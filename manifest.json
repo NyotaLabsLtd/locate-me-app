@@ -1,26 +1,41 @@
-"icons": [
-  {
-    "src": "icon.png",
-    "sizes": "512x512",
-    "type": "image/png",
-    "purpose": "any"
-  },
-  {
-    "src": "icon.png",
-    "sizes": "512x512",
-    "type": "image/png",
-    "purpose": "maskable"
-  },
-  {
-    "src": "icon.png",
-    "sizes": "192x192",
-    "type": "image/png",
-    "purpose": "any"
-  },
-  {
-    "src": "icon.png",
-    "sizes": "192x192",
-    "type": "image/png",
-    "purpose": "maskable"
-  }
-]
+{
+  "name": "Locate Me",
+  "short_name": "Locate Me",
+  "description": "Find missing persons and report sightings in Kenya.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "id": "locate-me-app",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["Social", "News", "Lifestyle"],
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
