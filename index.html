@@ -102,6 +102,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .auth-divider span { position: relative; background: var(--dark-card); padding: 0 10px; }
 .logout-btn { background: var(--danger); color: white; padding: 12px; border: none; border-radius: 8px; width: 100%; margin-top: 15px; cursor: pointer; font-weight: 600; }
 .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px; }
+.verification-message { background: var(--dark-card); padding: 30px; border-radius: 16px; text-align: center; max-width: 400px; }
+.verification-message h2 { color: var(--warning); margin-bottom: 15px; }
+.verification-message p { margin-bottom: 20px; color: var(--light); }
 </style>
 </head>
 <body>
@@ -361,27 +364,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </nav>
 </div>
 
+<!-- Verification Success Modal -->
+<div class="modal-overlay" id="verifySuccessModal">
+  <div class="modal-content">
+    <div class="verification-message">
+      <h2>✅ Email Verified!</h2>
+      <p>Your email has been successfully verified. You can now log in to your account.</p>
+      <button class="btn-submit" onclick="closeModal('verifySuccessModal'); switchAuthTab('login'); showAuth();" style="width:100%">Go to Login</button>
+    </div>
+  </div>
+</div>
+
 <!-- Profile Modal - Full Screen -->
 <div class="modal-overlay" id="profileModal">
   <div class="modal-header">
     <button class="modal-close" onclick="closeProfileModal()">✕</button>
   </div>
   <div class="modal-content" id="modalContent"></div>
-</div>
-
-<!-- Verification Modal -->
-<div class="modal-overlay" id="verifyModal">
-  <div class="modal-header">
-    <div style="font-weight:700">Verify Email</div>
-    <div style="width:36px"></div>
-  </div>
-  <div class="modal-content">
-    <h2 style="color:var(--warning)">Enter Verification Code</h2>
-    <p>We sent a 6-digit code to <span id="verifyEmailDisplay" style="color:var(--warning); font-weight:bold;"></span></p>
-    <input type="text" class="form-input" id="verifyCodeInput" placeholder="123456" maxlength="6" style="text-align:center; font-size:24px; letter-spacing:5px; margin: 20px 0;">
-    <button class="btn-submit" style="width:100%" onclick="submitVerification()">Verify Account</button>
-    <button class="btn-cancel" style="width:100%; margin-top:10px;" onclick="closeModal('verifyModal')">Cancel</button>
-  </div>
 </div>
 
 <!-- Edit Post Modal -->
@@ -430,7 +429,6 @@ const CLOUDINARY_CONFIG = { cloud_name: 'dvvz0dcrj', upload_preset: 'locate-me-u
 const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 const GOOGLE_CLIENT_ID = '384124217618-38rde3tgblslp1s9u3e1fn5tn7h971uk.apps.googleusercontent.com';
 let missingPersons = []; let currentUser = null;
-let pendingVerificationEmail = '';
 
 function switchAuthTab(tab) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
@@ -472,31 +470,13 @@ async function handleSignup(e) {
     const data = await res.json();
     if (!res.ok) {
       if (res.status === 409) {
-        throw new Error('Email already registered. Please check your email for the verification code or try logging in.');
+        throw new Error('Email already registered. Please check your email for the verification link or try logging in.');
       }
       throw new Error(data.error || 'Signup failed');
     }
     
-    pendingVerificationEmail = document.getElementById('signupEmail').value;
-    document.getElementById('verifyEmailDisplay').textContent = pendingVerificationEmail;
-    document.getElementById('verifyModal').classList.add('active');
-    showToast('✅ Code sent to your email!');
-  } catch (err) { showToast('❌ ' + err.message); }
-}
-
-async function submitVerification() {
-  const code = document.getElementById('verifyCodeInput').value;
-  try {
-    const res = await fetch(`${API_URL}/auth/verify`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: pendingVerificationEmail, code: code })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
-    showToast('✅ Verified! Please log in.');
-    closeModal('verifyModal');
-    switchAuthTab('login');
+    showToast('✅ Account created! Please check your email and click the verification link.');
+    document.getElementById('signupForm').reset();
   } catch (err) { showToast('❌ ' + err.message); }
 }
 
@@ -505,7 +485,12 @@ async function handleLogin(e) {
   try {
     const res = await fetch(`${API_URL}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: document.getElementById('loginEmail').value, password: document.getElementById('loginPassword').value }) });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Login failed');
+    if (!res.ok) {
+      if (data.unverified) {
+        throw new Error('Please verify your email first. Check your inbox for the verification link.');
+      }
+      throw new Error(data.error || 'Login failed');
+    }
     localStorage.setItem('authToken', data.token); localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
@@ -538,6 +523,29 @@ function checkAuth() {
     document.getElementById('userEmailDisplay').textContent = currentUser.email;
     showApp(); loadData();
   } else { showAuth(); }
+}
+
+// Check for verification link on page load
+async function checkVerificationLink() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const verifyToken = urlParams.get('verify');
+  
+  if (verifyToken) {
+    try {
+      const res = await fetch(`${API_URL}/auth/verify/${verifyToken}`);
+      const data = await res.json();
+      
+      if (data.verified || data.alreadyVerified) {
+        document.getElementById('verifySuccessModal').classList.add('active');
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else {
+        showToast('❌ ' + (data.error || 'Verification failed'));
+      }
+    } catch (err) {
+      showToast('❌ Verification failed. Link may be expired.');
+    }
+  }
 }
 
 function logout() {
@@ -794,6 +802,7 @@ async function confirmDeletePost() {
 window.addEventListener('load', () => {
   checkAuth(); 
   initializeGoogleSignIn();
+  checkVerificationLink(); // Check for verification link on load
 });
 
 document.getElementById('searchInput').addEventListener('input', renderCards);
