@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f172a">
-<title>Locate Me - Find Missing Persons</title><link rel="manifest" href="manifest.json">
+<title>Locate Me - Find Missing Persons</title>
+<link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
@@ -38,24 +39,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .card-info { font-size: 14px; color: var(--gray); margin-bottom: 4px; }
 .card-date { font-size: 13px; color: var(--gray); }
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: none; overflow-y: auto; }
-.modal-overlay.active { display: block; }
-.modal-header { position: sticky; top: 0; background: var(--dark); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); z-index: 10; }
+.modal-overlay.active { display: flex; justify-content: center; align-items: center; }
+.modal-header { position: sticky; top: 0; background: var(--dark); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); z-index: 10; width: 100%; }
 .modal-close { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--dark-card); color: var(--light); font-size: 20px; cursor: pointer; }
-.modal-content { padding: 20px; max-width: 600px; margin: 0 auto; }
+.modal-content { padding: 20px; max-width: 600px; width: 90%; background: var(--dark-card); border-radius: 12px; margin: 20px; max-height: 90vh; overflow-y: auto; }
 .modal-content h2 { margin-bottom: 20px; color: var(--warning); }
 .modal-content p { margin-bottom: 15px; line-height: 1.6; }
 .modal-content h3 { margin: 20px 0 10px; color: var(--light); }
-.modal-content ul { margin-left: 20px; margin-bottom: 15px; }
-.modal-content li { margin-bottom: 8px; line-height: 1.5; }
 .modal-photo { width: 100%; border-radius: 12px; margin-bottom: 20px; }
 .photo-gallery { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
 .photo-wrapper { position: relative; width: 100%; }
 .photo-wrapper img { width: 100%; height: 400px; object-fit: cover; border-radius: 12px; border: 2px solid var(--border); }
-.photo-counter {
-  position: absolute; top: 15px; right: 15px;
-  background: rgba(15, 23, 42, 0.9); color: var(--warning);
-  padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; border: 2px solid var(--warning);
-}
+.photo-counter { position: absolute; top: 15px; right: 15px; background: rgba(15, 23, 42, 0.9); color: var(--warning); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; border: 2px solid var(--warning); }
 .info-section { background: var(--dark-card); border-radius: 10px; padding: 16px; margin-bottom: 16px; cursor: pointer; transition: background 0.2s; }
 .info-section:active { background: var(--border); }
 .info-label { font-size: 11px; color: var(--warning); margin-bottom: 4px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
@@ -63,7 +58,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .form-section-title { font-size: 13px; color: var(--gray); text-transform: uppercase; margin: 24px 0 12px; font-weight: 600; }
 .form-group { margin-bottom: 20px; position: relative; }
 .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-.form-input, .form-select, textarea.form-input { width: 100%; padding: 14px; background: var(--dark-card); border: 1px solid var(--border); border-radius: 10px; color: var(--light); font-size: 15px; font-family: inherit; }
+.form-input, .form-select, textarea.form-input { width: 100%; padding: 14px; background: var(--dark); border: 1px solid var(--border); border-radius: 10px; color: var(--light); font-size: 15px; font-family: inherit; }
 .form-input:focus, .form-select:focus, textarea.form-input:focus { outline: none; border-color: var(--warning); }
 .toggle-password { position: absolute; right: 12px; top: 36px; background: none; border: none; cursor: pointer; font-size: 20px; opacity: 0.7; transition: opacity 0.2s; }
 .toggle-password:hover { opacity: 1; }
@@ -76,7 +71,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .checkbox-wrapper input { width: 20px; height: 20px; accent-color: var(--warning); }
 .form-actions { display: flex; gap: 12px; margin-top: 24px; }
 .btn-cancel, .btn-submit { flex: 1; padding: 16px; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; }
-.btn-cancel { background: var(--dark-card); }
+.btn-cancel { background: var(--dark-card); color: var(--light); }
 .btn-submit { background: var(--warning); color: var(--dark); }
 .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark-card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
@@ -86,12 +81,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .nav-label { font-size: 12px; font-weight: 600; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
-.splash-screen { position: fixed; inset: 0; background: var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2000; }
-.splash-logo { width: 150px; height: 150px; background: var(--dark-card); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 70px; }
-.splash-text { font-size: 24px; font-weight: 700; letter-spacing: 2px; }
 .loading { text-align: center; padding: 40px; color: var(--gray); }
 .optional-badge { font-size: 12px; color: var(--gray); font-weight: 400; margin-left: 4px; }
-.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--dark-card); color: var(--light); padding: 12px 24px; border-radius: 8px; z-index: 2000; display: none; }
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--dark-card); color: var(--light); padding: 12px 24px; border-radius: 8px; z-index: 2000; display: none; border: 1px solid var(--border); }
 .toast.show { display: block; animation: slideUp 0.3s ease; }
 .toggle-switch { position: relative; width: 50px; height: 26px; flex-shrink: 0; }
 .toggle-switch input { opacity: 0; width: 0; height: 0; }
@@ -103,7 +95,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .auth-screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
 .auth-screen.active { display: flex; }
 .auth-box { background: var(--dark-card); padding: 30px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-.auth-logo { font-size: 60px; margin-bottom: 10px; }
+.auth-logo { font-size: 60px; margin-bottom: 10px; text-align: center; }
 .auth-title { text-align: center; color: var(--warning); margin-bottom: 20px; font-size: 24px; }
 .auth-tabs { display: flex; margin-bottom: 20px; border-bottom: 2px solid var(--border); }
 .auth-tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; color: var(--gray); font-weight: 600; }
@@ -135,7 +127,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <div class="form-group">
         <label class="form-label">Password</label>
         <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required style="padding-right: 45px;">
-        <button type="button" class="toggle-password" onclick="togglePassword('loginPassword', 'loginEye')">👁‍</button>
       </div>
       <button type="submit" class="btn-submit" style="width:100%">Login</button>
     </form>
@@ -146,8 +137,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6" style="padding-right: 45px;">
-        <button type="button" class="toggle-password" onclick="togglePassword('signupPassword', 'signupEye')">👁‍</button>
+        <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
       </div>
       <button type="submit" class="btn-submit" style="width:100%">Create Account</button>
     </form>
@@ -158,7 +148,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <div class="app-container" id="mainApp">
   <div class="header">
-    <div class="header-logo">📍</div>
+    <div class="header-logo"></div>
     <h1>Locate Me</h1>
     <div class="settings-icon" onclick="switchTab('settings', event)">⚙️</div>
   </div>
@@ -167,7 +157,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <h2 class="page-title">Reported Missing People</h2>
       <div class="search-bar">
         <input type="text" class="search-input" placeholder="Search by name or location..." id="searchInput">
-        <button class="filter-btn" id="filterBtn" onclick="toggleFilters()">⚙️</button>
+        <button class="filter-btn" id="filterBtn" onclick="toggleFilters()">️</button>
       </div>
       <div class="filter-panel" id="filterPanel">
         <div class="filter-grid">
@@ -187,6 +177,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <div id="missingCardsContainer"><div class="loading">Loading...</div></div>
     </div>
+    
     <div id="postTab" class="tab-content">
       <h2 class="page-title">Post Missing Person</h2>
       <div class="form-section-title">Basic Information</div>
@@ -229,7 +220,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <div class="form-section-title">Description & Details *</div>
       <div class="form-group">
         <label class="form-label">Clothing & Appearance</label>
-        <textarea class="form-input" id="postDescription" rows="3" placeholder="e.g. Blue jeans, white t-shirt, black hair, approx 5'8" tall"></textarea>
+        <textarea class="form-input" id="postDescription" rows="3" placeholder="e.g. Blue jeans, white t-shirt, black hair"></textarea>
       </div>
       <div class="form-group">
         <label class="form-label">Additional Notes</label>
@@ -246,128 +237,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <div class="form-section-title">Police Info <span class="optional-badge">(Optional)</span></div>
       <div class="form-group">
         <label class="form-label">Nearest Police Station</label>
-        <input type="text" class="form-input" id="postPoliceStation" list="policeStationsList" placeholder="Type nearest police station of missing person">
+        <input type="text" class="form-input" id="postPoliceStation" list="policeStationsList" placeholder="Type nearest police station">
         <datalist id="policeStationsList">
           <option value="Central Police Station">
           <option value="Kasarani Police Station">
           <option value="Westlands Police Station">
-          <option value="Kilimani Police Station">
-          <option value="Langata Police Station">
-          <option value="Embakasi Police Station">
-          <option value="Kamukunji Police Station">
-          <option value="Starehe Police Station">
-          <option value="Makadara Police Station">
-          <option value="Ruaraka Police Station">
-          <option value="Roysambu Police Station">
-          <option value="Dagoretti Police Station">
-          <option value="Karen Police Station">
-          <option value="Kibera Police Station">
-          <option value="Mathare Police Station">
-          <option value="Huruma Police Station">
-          <option value="Donholm Police Station">
-          <option value="Buruburu Police Station">
-          <option value="Embakasi Village Police Station">
-          <option value="Pipeline Police Station">
-          <option value="Mombasa Central Police Station">
-          <option value="Nyali Police Station">
-          <option value="Likoni Police Station">
-          <option value="Changamwe Police Station">
-          <option value="Kisauni Police Station">
-          <option value="Jomvu Police Station">
-          <option value="Kisumu Central Police Station">
-          <option value="Kisumu East Police Station">
-          <option value="Kisumu West Police Station">
-          <option value="Nyando Police Station">
-          <option value="Muhoroni Police Station">
-          <option value="Nakuru Central Police Station">
-          <option value="Nakuru West Police Station">
-          <option value="Nakuru East Police Station">
-          <option value="Naivasha Police Station">
-          <option value="Gilgil Police Station">
-          <option value="Rongai Police Station">
-          <option value="Molo Police Station">
-          <option value="Njoro Police Station">
-          <option value="Machakos Central Police Station">
-          <option value="Athi River Police Station">
-          <option value="Kangundo Police Station">
-          <option value="Matuu Police Station">
-          <option value="Kathiani Police Station">
-          <option value="Kiambu Police Station">
-          <option value="Thika Police Station">
-          <option value="Ruiru Police Station">
-          <option value="Juja Police Station">
-          <option value="Githunguri Police Station">
-          <option value="Gatundu Police Station">
-          <option value="Limuru Police Station">
-          <option value="Kikuyu Police Station">
-          <option value="Karuri Police Station">
-          <option value="Kabete Police Station">
-          <option value="Kakamega Central Police Station">
-          <option value="Mumias Police Station">
-          <option value="Butere Police Station">
-          <option value="Malava Police Station">
-          <option value="Lugari Police Station">
-          <option value="Vihiga Police Station">
-          <option value="Bungoma Central Police Station">
-          <option value="Webuye Police Station">
-          <option value="Busia Police Station">
-          <option value="Teso Police Station">
-          <option value="Nyeri Central Police Station">
-          <option value="Othaya Police Station">
-          <option value="Nanyuki Police Station">
-          <option value="Karatina Police Station">
-          <option value="Mukurweini Police Station">
-          <option value="Meru Central Police Station">
-          <option value="Maua Police Station">
-          <option value="Chuka Police Station">
-          <option value="Mitunguu Police Station">
-          <option value="Kilifi Police Station">
-          <option value="Malindi Police Station">
-          <option value="Watamu Police Station">
-          <option value="Gede Police Station">
-          <option value="Kwale Police Station">
-          <option value="Ukunda Police Station">
-          <option value="Msambweni Police Station">
-          <option value="Hola Police Station">
-          <option value="Garsen Police Station">
-          <option value="Lamu Police Station">
-          <option value="Mpeketoni Police Station">
-          <option value="Voi Police Station">
-          <option value="Taveta Police Station">
-          <option value="Wundanyi Police Station">
-          <option value="Garissa Police Station">
-          <option value="Dadaab Police Station">
-          <option value="Wajir Police Station">
-          <option value="Eldas Police Station">
-          <option value="Mandera Police Station">
-          <option value="El Wak Police Station">
-          <option value="Marsabit Police Station">
-          <option value="Moyale Police Station">
-          <option value="Isiolo Police Station">
-          <option value="Merti Police Station">
-          <option value="Maralal Police Station">
-          <option value="Baragoi Police Station">
-          <option value="Lodwar Police Station">
-          <option value="Lokichar Police Station">
-          <option value="Kapenguria Police Station">
-          <option value="Makutano Police Station">
-          <option value="Kitale Police Station">
-          <option value="Endebess Police Station">
-          <option value="Iten Police Station">
-          <option value="Kapsowar Police Station">
-          <option value="Kapsabet Police Station">
-          <option value="Nandi Hills Police Station">
-          <option value="Kabarnet Police Station">
-          <option value="Marigat Police Station">
-          <option value="Nyahururu Police Station">
-          <option value="Ol Kalou Police Station">
-          <option value="Kerugoya Police Station">
-          <option value="Sagana Police Station">
-          <option value="Murang'a Police Station">
-          <option value="Kangema Police Station">
-          <option value="DCI Headquarters - Nairobi">
-          <option value="Serious Crime Unit">
-          <option value="Anti-Stock Theft Unit">
         </datalist>
       </div>
       <div class="form-actions">
@@ -375,6 +249,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <button class="btn-submit" onclick="submitMissingPerson()" id="postBtn">Submit</button>
       </div>
     </div>
+
     <div id="foundTab" class="tab-content">
       <h2 class="page-title">Report a Sighting</h2>
       <div class="form-section-title">Sighting Details</div>
@@ -385,14 +260,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <div class="checkbox-wrapper">
         <input type="checkbox" id="sightingUnknown" onchange="toggleUnknownPerson()">
         <label class="form-label" for="sightingUnknown">The person didn't say their name</label>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Gender</label>
-        <select class="form-select" id="sightingGender">
-          <option value="">Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-        </select>
       </div>
       <div class="form-group">
         <label class="form-label">Where did you see them? *</label>
@@ -408,12 +275,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <input type="file" class="file-input" accept="image/*" id="sightingPhoto" onchange="previewImage(this, 'sightingPreview', 'sightingProgress')">
         <img class="file-preview" id="sightingPreview">
         <div class="upload-progress" id="sightingProgress"><div class="upload-progress-bar"></div></div>
-        <small style="color: var(--gray); font-size: 11px; margin-top: 5px; display: block;">Helps admin verify the sighting</small>
-      </div>
-      <div class="form-section-title">Additional Information</div>
-      <div class="form-group">
-        <label class="form-label">Describe the sighting</label>
-        <textarea class="form-input" id="sightingDescription" rows="3" placeholder="Details, condition, clothing, etc."></textarea>
       </div>
       <div class="form-section-title">Your Contact Information *</div>
       <div class="form-group">
@@ -422,14 +283,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <div class="form-group">
         <label class="form-label">Phone Number * (Required)</label>
-        <input type="tel" class="form-input" id="sightingContact" placeholder="e.g. 0712345678 or +254712345678" pattern="[0-9+\-\s]{10,15}">
-        <small style="color: var(--gray); font-size: 12px; margin-top: 5px; display: block;">Questions? Contact: nyotalabs@gmail.com</small>
+        <input type="tel" class="form-input" id="sightingContact" placeholder="e.g. 0712345678" pattern="[0-9+\-\s]{10,15}">
       </div>
       <div class="form-actions">
         <button class="btn-cancel" onclick="resetSightingForm()">Cancel</button>
         <button class="btn-submit" onclick="submitSighting()" id="sightingBtn">Submit</button>
       </div>
     </div>
+
     <div id="settingsTab" class="tab-content">
       <h2 class="page-title">Settings</h2>
       <div class="info-section" id="userProfileSection">
@@ -439,6 +300,29 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <div class="info-value" id="userEmailDisplay">Loading...</div>
         </div>
       </div>
+      
+      <!-- My Posts Section -->
+      <div class="info-section" onclick="loadMyPosts()">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div class="info-label">My Posts</div>
+            <div class="info-value">View, edit or delete your reports</div>
+          </div>
+          <span style="font-size: 20px;">➡️</span>
+        </div>
+      </div>
+      <div id="my-posts-container" style="display:none; margin-bottom: 20px;">
+        <div id="my-posts-list"></div>
+      </div>
+
+      <!-- NEW: Unified Legal & Policies Button -->
+      <a href="policies.html" style="text-decoration: none; color: inherit; display: block;">
+        <div class="info-section">
+          <div class="info-label">Legal & Policies</div>
+          <div class="info-value">Privacy, Terms, Child Safety & More</div>
+        </div>
+      </a>
+
       <div class="info-section">
         <div class="info-label">Language</div>
         <select class="form-select" id="settingsLanguage" onchange="changeLanguage()">
@@ -452,14 +336,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <label class="toggle-switch"><input type="checkbox" checked id="notifToggle" onchange="toggleNotifications()"><span class="toggle-slider"></span></label>
         </div>
       </div>
-      <div class="info-section" onclick="showPrivacyPolicy()">
-        <div class="info-label">Privacy Policy</div>
-        <div class="info-value">Read how we handle your data</div>
-      </div>
-      <div class="info-section" onclick="showTermsOfService()">
-        <div class="info-label">Terms of Service</div>
-        <div class="info-value">Rules for using the app</div>
-      </div>
       <div class="info-section" onclick="showContactSupport()">
         <div class="info-label">Contact Support</div>
         <div class="info-value">Get help or report issues</div>
@@ -467,12 +343,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <button class="logout-btn" onclick="logout()">Logout</button>
       <div class="info-section" style="margin-top: 20px;">
         <div class="info-label">App Version</div>
-        <div class="info-value">1.0.0</div>
+        <div class="info-value">1.1.0</div>
       </div>
     </div>
   </div>
   
-  <!-- FIXED BOTTOM NAVIGATION WITH ICONS -->
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="home" onclick="switchTab('home', event)">
       <span class="nav-icon">🏠</span>
@@ -483,7 +358,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <span class="nav-label">Post</span>
     </button>
     <button class="nav-item" data-tab="found" onclick="switchTab('found', event)">
-      <span class="nav-icon">🔍</span>
+      <span class="nav-icon"></span>
       <span class="nav-label">Found</span>
     </button>
     <button class="nav-item" data-tab="settings" onclick="switchTab('settings', event)">
@@ -493,6 +368,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </nav>
 </div>
 
+<!-- Existing Modals -->
 <div class="modal-overlay" id="profileModal">
   <div class="modal-header">
     <button class="modal-close" onclick="closeProfileModal()">✕</button>
@@ -511,56 +387,70 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <div class="modal-content" id="infoModalContent"></div>
 </div>
 
+<!-- Verification Modal -->
+<div class="modal-overlay" id="verifyModal">
+  <div class="modal-header">
+    <div style="font-weight:700">Verify Email</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="modal-content">
+    <h2 style="color:var(--warning)">Enter Verification Code</h2>
+    <p>We sent a 6-digit code to <span id="verifyEmailDisplay" style="color:var(--warning); font-weight:bold;"></span></p>
+    <input type="text" class="form-input" id="verifyCodeInput" placeholder="123456" maxlength="6" style="text-align:center; font-size:24px; letter-spacing:5px; margin: 20px 0;">
+    <button class="btn-submit" style="width:100%" onclick="submitVerification()">Verify Account</button>
+    <button class="btn-cancel" style="width:100%; margin-top:10px;" onclick="closeModal('verifyModal')">Cancel</button>
+  </div>
+</div>
+
+<!-- Edit Post Modal -->
+<div class="modal-overlay" id="editPostModal">
+  <div class="modal-header">
+    <button class="modal-close" onclick="closeModal('editPostModal')">✕</button>
+    <div style="font-weight:700">Edit Post</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="modal-content">
+    <input type="hidden" id="editPostId">
+    <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="editName"></div>
+    <div class="form-group"><label class="form-label">Age</label><input type="number" class="form-input" id="editAge"></div>
+    <div class="form-group"><label class="form-label">Last Seen Location</label><input type="text" class="form-input" id="editLocation"></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="editDesc" rows="3"></textarea></div>
+    <button class="btn-submit" style="width:100%" onclick="savePostEdit()">Save Changes</button>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deletePostModal">
+  <div class="modal-header">
+    <button class="modal-close" onclick="closeModal('deletePostModal')">✕</button>
+    <div style="font-weight:700">Delete Post</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="modal-content">
+    <h3 style="color:var(--danger)">Are you sure?</h3>
+    <p>Please select a reason for deletion:</p>
+    <select class="form-select" id="deleteReason" style="margin-bottom: 20px;">
+      <option value="found">✅ The missing person has been found</option>
+      <option value="duplicate">📑 This is a duplicate post</option>
+      <option value="wrong_info">❌ Contains wrong information</option>
+      <option value="resolved">🛑 Issue resolved</option>
+      <option value="other">📝 Other reason</option>
+    </select>
+    <button class="btn-submit" style="width:100%; background:var(--danger); color:white;" onclick="confirmDeletePost()">Yes, Delete Post</button>
+    <button class="btn-cancel" style="width:100%; margin-top:10px;" onclick="closeModal('deletePostModal')">Cancel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
 const CLOUDINARY_CONFIG = { cloud_name: 'dvvz0dcrj', upload_preset: 'locate-me-uploads', folder: 'locate-me/missing-persons' };
 const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 const GOOGLE_CLIENT_ID = '816021523687-bjk1hqap09aak1bl9rb3tk60q8qr4q1b.apps.googleusercontent.com';
 let missingPersons = []; let currentUser = null;
+let pendingVerificationEmail = '';
 
-function togglePassword(inputId, iconId) {
-  const input = document.getElementById(inputId);
-  const icon = document.getElementById(iconId);
-  if (input.type === 'password') { input.type = 'text'; icon.textContent = '🙈'; } 
-  else { input.type = 'password'; icon.textContent = '👁‍'; }
-}
-
-function initializeGoogleSignIn() {
-  if (typeof google === 'undefined') { setTimeout(initializeGoogleSignIn, 500); return; }
-  google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleResponse, auto_select: false, cancel_on_tap_outside: true });
-  try {
-    google.accounts.id.renderButton(document.getElementById("googleSignInContainer"), { theme: "outline", size: "large", width: "100%", text: "signin_with", shape: "rectangular" });
-  } catch (err) { console.error('Error rendering Google button:', err); }
-}
-
-async function handleGoogleResponse(response) {
-  try {
-    showToast('⏳ Verifying with Google...');
-    const res = await fetch(`${API_URL}/auth/google`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ credential: response.credential }) });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Google sign-in failed');
-    localStorage.setItem('authToken', data.token); localStorage.setItem('user', JSON.stringify(data.user));
-    currentUser = data.user;
-    const userEmailEl = document.getElementById('userEmailDisplay'); const userAvatarEl = document.getElementById('userAvatar');
-    if (userEmailEl) userEmailEl.textContent = data.user.email;
-    if (userAvatarEl && data.user.avatar) { userAvatarEl.src = data.user.avatar; userAvatarEl.style.display = 'block'; }
-    showToast('✅ Signed in with Google!'); showApp(); loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
-}
-
-function checkAuth() {
-  const token = localStorage.getItem('authToken'); const user = localStorage.getItem('user');
-  if (token && user) {
-    currentUser = JSON.parse(user);
-    const userEmailEl = document.getElementById('userEmailDisplay'); const userAvatarEl = document.getElementById('userAvatar');
-    if (userEmailEl) userEmailEl.textContent = currentUser.email;
-    if (userAvatarEl && currentUser.avatar) { userAvatarEl.src = currentUser.avatar; userAvatarEl.style.display = 'block'; }
-    showApp(); loadData();
-  } else { showAuth(); }
-}
-
-function showAuth() { document.getElementById('authScreen').classList.add('active'); document.getElementById('mainApp').classList.remove('active'); }
-function showApp() { document.getElementById('authScreen').classList.remove('active'); document.getElementById('mainApp').classList.add('active'); }
-
+// --- Auth & UI Helpers ---
 function switchAuthTab(tab) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
@@ -568,42 +458,8 @@ function switchAuthTab(tab) {
   document.getElementById(tab + 'Form').classList.add('active');
 }
 
-async function handleLogin(e) {
-  e.preventDefault();
-  try {
-    const res = await fetch(`${API_URL}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: document.getElementById('loginEmail').value, password: document.getElementById('loginPassword').value }) });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Login failed');
-    localStorage.setItem('authToken', data.token); localStorage.setItem('user', JSON.stringify(data.user));
-    currentUser = data.user;
-    document.getElementById('userEmailDisplay').textContent = data.user.email;
-    showToast('✅ Login successful!'); showApp(); loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
-}
-
-async function handleSignup(e) {
-  e.preventDefault();
-  try {
-    const res = await fetch(`${API_URL}/auth/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: document.getElementById('signupEmail').value, password: document.getElementById('signupPassword').value }) });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Signup failed');
-    localStorage.setItem('authToken', data.token); localStorage.setItem('user', JSON.stringify(data.user));
-    currentUser = data.user;
-    document.getElementById('userEmailDisplay').textContent = data.user.email;
-    showToast('✅ Account created!'); showApp(); loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
-}
-
-function logout() {
-  localStorage.removeItem('authToken'); localStorage.removeItem('user'); currentUser = null;
-  showToast('✅ Logged out'); showAuth();
-}
-
-window.addEventListener('load', () => {
-  const splash = document.getElementById('splashScreen');
-  if (splash) { setTimeout(() => { splash.style.display = 'none'; checkAuth(); initializeGoogleSignIn(); }, 2000); }
-  else { checkAuth(); initializeGoogleSignIn(); }
-});
+function showAuth() { document.getElementById('authScreen').classList.add('active'); document.getElementById('mainApp').classList.remove('active'); }
+function showApp() { document.getElementById('authScreen').classList.remove('active'); document.getElementById('mainApp').classList.add('active'); }
 
 function switchTab(tab, eventObj) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -619,6 +475,93 @@ function showToast(msg) {
   if (t) { t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
 }
 
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+// --- Email Verification Logic ---
+async function handleSignup(e) {
+  e.preventDefault();
+  try {
+    const res = await fetch(`${API_URL}/auth/register`, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' }, 
+      body: JSON.stringify({ 
+        email: document.getElementById('signupEmail').value, 
+        password: document.getElementById('signupPassword').value 
+      }) 
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Signup failed');
+    
+    pendingVerificationEmail = document.getElementById('signupEmail').value;
+    document.getElementById('verifyEmailDisplay').textContent = pendingVerificationEmail;
+    document.getElementById('verifyModal').classList.add('active');
+    showToast('✅ Code sent to your email!');
+  } catch (err) { showToast('❌ ' + err.message); }
+}
+
+async function submitVerification() {
+  const code = document.getElementById('verifyCodeInput').value;
+  try {
+    const res = await fetch(`${API_URL}/auth/verify`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: pendingVerificationEmail, code: code })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    showToast('✅ Verified! Please log in.');
+    closeModal('verifyModal');
+    switchAuthTab('login');
+  } catch (err) { showToast('❌ ' + err.message); }
+}
+
+// --- Login & Google ---
+async function handleLogin(e) {
+  e.preventDefault();
+  try {
+    const res = await fetch(`${API_URL}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: document.getElementById('loginEmail').value, password: document.getElementById('loginPassword').value }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+    localStorage.setItem('authToken', data.token); localStorage.setItem('user', JSON.stringify(data.user));
+    currentUser = data.user;
+    document.getElementById('userEmailDisplay').textContent = data.user.email;
+    showToast('✅ Login successful!'); showApp(); loadData();
+  } catch (err) { showToast('❌ ' + err.message); }
+}
+
+function initializeGoogleSignIn() {
+  if (typeof google === 'undefined') { setTimeout(initializeGoogleSignIn, 500); return; }
+  google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleResponse, auto_select: false });
+  try { google.accounts.id.renderButton(document.getElementById("googleSignInContainer"), { theme: "outline", size: "large", width: "100%" }); } catch (err) {}
+}
+
+async function handleGoogleResponse(response) {
+  try {
+    const res = await fetch(`${API_URL}/auth/google`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ credential: response.credential }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    localStorage.setItem('authToken', data.token); localStorage.setItem('user', JSON.stringify(data.user));
+    currentUser = data.user;
+    document.getElementById('userEmailDisplay').textContent = data.user.email;
+    showToast('✅ Signed in with Google!'); showApp(); loadData();
+  } catch (err) { showToast('❌ ' + err.message); }
+}
+
+function checkAuth() {
+  const token = localStorage.getItem('authToken'); const user = localStorage.getItem('user');
+  if (token && user) {
+    currentUser = JSON.parse(user);
+    document.getElementById('userEmailDisplay').textContent = currentUser.email;
+    showApp(); loadData();
+  } else { showAuth(); }
+}
+
+function logout() {
+  localStorage.removeItem('authToken'); localStorage.removeItem('user'); currentUser = null;
+  showToast('✅ Logged out'); showAuth();
+}
+
+// --- Data Loading ---
 async function loadData() {
   try {
     const response = await fetch(`${API_URL}/missing-persons`);
@@ -629,11 +572,10 @@ async function loadData() {
 
 function renderCards() {
   const container = document.getElementById('missingCardsContainer');
-  const searchInput = document.getElementById('searchInput');
-  const filterGender = document.getElementById('filterGender');
-  const filterAge = document.getElementById('filterAge');
-  if (!container || !searchInput || !filterGender || !filterAge) return;
-  const term = searchInput.value.toLowerCase(); const gender = filterGender.value; const ageFilter = filterAge.value;
+  const term = document.getElementById('searchInput').value.toLowerCase();
+  const gender = document.getElementById('filterGender').value;
+  const ageFilter = document.getElementById('filterAge').value;
+  
   let filtered = missingPersons.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(term) || p.last_seen_location.toLowerCase().includes(term);
     const matchesGender = !gender || p.gender === gender;
@@ -644,6 +586,7 @@ function renderCards() {
     }
     return matchesSearch && matchesGender && matchesAge;
   });
+  
   if (filtered.length === 0) { container.innerHTML = '<div class="loading">No missing persons found.</div>'; return; }
   container.innerHTML = filtered.map(p => `
     <div class="missing-card" onclick="openModal(${p.id})">
@@ -651,86 +594,40 @@ function renderCards() {
       <div class="card-content">
         <div class="card-name">${p.name}</div>
         <div class="card-info">Last Seen: ${p.last_seen_location}</div>
-        <div class="card-date"> ${formatDate(p.date_missing)}</div>
+        <div class="card-date">${formatDate(p.date_missing)}</div>
       </div>
     </div>
   `).join('');
 }
 
-function toggleFilters() {
-  const panel = document.getElementById('filterPanel'); const btn = document.getElementById('filterBtn');
-  if (panel) panel.classList.toggle('active'); if (btn) btn.classList.toggle('active');
-}
-
+// --- Modals & Forms ---
 function openModal(id) {
   const p = missingPersons.find(x => x.id === id); if (!p) return;
   const photos = p.photo_urls || []; let photoHTML = '';
   if (photos.length > 0) {
     photoHTML = '<div class="photo-gallery">';
-    photos.forEach((url, index) => { photoHTML += `<div class="photo-wrapper"><img src="${url}" onerror="this.style.display='none'"><div class="photo-counter">${index + 1} / ${photos.length}</div></div>`; });
+    photos.forEach((url, index) => { photoHTML += `<div class="photo-wrapper"><img src="${url}"><div class="photo-counter">${index + 1} / ${photos.length}</div></div>`; });
     photoHTML += '</div>';
-  } else { photoHTML = '<div style="background:var(--dark-card); height:300px; display:flex; align-items:center; justify-content:center; color:var(--gray); border-radius:12px;">No photos available</div>'; }
-  const modalContent = document.getElementById('modalContent');
-  if (modalContent) {
-    modalContent.innerHTML = `
-      ${photoHTML}
-      <div class="info-section"><div class="info-label">NAME</div><div class="info-value">${p.name}</div><div class="info-label">AGE</div><div class="info-value">${p.age || 'N/A'} years old</div><div class="info-label">GENDER</div><div class="info-value">${p.gender || 'N/A'}</div></div>
-      <div class="info-section"><div class="info-label">LAST SEEN</div><div class="info-value">${p.last_seen_location}</div><div class="info-label">DATE REPORTED</div><div class="info-value">${formatDate(p.date_missing)}</div></div>
-      ${p.description ? `<div class="info-section"><div class="info-label">CLOTHING & APPEARANCE</div><div class="info-value">${p.description}</div></div>` : ''}
-      ${p.notes ? `<div class="info-section"><div class="info-label">ADDITIONAL NOTES</div><div class="info-value">${p.notes}</div></div>` : ''}
-      ${p.residence ? `<div class="info-section"><div class="info-label">RESIDENCE</div><div class="info-value">${p.residence}</div></div>` : ''}
-      ${p.police_station ? `<div class="info-section"><div class="info-label">NEAREST POLICE STATION</div><div class="info-value" style="color:var(--warning); font-weight:600"> ${p.police_station}</div></div>` : ''}
-    `;
   }
+  document.getElementById('modalContent').innerHTML = `
+    ${photoHTML}
+    <div class="info-section"><div class="info-label">NAME</div><div class="info-value">${p.name}</div><div class="info-label">AGE</div><div class="info-value">${p.age || 'N/A'} years old</div><div class="info-label">GENDER</div><div class="info-value">${p.gender || 'N/A'}</div></div>
+    <div class="info-section"><div class="info-label">LAST SEEN</div><div class="info-value">${p.last_seen_location}</div><div class="info-label">DATE REPORTED</div><div class="info-value">${formatDate(p.date_missing)}</div></div>
+    ${p.description ? `<div class="info-section"><div class="info-label">CLOTHING & APPEARANCE</div><div class="info-value">${p.description}</div></div>` : ''}
+    ${p.police_station ? `<div class="info-section"><div class="info-label">NEAREST POLICE STATION</div><div class="info-value" style="color:var(--warning); font-weight:600">${p.police_station}</div></div>` : ''}
+  `;
   document.getElementById('profileModal').classList.add('active');
 }
 function closeProfileModal() { document.getElementById('profileModal').classList.remove('active'); }
-
-function showPrivacyPolicy() {
-  const title = document.getElementById('infoModalTitle');
-  const content = document.getElementById('infoModalContent');
-  if (title) title.textContent = 'Privacy Policy';
-  if (content) content.innerHTML = `
-    <h2 style="color:var(--warning); margin-bottom:20px;">Privacy Policy</h2>
-    <p style="color:var(--gray); font-size:13px; margin-bottom:20px;">Last updated: June 1, 2026</p>
-    <h3 style="margin:20px 0 10px;">1. Information We Collect</h3>
-    <p>We collect personal information you provide (name, photo, location) and usage data to help locate missing persons.</p>
-    <h3 style="margin:20px 0 10px;">2. How We Use It</h3>
-    <p>To display reports to the public and connect witnesses with authorities.</p>
-    <h3 style="margin:20px 0 10px;">3. Contact</h3>
-    <p>For privacy concerns: <a href="mailto:nyotalabs@gmail.com" style="color:var(--warning)">nyotalabs@gmail.com</a></p>
-  `;
-  const modal = document.getElementById('infoModal');
-  if (modal) modal.classList.add('active');
-}
-
-function showTermsOfService() {
-  const title = document.getElementById('infoModalTitle');
-  const content = document.getElementById('infoModalContent');
-  if (title) title.textContent = 'Terms of Service';
-  if (content) content.innerHTML = `
-    <h2 style="color:var(--warning); margin-bottom:20px;">Terms of Service</h2>
-    <p style="color:var(--gray); font-size:13px; margin-bottom:20px;">Last updated: June 1, 2026</p>
-    <h3 style="margin:20px 0 10px;">1. User Responsibilities</h3>
-    <p>You agree to provide accurate information and only report genuine cases.</p>
-    <h3 style="margin:20px 0 10px;">2. Prohibited Activities</h3>
-    <p>Posting false missing person reports is a criminal offense.</p>
-    <h3 style="margin:20px 0 10px;">3. Contact</h3>
-    <p>Questions: <a href="mailto:nyotalabs@gmail.com" style="color:var(--warning)">nyotalabs@gmail.com</a></p>
-  `;
-  const modal = document.getElementById('infoModal');
-  if (modal) modal.classList.add('active');
-}
-
-function showContactSupport() {
-  const title = document.getElementById('infoModalTitle');
-  const content = document.getElementById('infoModalContent');
-  if (title) title.textContent = 'Contact Support';
-  if (content) content.innerHTML = `<h2>Contact Support</h2><p>📧 Email: <a href="mailto:nyotalabs@gmail.com" style="color:var(--warning)">nyotalabs@gmail.com</a><br>🕐 We respond within 24 hours</p>`;
-  const modal = document.getElementById('infoModal');
-  if (modal) modal.classList.add('active');
-}
 function closeInfoModal() { document.getElementById('infoModal').classList.remove('active'); }
+
+function showContactSupport() { document.getElementById('infoModalTitle').textContent = 'Contact Support'; document.getElementById('infoModalContent').innerHTML = '<h2>Contact Support</h2><p>📧 Email: <a href="mailto:nyotalabs@gmail.com" style="color:var(--warning)">nyotalabs@gmail.com</a><br> Address: Nairobi, Kenya</p>'; document.getElementById('infoModal').classList.add('active'); }
+
+function toggleFilters() { document.getElementById('filterPanel').classList.toggle('active'); document.getElementById('filterBtn').classList.toggle('active'); }
+function toggleUnknownPerson() {
+  const checkbox = document.getElementById('sightingUnknown'); const nameInput = document.getElementById('sightingName');
+  if (checkbox && nameInput) { if (checkbox.checked) { nameInput.disabled = true; nameInput.placeholder = 'Name unknown'; } else { nameInput.disabled = false; nameInput.placeholder = 'Enter the name'; } }
+}
 function changeLanguage() { showToast('Language feature coming soon!'); }
 function toggleNotifications() { showToast('Notifications toggled!'); }
 
@@ -776,11 +673,6 @@ function resetPostForm() {
   document.querySelectorAll('#postTab .upload-progress').forEach(p => { if (p) p.style.display = 'none'; });
 }
 
-function toggleUnknownPerson() {
-  const checkbox = document.getElementById('sightingUnknown'); const nameInput = document.getElementById('sightingName');
-  if (checkbox && nameInput) { if (checkbox.checked) { nameInput.disabled = true; nameInput.placeholder = 'Name unknown'; } else { nameInput.disabled = false; nameInput.placeholder = 'Enter the name'; } }
-}
-
 async function submitSighting() {
   const contact = document.getElementById('sightingContact')?.value.trim(); const location = document.getElementById('sightingLocation')?.value.trim();
   const phoneRegex = /^(\+254|0)?[7]\d{8}$/;
@@ -790,22 +682,18 @@ async function submitSighting() {
     const photoFile = document.getElementById('sightingPhoto')?.files[0];
     let photoUrl = null;
     if (photoFile) {
-      const progressEl = document.getElementById('sightingProgress');
-      const bar = progressEl?.querySelector('.upload-progress-bar');
-      if (progressEl) progressEl.style.display = 'block'; if (bar) bar.style.width = '30%';
       const formData = new FormData();
       formData.append('file', photoFile); formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset); formData.append('folder', CLOUDINARY_CONFIG.folder + '/sightings');
       const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`, { method: 'POST', body: formData });
       if (!res.ok) throw new Error('Photo upload failed');
       const data = await res.json(); photoUrl = data.secure_url;
-      if (bar) bar.style.width = '100%'; setTimeout(() => { if (progressEl) progressEl.style.display = 'none'; }, 500);
     }
     const sightingData = { missing_person_name: document.getElementById('sightingName')?.value, gender: document.getElementById('sightingGender')?.value, sighting_location: location, sighting_time: document.getElementById('sightingTime')?.value, description: document.getElementById('sightingDescription')?.value, reporter_name: document.getElementById('sightingYourName')?.value, reporter_contact: contact, photo_url: photoUrl };
     const token = localStorage.getItem('authToken');
     const response = await fetch(`${API_URL}/sightings`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(sightingData) });
     if (response.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!response.ok) throw new Error('Failed to save sighting');
-    showToast('✅ Sighting reported! Police will contact you at ' + contact);
+    showToast('✅ Sighting reported!');
     resetSightingForm(); switchTab('home', null);
   } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
 }
@@ -824,9 +712,105 @@ function formatDate(dateString) {
   return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-const searchInput = document.getElementById('searchInput'); if (searchInput) searchInput.addEventListener('input', renderCards);
-const profileModal = document.getElementById('profileModal'); if (profileModal) { profileModal.addEventListener('click', e => { if (e.target === e.currentTarget) closeProfileModal(); }); }
-const infoModal = document.getElementById('infoModal'); if (infoModal) { infoModal.addEventListener('click', e => { if (e.target === e.currentTarget) closeInfoModal(); }); }
+// --- My Posts Logic ---
+async function loadMyPosts() {
+  const token = localStorage.getItem('authToken');
+  if (!token) return showToast('Please log in first');
+  
+  try {
+    const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const posts = await res.json();
+    const container = document.getElementById('my-posts-container');
+    const list = document.getElementById('my-posts-list');
+    
+    container.style.display = 'block';
+    if (posts.length === 0) {
+      list.innerHTML = '<p style="color:var(--gray); padding: 10px;">You have no active posts.</p>';
+      return;
+    }
+    
+    list.innerHTML = posts.map(p => `
+      <div class="info-section" style="margin-bottom:10px; padding:15px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+          <strong style="font-size: 16px;">${p.name}</strong>
+          <div>
+            <button onclick="openEditModal(${p.id}, '${p.name}', ${p.age}, '${p.last_seen_location}', '${p.description || ''}')" style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:5px; margin-right:5px; cursor:pointer;">Edit</button>
+            <button onclick="openDeleteModal(${p.id})" style="background:var(--danger); color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">Delete</button>
+          </div>
+        </div>
+        <div style="font-size:13px; color:var(--gray)">📍 ${p.last_seen_location} | 👤 Age: ${p.age}</div>
+      </div>
+    `).join('');
+  } catch (err) { console.error(err); showToast('❌ Failed to load posts'); }
+}
+
+let currentEditId = null;
+let currentDeleteId = null;
+
+function openEditModal(id, name, age, location, desc) {
+  currentEditId = id;
+  document.getElementById('editName').value = name;
+  document.getElementById('editAge').value = age;
+  document.getElementById('editLocation').value = location;
+  document.getElementById('editDesc').value = desc;
+  document.getElementById('editPostModal').classList.add('active');
+}
+
+async function savePostEdit() {
+  const token = localStorage.getItem('authToken');
+  const data = {
+    name: document.getElementById('editName').value,
+    age: document.getElementById('editAge').value,
+    last_seen_location: document.getElementById('editLocation').value,
+    description: document.getElementById('editDesc').value
+  };
+  
+  try {
+    const res = await fetch(`${API_URL}/missing-persons/${currentEditId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('Update failed');
+    showToast('✅ Post updated!');
+    closeModal('editPostModal');
+    loadMyPosts();
+    loadData();
+  } catch (err) { showToast('❌ ' + err.message); }
+}
+
+function openDeleteModal(id) {
+  currentDeleteId = id;
+  document.getElementById('deletePostModal').classList.add('active');
+}
+
+async function confirmDeletePost() {
+  const token = localStorage.getItem('authToken');
+  const reason = document.getElementById('deleteReason').value;
+  
+  try {
+    const res = await fetch(`${API_URL}/missing-persons/${currentDeleteId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ reason })
+    });
+    if (!res.ok) throw new Error('Delete failed');
+    showToast('✅ Post deleted.');
+    closeModal('deletePostModal');
+    loadMyPosts();
+    loadData();
+  } catch (err) { showToast(' ' + err.message); }
+}
+
+// --- Initialization ---
+window.addEventListener('load', () => {
+  checkAuth(); 
+  initializeGoogleSignIn();
+});
+
+document.getElementById('searchInput').addEventListener('input', renderCards);
+document.getElementById('filterGender').addEventListener('change', renderCards);
+document.getElementById('filterAge').addEventListener('change', renderCards);
 </script>
 </body>
 </html>
