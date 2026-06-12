@@ -18,13 +18,14 @@
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--dark); min-height: 100vh; color: var(--light); }
 .app-container { width: 100%; min-height: 100vh; background: var(--dark); padding-bottom: 70px; display: none; }
 .app-container.active { display: block; }
-.header { background: var(--dark); padding: 15px 20px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+.header { background: var(--dark); padding: 15px 20px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); }
 .header h1 { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.header-logo { font-size: 24px; }
 .content { padding: 20px; min-height: calc(100vh - 140px); }
 .page-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
 .search-bar { display: flex; gap: 10px; margin-bottom: 20px; }
 .search-input { flex: 1; padding: 12px; background: var(--dark-card); border: 1px solid var(--border); border-radius: 8px; color: var(--light); font-size: 15px; }
+.filter-btn { padding: 12px 16px; background: var(--dark-card); border: 1px solid var(--border); border-radius: 8px; color: var(--light); cursor: pointer; font-size: 20px; }
+.filter-btn.active { background: var(--warning); color: var(--dark); }
 .filter-panel { background: var(--dark-card); border-radius: 10px; padding: 16px; margin-bottom: 20px; display: none; }
 .filter-panel.active { display: block; }
 .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -35,11 +36,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .card-name { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
 .card-info { font-size: 14px; color: var(--gray); margin-bottom: 4px; }
 .card-date { font-size: 13px; color: var(--gray); }
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: none; overflow-y: auto; }
-.modal-overlay.active { display: flex; justify-content: center; align-items: center; }
-.modal-header { position: sticky; top: 0; background: var(--dark); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); z-index: 10; width: 100%; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,1); z-index: 1000; display: none; overflow-y: auto; }
+.modal-overlay.active { display: block; }
+.modal-header { position: sticky; top: 0; background: var(--dark); padding: 15px 20px; display: flex; align-items: center; justify-content: flex-end; border-bottom: 1px solid var(--border); z-index: 10; width: 100%; }
 .modal-close { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--dark-card); color: var(--light); font-size: 20px; cursor: pointer; }
-.modal-content { padding: 20px; max-width: 600px; width: 90%; background: var(--dark-card); border-radius: 12px; margin: 20px; max-height: 90vh; overflow-y: auto; }
+.modal-content { padding: 20px; max-width: 600px; width: 100%; margin: 0 auto; max-height: 90vh; overflow-y: auto; }
 .modal-content h2 { margin-bottom: 20px; color: var(--warning); }
 .modal-content p { margin-bottom: 15px; line-height: 1.6; }
 .modal-content h3 { margin: 20px 0 10px; color: var(--light); }
@@ -79,6 +80,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .optional-badge { font-size: 12px; color: var(--gray); font-weight: 400; margin-left: 4px; }
 .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--dark-card); color: var(--light); padding: 12px 24px; border-radius: 8px; z-index: 2000; display: none; border: 1px solid var(--border); }
 .toast.show { display: block; animation: slideUp 0.3s ease; }
+.toggle-switch { position: relative; width: 50px; height: 26px; flex-shrink: 0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; cursor: pointer; inset: 0; background: var(--border); transition: 0.3s; border-radius: 34px; }
+.toggle-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; transition: 0.3s; border-radius: 50%; }
+.toggle-switch input:checked + .toggle-slider { background: var(--warning); }
+.toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
 @keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 .auth-screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
 .auth-screen.active { display: flex; }
@@ -95,10 +102,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .auth-divider span { position: relative; background: var(--dark-card); padding: 0 10px; }
 .logout-btn { background: var(--danger); color: white; padding: 12px; border: none; border-radius: 8px; width: 100%; margin-top: 15px; cursor: pointer; font-weight: 600; }
 .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px; }
-.contact-page { padding: 20px; }
-.contact-page h2 { color: var(--warning); margin-bottom: 20px; }
-.contact-item { background: var(--dark-card); padding: 16px; border-radius: 10px; margin-bottom: 12px; }
-.contact-item strong { color: var(--warning); display: block; margin-bottom: 5px; }
 </style>
 </head>
 <body>
@@ -140,15 +143,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <div class="app-container" id="mainApp">
   <div class="header">
-    <div class="header-logo">📍</div>
-    <h1>Locate Me</h1>
-    <div style="width: 24px;"></div>
+    <h1>📍 Locate Me</h1>
   </div>
   <div class="content">
     <div id="homeTab" class="tab-content active">
       <h2 class="page-title">Reported Missing People</h2>
       <div class="search-bar">
         <input type="text" class="search-input" placeholder="Search by name or location..." id="searchInput">
+        <button class="filter-btn" id="filterBtn" onclick="toggleFilters()">⚙️</button>
       </div>
       <div class="filter-panel" id="filterPanel">
         <div class="filter-grid">
@@ -353,21 +355,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <span class="nav-label">Found</span>
     </button>
     <button class="nav-item" data-tab="settings" onclick="switchTab('settings', event)">
-      <span class="nav-icon">️</span>
+      <span class="nav-icon">⚙️</span>
       <span class="nav-label">Settings</span>
     </button>
   </nav>
 </div>
 
+<!-- Profile Modal - Full Screen -->
 <div class="modal-overlay" id="profileModal">
   <div class="modal-header">
     <button class="modal-close" onclick="closeProfileModal()">✕</button>
-    <div style="font-weight:700">Details</div>
-    <div style="width:36px"></div>
   </div>
   <div class="modal-content" id="modalContent"></div>
 </div>
 
+<!-- Verification Modal -->
 <div class="modal-overlay" id="verifyModal">
   <div class="modal-header">
     <div style="font-weight:700">Verify Email</div>
@@ -382,6 +384,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
+<!-- Edit Post Modal -->
 <div class="modal-overlay" id="editPostModal">
   <div class="modal-header">
     <button class="modal-close" onclick="closeModal('editPostModal')">✕</button>
@@ -398,6 +401,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
+<!-- Delete Confirmation Modal -->
 <div class="modal-overlay" id="deletePostModal">
   <div class="modal-header">
     <button class="modal-close" onclick="closeModal('deletePostModal')">✕</button>
@@ -598,6 +602,11 @@ function openModal(id) {
 }
 function closeProfileModal() { document.getElementById('profileModal').classList.remove('active'); }
 
+function toggleFilters() { 
+  document.getElementById('filterPanel').classList.toggle('active'); 
+  document.getElementById('filterBtn').classList.toggle('active'); 
+}
+
 function toggleUnknownPerson() {
   const checkbox = document.getElementById('sightingUnknown'); const nameInput = document.getElementById('sightingName');
   if (checkbox && nameInput) { if (checkbox.checked) { nameInput.disabled = true; nameInput.placeholder = 'Name unknown'; } else { nameInput.disabled = false; nameInput.placeholder = 'Enter the name'; } }
@@ -693,7 +702,7 @@ async function loadMyPosts() {
   try {
     const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
     if (!res.ok) {
-      showToast(' Failed to load posts. Backend may need updating.');
+      showToast('❌ Failed to load posts.');
       return;
     }
     const posts = await res.json();
@@ -720,7 +729,7 @@ async function loadMyPosts() {
     `).join('');
   } catch (err) { 
     console.error(err); 
-    showToast('❌ Failed to load posts. Please ensure backend is updated.'); 
+    showToast('❌ Failed to load posts.'); 
   }
 }
 
@@ -779,7 +788,7 @@ async function confirmDeletePost() {
     closeModal('deletePostModal');
     loadMyPosts();
     loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
+  } catch (err) { showToast(' ' + err.message); }
 }
 
 window.addEventListener('load', () => {
