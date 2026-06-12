@@ -21,13 +21,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .header { background: var(--dark); padding: 15px 20px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
 .header h1 { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .header-logo { font-size: 24px; }
-.settings-icon { font-size: 24px; cursor: pointer; }
 .content { padding: 20px; min-height: calc(100vh - 140px); }
 .page-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
 .search-bar { display: flex; gap: 10px; margin-bottom: 20px; }
 .search-input { flex: 1; padding: 12px; background: var(--dark-card); border: 1px solid var(--border); border-radius: 8px; color: var(--light); font-size: 15px; }
-.filter-btn { padding: 12px 16px; background: var(--dark-card); border: 1px solid var(--border); border-radius: 8px; color: var(--light); cursor: pointer; font-size: 20px; }
-.filter-btn.active { background: var(--warning); color: var(--dark); }
 .filter-panel { background: var(--dark-card); border-radius: 10px; padding: 16px; margin-bottom: 20px; display: none; }
 .filter-panel.active { display: block; }
 .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -46,7 +43,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .modal-content h2 { margin-bottom: 20px; color: var(--warning); }
 .modal-content p { margin-bottom: 15px; line-height: 1.6; }
 .modal-content h3 { margin: 20px 0 10px; color: var(--light); }
-.modal-photo { width: 100%; border-radius: 12px; margin-bottom: 20px; }
 .photo-gallery { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
 .photo-wrapper { position: relative; width: 100%; }
 .photo-wrapper img { width: 100%; height: 400px; object-fit: cover; border-radius: 12px; border: 2px solid var(--border); }
@@ -60,8 +56,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
 .form-input, .form-select, textarea.form-input { width: 100%; padding: 14px; background: var(--dark); border: 1px solid var(--border); border-radius: 10px; color: var(--light); font-size: 15px; font-family: inherit; }
 .form-input:focus, .form-select:focus, textarea.form-input:focus { outline: none; border-color: var(--warning); }
-.toggle-password { position: absolute; right: 12px; top: 36px; background: none; border: none; cursor: pointer; font-size: 20px; opacity: 0.7; transition: opacity 0.2s; }
-.toggle-password:hover { opacity: 1; }
 .file-input-wrapper { margin-bottom: 16px; }
 .file-input { width: 100%; padding: 12px; background: var(--dark-card); border: 1px solid var(--border); border-radius: 8px; color: var(--gray); }
 .file-preview { max-width: 100%; margin-top: 10px; border-radius: 8px; display: none; }
@@ -85,12 +79,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .optional-badge { font-size: 12px; color: var(--gray); font-weight: 400; margin-left: 4px; }
 .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--dark-card); color: var(--light); padding: 12px 24px; border-radius: 8px; z-index: 2000; display: none; border: 1px solid var(--border); }
 .toast.show { display: block; animation: slideUp 0.3s ease; }
-.toggle-switch { position: relative; width: 50px; height: 26px; flex-shrink: 0; }
-.toggle-switch input { opacity: 0; width: 0; height: 0; }
-.toggle-slider { position: absolute; cursor: pointer; inset: 0; background: var(--border); transition: 0.3s; border-radius: 34px; }
-.toggle-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; transition: 0.3s; border-radius: 50%; }
-.toggle-switch input:checked + .toggle-slider { background: var(--warning); }
-.toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
 @keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 .auth-screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
 .auth-screen.active { display: flex; }
@@ -107,6 +95,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .auth-divider span { position: relative; background: var(--dark-card); padding: 0 10px; }
 .logout-btn { background: var(--danger); color: white; padding: 12px; border: none; border-radius: 8px; width: 100%; margin-top: 15px; cursor: pointer; font-weight: 600; }
 .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px; }
+.contact-page { padding: 20px; }
+.contact-page h2 { color: var(--warning); margin-bottom: 20px; }
+.contact-item { background: var(--dark-card); padding: 16px; border-radius: 10px; margin-bottom: 12px; }
+.contact-item strong { color: var(--warning); display: block; margin-bottom: 5px; }
 </style>
 </head>
 <body>
@@ -126,7 +118,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required style="padding-right: 45px;">
+        <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
       </div>
       <button type="submit" class="btn-submit" style="width:100%">Login</button>
     </form>
@@ -148,16 +140,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <div class="app-container" id="mainApp">
   <div class="header">
-    <div class="header-logo"></div>
+    <div class="header-logo">📍</div>
     <h1>Locate Me</h1>
-    <div class="settings-icon" onclick="switchTab('settings', event)">⚙️</div>
+    <div style="width: 24px;"></div>
   </div>
   <div class="content">
     <div id="homeTab" class="tab-content active">
       <h2 class="page-title">Reported Missing People</h2>
       <div class="search-bar">
         <input type="text" class="search-input" placeholder="Search by name or location..." id="searchInput">
-        <button class="filter-btn" id="filterBtn" onclick="toggleFilters()">️</button>
       </div>
       <div class="filter-panel" id="filterPanel">
         <div class="filter-grid">
@@ -301,7 +292,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         </div>
       </div>
       
-      <!-- My Posts Section -->
       <div class="info-section" onclick="loadMyPosts()">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
@@ -315,7 +305,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <div id="my-posts-list"></div>
       </div>
 
-      <!-- NEW: Unified Legal & Policies Button -->
       <a href="policies.html" style="text-decoration: none; color: inherit; display: block;">
         <div class="info-section">
           <div class="info-label">Legal & Policies</div>
@@ -336,10 +325,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <label class="toggle-switch"><input type="checkbox" checked id="notifToggle" onchange="toggleNotifications()"><span class="toggle-slider"></span></label>
         </div>
       </div>
-      <div class="info-section" onclick="showContactSupport()">
-        <div class="info-label">Contact Support</div>
-        <div class="info-value">Get help or report issues</div>
-      </div>
+      <a href="mailto:nyotalabs@gmail.com" style="text-decoration: none; color: inherit; display: block;">
+        <div class="info-section">
+          <div class="info-label">Contact Support</div>
+          <div class="info-value">Get help or report issues</div>
+        </div>
+      </a>
       <button class="logout-btn" onclick="logout()">Logout</button>
       <div class="info-section" style="margin-top: 20px;">
         <div class="info-label">App Version</div>
@@ -358,17 +349,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <span class="nav-label">Post</span>
     </button>
     <button class="nav-item" data-tab="found" onclick="switchTab('found', event)">
-      <span class="nav-icon"></span>
+      <span class="nav-icon">🔍</span>
       <span class="nav-label">Found</span>
     </button>
     <button class="nav-item" data-tab="settings" onclick="switchTab('settings', event)">
-      <span class="nav-icon">⚙️</span>
+      <span class="nav-icon">️</span>
       <span class="nav-label">Settings</span>
     </button>
   </nav>
 </div>
 
-<!-- Existing Modals -->
 <div class="modal-overlay" id="profileModal">
   <div class="modal-header">
     <button class="modal-close" onclick="closeProfileModal()">✕</button>
@@ -378,16 +368,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <div class="modal-content" id="modalContent"></div>
 </div>
 
-<div class="modal-overlay" id="infoModal">
-  <div class="modal-header">
-    <button class="modal-close" onclick="closeInfoModal()">✕</button>
-    <div style="font-weight:700" id="infoModalTitle">Info</div>
-    <div style="width:36px"></div>
-  </div>
-  <div class="modal-content" id="infoModalContent"></div>
-</div>
-
-<!-- Verification Modal -->
 <div class="modal-overlay" id="verifyModal">
   <div class="modal-header">
     <div style="font-weight:700">Verify Email</div>
@@ -402,7 +382,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
-<!-- Edit Post Modal -->
 <div class="modal-overlay" id="editPostModal">
   <div class="modal-header">
     <button class="modal-close" onclick="closeModal('editPostModal')">✕</button>
@@ -419,7 +398,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
 <div class="modal-overlay" id="deletePostModal">
   <div class="modal-header">
     <button class="modal-close" onclick="closeModal('deletePostModal')">✕</button>
@@ -450,7 +428,6 @@ const GOOGLE_CLIENT_ID = '816021523687-bjk1hqap09aak1bl9rb3tk60q8qr4q1b.apps.goo
 let missingPersons = []; let currentUser = null;
 let pendingVerificationEmail = '';
 
-// --- Auth & UI Helpers ---
 function switchAuthTab(tab) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
@@ -477,7 +454,6 @@ function showToast(msg) {
 
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-// --- Email Verification Logic ---
 async function handleSignup(e) {
   e.preventDefault();
   try {
@@ -490,7 +466,12 @@ async function handleSignup(e) {
       }) 
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Signup failed');
+    if (!res.ok) {
+      if (res.status === 409) {
+        throw new Error('Email already registered. Please check your email for the verification code or try logging in.');
+      }
+      throw new Error(data.error || 'Signup failed');
+    }
     
     pendingVerificationEmail = document.getElementById('signupEmail').value;
     document.getElementById('verifyEmailDisplay').textContent = pendingVerificationEmail;
@@ -515,7 +496,6 @@ async function submitVerification() {
   } catch (err) { showToast('❌ ' + err.message); }
 }
 
-// --- Login & Google ---
 async function handleLogin(e) {
   e.preventDefault();
   try {
@@ -561,7 +541,6 @@ function logout() {
   showToast('✅ Logged out'); showAuth();
 }
 
-// --- Data Loading ---
 async function loadData() {
   try {
     const response = await fetch(`${API_URL}/missing-persons`);
@@ -600,7 +579,6 @@ function renderCards() {
   `).join('');
 }
 
-// --- Modals & Forms ---
 function openModal(id) {
   const p = missingPersons.find(x => x.id === id); if (!p) return;
   const photos = p.photo_urls || []; let photoHTML = '';
@@ -619,11 +597,7 @@ function openModal(id) {
   document.getElementById('profileModal').classList.add('active');
 }
 function closeProfileModal() { document.getElementById('profileModal').classList.remove('active'); }
-function closeInfoModal() { document.getElementById('infoModal').classList.remove('active'); }
 
-function showContactSupport() { document.getElementById('infoModalTitle').textContent = 'Contact Support'; document.getElementById('infoModalContent').innerHTML = '<h2>Contact Support</h2><p>📧 Email: <a href="mailto:nyotalabs@gmail.com" style="color:var(--warning)">nyotalabs@gmail.com</a><br> Address: Nairobi, Kenya</p>'; document.getElementById('infoModal').classList.add('active'); }
-
-function toggleFilters() { document.getElementById('filterPanel').classList.toggle('active'); document.getElementById('filterBtn').classList.toggle('active'); }
 function toggleUnknownPerson() {
   const checkbox = document.getElementById('sightingUnknown'); const nameInput = document.getElementById('sightingName');
   if (checkbox && nameInput) { if (checkbox.checked) { nameInput.disabled = true; nameInput.placeholder = 'Name unknown'; } else { nameInput.disabled = false; nameInput.placeholder = 'Enter the name'; } }
@@ -712,13 +686,16 @@ function formatDate(dateString) {
   return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// --- My Posts Logic ---
 async function loadMyPosts() {
   const token = localStorage.getItem('authToken');
   if (!token) return showToast('Please log in first');
   
   try {
     const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!res.ok) {
+      showToast(' Failed to load posts. Backend may need updating.');
+      return;
+    }
     const posts = await res.json();
     const container = document.getElementById('my-posts-container');
     const list = document.getElementById('my-posts-list');
@@ -738,10 +715,13 @@ async function loadMyPosts() {
             <button onclick="openDeleteModal(${p.id})" style="background:var(--danger); color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">Delete</button>
           </div>
         </div>
-        <div style="font-size:13px; color:var(--gray)">📍 ${p.last_seen_location} | 👤 Age: ${p.age}</div>
+        <div style="font-size:13px; color:var(--gray)"> ${p.last_seen_location} | 👤 Age: ${p.age}</div>
       </div>
     `).join('');
-  } catch (err) { console.error(err); showToast('❌ Failed to load posts'); }
+  } catch (err) { 
+    console.error(err); 
+    showToast('❌ Failed to load posts. Please ensure backend is updated.'); 
+  }
 }
 
 let currentEditId = null;
@@ -799,10 +779,9 @@ async function confirmDeletePost() {
     closeModal('deletePostModal');
     loadMyPosts();
     loadData();
-  } catch (err) { showToast(' ' + err.message); }
+  } catch (err) { showToast('❌ ' + err.message); }
 }
 
-// --- Initialization ---
 window.addEventListener('load', () => {
   checkAuth(); 
   initializeGoogleSignIn();
