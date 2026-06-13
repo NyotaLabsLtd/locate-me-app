@@ -137,7 +137,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
       </div>
-      <button type="submit" class="btn-submit" style="width:100%">Create Account</button>
+      <button type="submit" id="signupBtn" class="btn-submit" style="width:100%">Create Account</button>
     </form>
     <div class="auth-divider"><span>or continue with</span></div>
     <div id="googleSignInContainer" style="width: 100%; margin-top: 10px;"></div>
@@ -458,6 +458,14 @@ function closeModal(id) { document.getElementById(id).classList.remove('active')
 
 async function handleSignup(e) {
   e.preventDefault();
+  const btn = document.getElementById('signupBtn');
+  
+  // Disable button and show loading text
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Creating Account...';
+  }
+
   try {
     const res = await fetch(`${API_URL}/auth/register`, { 
       method: 'POST', 
@@ -468,16 +476,25 @@ async function handleSignup(e) {
       }) 
     });
     const data = await res.json();
+    
     if (!res.ok) {
       if (res.status === 409) {
-        throw new Error('Email already registered. Please check your email for the verification link or try logging in.');
+        throw new Error('Email already registered. Please log in.');
       }
       throw new Error(data.error || 'Signup failed');
     }
     
-    showToast('✅ Account created! Please check your email and click the verification link.');
+    showToast('✅ Account created! Please check your email.');
     document.getElementById('signupForm').reset();
-  } catch (err) { showToast('❌ ' + err.message); }
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  } finally {
+    // Re-enable button
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Create Account';
+    }
+  }
 }
 
 async function handleLogin(e) {
