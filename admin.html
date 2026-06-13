@@ -140,7 +140,34 @@
         </div>
     </div>
 
-    <script>
+    // 🛡️ ADMIN SECURITY GUARD
+(function checkAdminAccess() {
+    const token = localStorage.getItem('authToken');
+    const userStr = localStorage.getItem('user');
+
+    // 1. If not logged in, kick to login page
+    if (!token || !userStr) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    try {
+        const user = JSON.parse(userStr);
+        
+        // 2. If logged in but NOT an admin, kick to home page
+        if (user.role !== 'admin') {
+            alert('🚫 Access Denied: This area is for Administrators only.');
+            window.location.href = 'index.html';
+        } else {
+            // 3. Admin is verified! Allow the page to load.
+            console.log('✅ Admin access granted for:', user.email);
+            // The rest of your admin code will run below this...
+        }
+    } catch (e) {
+        // If user data is corrupted, kick them out
+        window.location.href = 'index.html';
+    }
+})();<script>
         const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
         let authToken = localStorage.getItem('adminToken');
         let currentUser = null;
