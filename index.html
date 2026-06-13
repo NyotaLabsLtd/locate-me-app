@@ -74,7 +74,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .upload-progress { height: 4px; background: var(--dark); border-radius: 2px; margin-top: 8px; overflow: hidden; display: none; }
 .upload-progress-bar { height: 100%; background: var(--warning); width: 0%; transition: width 0.3s; }
 .checkbox-wrapper { display: flex; align-items: center; gap: 10px; margin: 16px 0; }
-.checkbox-wrapper input { width: 20px; height: 20px; accent-color: var(--warning); }
+.checkbox-wrapper input { width: 20px; height: 20px; accent-color: var(--warning); flex-shrink: 0; }
 .form-actions { display: flex; gap: 12px; margin-top: 24px; }
 .btn-cancel, .btn-submit { flex: 1; padding: 16px; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; }
 .btn-cancel { background: var(--dark-card); color: var(--light); }
@@ -118,6 +118,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .verification-message p { margin-bottom: 20px; color: var(--light); }
 .spam-notice { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; padding: 12px; margin-top: 15px; font-size: 13px; color: var(--warning); text-align: center; }
 .spam-notice strong { display: block; margin-bottom: 4px; }
+.google-terms-notice { margin: 15px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; font-size: 12px; color: var(--warning); }
 </style>
 </head>
 <body>
@@ -163,6 +164,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <button type="button" class="password-toggle" onclick="togglePassword('signupConfirmPassword', this)">👁️</button>
         </div>
       </div>
+      
+      <!-- ✅ MANDATORY CHECKBOX -->
+      <div class="checkbox-wrapper" style="margin: 20px 0;">
+        <input type="checkbox" id="agreeToTerms" required>
+        <label class="form-label" for="agreeToTerms" style="margin: 0; font-size: 13px; line-height: 1.4;">
+          I agree to the <a href="privacy-policy.html" target="_blank" style="color: var(--warning);">Privacy Policy</a> and 
+          <a href="terms.html" target="_blank" style="color: var(--warning);">Terms of Service</a> *
+        </label>
+      </div>
+      
       <button type="submit" id="signupBtn" class="btn-submit" style="width:100%">Create Account</button>
       <div class="spam-notice">
         <strong>📧 Important:</strong>
@@ -170,6 +181,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
     </form>
     <div class="auth-divider"><span>or continue with</span></div>
+    <div class="google-terms-notice">
+      <strong>Note:</strong> By signing in with Google, you agree to our <a href="privacy-policy.html" target="_blank" style="color: var(--warning);">Privacy Policy</a> and <a href="terms.html" target="_blank" style="color: var(--warning);">Terms of Service</a>.
+    </div>
     <div id="googleSignInContainer" style="width: 100%; margin-top: 10px;"></div>
   </div>
 </div>
@@ -498,10 +512,17 @@ function togglePassword(inputId, btn) {
   }
 }
 
-// ✅ UPDATED SIGNUP FUNCTION WITH CONFIRM PASSWORD
+// ✅ SIGNUP FUNCTION WITH CONFIRM PASSWORD & MANDATORY CHECKBOX
 async function handleSignup(e) {
   e.preventDefault();
   const btn = document.getElementById('signupBtn');
+  
+  // Check if terms checkbox is checked
+  const agreeToTerms = document.getElementById('agreeToTerms');
+  if (!agreeToTerms.checked) {
+    showToast('❌ You must agree to Privacy Policy and Terms of Service');
+    return;
+  }
   
   if (btn) {
     btn.disabled = true;
