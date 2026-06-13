@@ -7,11 +7,9 @@
 <title>Locate Me - Find Missing Persons</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>">
-<!-- ✅ EmailJS SDK -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script type="text/javascript">
    (function(){
-      // ✅ Initialize EmailJS with your Public Key
       emailjs.init({
         publicKey: "Dk02lgQDtIdZYetEC",
       });
@@ -67,6 +65,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
 .form-input, .form-select, textarea.form-input { width: 100%; padding: 14px; background: var(--dark); border: 1px solid var(--border); border-radius: 10px; color: var(--light); font-size: 15px; font-family: inherit; }
 .form-input:focus, .form-select:focus, textarea.form-input:focus { outline: none; border-color: var(--warning); }
+.password-wrapper { position: relative; }
+.password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--gray); cursor: pointer; font-size: 18px; padding: 4px; }
+.password-toggle:hover { color: var(--light); }
 .file-input-wrapper { margin-bottom: 16px; }
 .file-input { width: 100%; padding: 12px; background: var(--dark-card); border: 1px solid var(--border); border-radius: 8px; color: var(--gray); }
 .file-preview { max-width: 100%; margin-top: 10px; border-radius: 8px; display: none; }
@@ -115,6 +116,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .verification-message { background: var(--dark-card); padding: 30px; border-radius: 16px; text-align: center; max-width: 400px; }
 .verification-message h2 { color: var(--warning); margin-bottom: 15px; }
 .verification-message p { margin-bottom: 20px; color: var(--light); }
+.spam-notice { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; padding: 12px; margin-top: 15px; font-size: 13px; color: var(--warning); text-align: center; }
+.spam-notice strong { display: block; margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -134,7 +137,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
+        <div class="password-wrapper">
+          <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
+          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
+        </div>
       </div>
       <button type="submit" class="btn-submit" style="width:100%">Login</button>
     </form>
@@ -145,9 +151,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
+        <div class="password-wrapper">
+          <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
+          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">👁️</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <div class="password-wrapper">
+          <input type="password" class="form-input" id="signupConfirmPassword" placeholder="Re-enter password" required minlength="6">
+          <button type="button" class="password-toggle" onclick="togglePassword('signupConfirmPassword', this)">👁️</button>
+        </div>
       </div>
       <button type="submit" id="signupBtn" class="btn-submit" style="width:100%">Create Account</button>
+      <div class="spam-notice">
+        <strong>📧 Important:</strong>
+        After signing up, check your email (including Spam/Promotions folder) to verify your account.
+      </div>
     </form>
     <div class="auth-divider"><span>or continue with</span></div>
     <div id="googleSignInContainer" style="width: 100%; margin-top: 10px;"></div>
@@ -466,7 +486,19 @@ function showToast(msg) {
 
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-// ✅ UPDATED SIGNUP FUNCTION WITH DETAILED LOGGING
+// Toggle password visibility
+function togglePassword(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁️';
+  }
+}
+
+// ✅ UPDATED SIGNUP FUNCTION WITH CONFIRM PASSWORD
 async function handleSignup(e) {
   e.preventDefault();
   const btn = document.getElementById('signupBtn');
@@ -479,6 +511,12 @@ async function handleSignup(e) {
   try {
     const email = document.getElementById('signupEmail').value;
     const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      throw new Error('Passwords do not match!');
+    }
 
     console.log('📝 Starting signup for:', email);
 
@@ -524,7 +562,7 @@ async function handleSignup(e) {
       }
     }
 
-    showToast('✅ Account created! Please check your email (and spam folder).');
+    showToast('✅ Account created! Check your email (including Spam folder).');
     document.getElementById('signupForm').reset();
   } catch (err) { 
     console.error('Full Signup Error:', err);
