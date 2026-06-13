@@ -1,151 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Locate Me - Admin Dashboard</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .admin-login { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .login-box { background: #1e293b; padding: 40px; border-radius: 16px; width: 100%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .login-box h1 { color: #fbbf24; text-align: center; margin-bottom: 10px; font-size: 28px; }
-        .login-box p { color: #94a3b8; text-align: center; margin-bottom: 30px; font-size: 14px; }
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #f8fafc; }
-        .form-input { width: 100%; padding: 14px; background: #0f172a; border: 1px solid #475569; border-radius: 10px; color: #f8fafc; font-size: 15px; }
-        .form-input:focus { outline: none; border-color: #fbbf24; }
-        .btn-login { width: 100%; padding: 16px; background: #fbbf24; border: none; border-radius: 10px; color: #0f172a; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-        .btn-login:hover { background: #f59e0b; }
-        .btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
-        .error-msg { background: #ef4444; color: white; padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; }
-        .error-msg.show { display: block; }
-        .back-link { text-align: center; margin-top: 20px; }
-        .back-link a { color: #fbbf24; text-decoration: none; }
-        .dashboard { display: none; }
-        .dashboard.active { display: block; }
-        .header { background: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { color: #fbbf24; }
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { background: #1e293b; padding: 20px; border-radius: 10px; text-align: center; }
-        .stat-number { font-size: 36px; font-weight: 700; color: #fbbf24; margin-bottom: 5px; }
-        .stat-label { color: #94a3b8; font-size: 14px; }
-        .section { background: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 30px; }
-        .section h2 { color: #fbbf24; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #334155; }
-        .table { width: 100%; border-collapse: collapse; }
-        .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; }
-        .table th { background: #0f172a; color: #fbbf24; font-weight: 600; }
-        .table tr:hover { background: #334155; }
-        .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
-        .btn-danger { background: #ef4444; color: white; }
-        .btn-danger:hover { background: #dc2626; }
-        .photo-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; cursor: zoom-in; transition: transform 0.2s; }
-        .photo-thumb:hover { transform: scale(1.1); border: 2px solid #fbbf24; }
-        .loading { text-align: center; padding: 40px; color: #94a3b8; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .tab { padding: 10px 20px; background: #334155; border: none; border-radius: 8px; color: #f8fafc; cursor: pointer; font-weight: 600; }
-        .tab.active { background: #fbbf24; color: #0f172a; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .role-badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
-        .role-admin { background: #fbbf24; color: #0f172a; }
-        .role-user { background: #334155; color: #f8fafc; }
-        .contact-info { background: #0f172a; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center; }
-        .contact-info a { color: #fbbf24; text-decoration: none; }
-        .btn-logout { background: #ef4444; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
-
-        /* LIGHTBOX STYLES */
-        .lightbox { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); justify-content: center; align-items: center; }
-        .lightbox-content { max-width: 90%; max-height: 90%; border-radius: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
-        .close-lightbox { position: absolute; top: 20px; right: 30px; color: #f8fafc; font-size: 40px; font-weight: bold; cursor: pointer; }
-        .close-lightbox:hover { color: #fbbf24; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - Locate Me</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #475569; }
+  .header h1 { color: #fbbf24; font-size: 24px; }
+  .back-btn { background: #334155; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+  .stat-card { background: #334155; padding: 20px; border-radius: 12px; }
+  .stat-card h3 { color: #94a3b8; font-size: 14px; margin-bottom: 10px; }
+  .stat-card .number { font-size: 32px; font-weight: 700; color: #fbbf24; }
+  .users-section { background: #334155; border-radius: 12px; padding: 20px; }
+  .users-section h2 { margin-bottom: 20px; color: #fbbf24; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 12px; text-align: left; border-bottom: 1px solid #475569; }
+  th { color: #94a3b8; font-size: 12px; text-transform: uppercase; }
+  td { font-size: 14px; }
+  .role-badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .role-admin { background: #fbbf24; color: #0f172a; }
+  .role-user { background: #475569; color: #f8fafc; }
+  .loading { text-align: center; padding: 40px; color: #94a3b8; }
+  .error { color: #ef4444; text-align: center; padding: 20px; }
+</style>
 </head>
 <body>
-    <!-- Lightbox Modal -->
-    <div id="lightboxModal" class="lightbox" onclick="closeLightbox(event)">
-        <span class="close-lightbox">&times;</span>
-        <img class="lightbox-content" id="lightboxImage">
-    </div>
 
-    <!-- Admin Login -->
-    <div class="admin-login" id="adminLogin">
-        <div class="login-box">
-            <h1>🔐 Admin Login</h1>
-            <p>Locate Me Admin Dashboard</p>
-            <div class="error-msg" id="loginError"></div>
-            <div class="form-group">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-input" id="adminEmail" placeholder="admin@nyotalabs.com" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Password</label>
-                <input type="password" class="form-input" id="adminPassword" placeholder="••••••••" required>
-            </div>
-            <button class="btn-login" onclick="adminLogin()">Login to Dashboard</button>
-            <div class="back-link">
-                <a href="index.html">← Back to App</a>
-            </div>
-        </div>
-    </div>
+<div class="header">
+  <h1>🛡️ Admin Dashboard</h1>
+  <a href="index.html" class="back-btn">← Back to App</a>
+</div>
 
-    <!-- Admin Dashboard -->
-    <div class="dashboard" id="adminDashboard">
-        <div class="container">
-            <div class="header">
-                <h1>🔍 Locate Me - Admin Dashboard</h1>
-                <div style="display:flex; gap:15px; align-items:center;">
-                    <span id="adminUserEmail" style="color:#94a3b8;"></span>
-                    <button class="btn-logout" onclick="adminLogout()">Logout</button>
-                </div>
-            </div>
+<div class="stats">
+  <div class="stat-card">
+    <h3>Total Registered Users</h3>
+    <div class="number" id="totalUsers">0</div>
+  </div>
+  <div class="stat-card">
+    <h3>Admins</h3>
+    <div class="number" id="totalAdmins">0</div>
+  </div>
+</div>
 
-            <div class="stats">
-                <div class="stat-card"><div class="stat-number" id="totalMissing">0</div><div class="stat-label">Missing Persons</div></div>
-                <div class="stat-card"><div class="stat-number" id="totalSightings">0</div><div class="stat-label">Sightings</div></div>
-                <div class="stat-card"><div class="stat-number" id="totalUsers">0</div><div class="stat-label">Registered Users</div></div>
-            </div>
+<div class="users-section">
+  <h2>Registered Users</h2>
+  <div id="usersContainer">
+    <div class="loading">Loading users...</div>
+  </div>
+</div>
 
-            <div class="tabs">
-                <button class="tab active" onclick="switchTab('missing')">Missing Persons</button>
-                <button class="tab" onclick="switchTab('sightings')">Sightings</button>
-                <button class="tab" onclick="switchTab('users')">Users</button>
-            </div>
+<script>
+const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 
-            <div id="missingTab" class="tab-content active">
-                <div class="section">
-                    <h2>Missing Persons Reports</h2>
-                    <div id="missingTableContainer"><div class="loading">Loading...</div></div>
-                </div>
-            </div>
-
-            <div id="sightingsTab" class="tab-content">
-                <div class="section">
-                    <h2>Sighting Reports</h2>
-                    <div id="sightingsTableContainer"><div class="loading">Loading...</div></div>
-                </div>
-            </div>
-
-            <div id="usersTab" class="tab-content">
-                <div class="section">
-                    <h2>Registered Users</h2>
-                    <div id="usersTableContainer"><div class="loading">Loading...</div></div>
-                </div>
-            </div>
-
-            <div class="contact-info">
-                <p>📧 For support, contact: <a href="mailto:nyotalabs@gmail.com">nyotalabs@gmail.com</a></p>
-            </div>
-        </div>
-    </div>
-
-    // 🛡️ ADMIN SECURITY GUARD
+// 🛡️ ADMIN SECURITY GUARD
 (function checkAdminAccess() {
     const token = localStorage.getItem('authToken');
     const userStr = localStorage.getItem('user');
 
-    // 1. If not logged in, kick to login page
     if (!token || !userStr) {
         window.location.href = 'index.html';
         return;
@@ -153,148 +67,83 @@
 
     try {
         const user = JSON.parse(userStr);
-        
-        // 2. If logged in but NOT an admin, kick to home page
         if (user.role !== 'admin') {
             alert('🚫 Access Denied: This area is for Administrators only.');
             window.location.href = 'index.html';
-        } else {
-            // 3. Admin is verified! Allow the page to load.
-            console.log('✅ Admin access granted for:', user.email);
-            // The rest of your admin code will run below this...
         }
     } catch (e) {
-        // If user data is corrupted, kick them out
         window.location.href = 'index.html';
     }
-})();<script>
-        const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
-        let authToken = localStorage.getItem('adminToken');
-        let currentUser = null;
+})();
 
-        // Lightbox Functions
-        function openLightbox(src) {
-            const modal = document.getElementById('lightboxModal');
-            const modalImg = document.getElementById('lightboxImage');
-            modal.style.display = 'flex';
-            modalImg.src = src;
+// ✅ FETCH AND DISPLAY USERS
+async function loadAdminUsers() {
+    const token = localStorage.getItem('authToken');
+    const container = document.getElementById('usersContainer');
+
+    try {
+        const res = await fetch(`${API_URL}/admin/users`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+            if (res.status === 403) throw new Error('Access Denied. Please log in as admin.');
+            throw new Error('Failed to load users');
         }
 
-        function closeLightbox(event) {
-            // Close if clicking the background or the X button
-            if (event.target.id === 'lightboxModal' || event.target.classList.contains('close-lightbox')) {
-                document.getElementById('lightboxModal').style.display = 'none';
-            }
+        const users = await res.json();
+        
+        // Update stats
+        document.getElementById('totalUsers').textContent = users.length;
+        const adminCount = users.filter(u => u.role === 'admin').length;
+        document.getElementById('totalAdmins').textContent = adminCount;
+
+        // Render table
+        if (users.length === 0) {
+            container.innerHTML = '<div class="loading">No users found.</div>';
+            return;
         }
 
-        window.addEventListener('load', () => { if (authToken) validateToken(); });
+        let tableHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Verified</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
 
-        async function validateToken() {
-            try {
-                const res = await fetch(`${API_URL}/auth/me`, { headers: { 'Authorization': `Bearer ${authToken}` } });
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.user.role === 'admin') { currentUser = data.user; showDashboard(); loadAllData(); } 
-                    else { adminLogout(); showError('Access denied. Admin role required.'); }
-                } else { adminLogout(); }
-            } catch (err) { adminLogout(); }
-        }
+        users.forEach(user => {
+            const roleClass = user.role === 'admin' ? 'role-admin' : 'role-user';
+            const verifiedText = user.is_verified ? '✅ Yes' : ' No';
+            const joinDate = new Date(user.created_at).toLocaleDateString();
+            
+            tableHTML += `
+                <tr>
+                    <td>${user.email}</td>
+                    <td><span class="role-badge ${roleClass}">${user.role}</span></td>
+                    <td>${verifiedText}</td>
+                    <td>${joinDate}</td>
+                </tr>
+            `;
+        });
 
-        async function adminLogin() {
-            const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
-            const btn = document.querySelector('.btn-login');
-            if (!email || !password) { showError('Please enter email and password'); return; }
-            btn.disabled = true; btn.textContent = 'Logging in...';
-            try {
-                const res = await fetch(`${API_URL}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.error || 'Login failed');
-                if (data.user.role !== 'admin') { showError('Access denied. Admin role required.'); return; }
-                localStorage.setItem('adminToken', data.token);
-                authToken = data.token; currentUser = data.user;
-                showDashboard(); loadAllData();
-            } catch (err) { showError(err.message); } finally { btn.disabled = false; btn.textContent = 'Login to Dashboard'; }
-        }
+        tableHTML += `</tbody></table>`;
+        container.innerHTML = tableHTML;
 
-        function adminLogout() {
-            localStorage.removeItem('adminToken'); authToken = null; currentUser = null;
-            document.getElementById('adminLogin').style.display = 'flex';
-            document.getElementById('adminDashboard').classList.remove('active');
-            document.getElementById('adminEmail').value = ''; document.getElementById('adminPassword').value = '';
-        }
+    } catch (err) {
+        console.error('Admin load error:', err);
+        container.innerHTML = `<div class="error">❌ ${err.message}</div>`;
+    }
+}
 
-        function showDashboard() {
-            document.getElementById('adminLogin').style.display = 'none';
-            document.getElementById('adminDashboard').classList.add('active');
-            if (currentUser) document.getElementById('adminUserEmail').textContent = currentUser.email;
-        }
+// Load users when page opens
+loadAdminUsers();
+</script>
 
-        function showError(msg) {
-            const errorEl = document.getElementById('loginError'); errorEl.textContent = msg; errorEl.classList.add('show');
-            setTimeout(() => errorEl.classList.remove('show'), 5000);
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById(tab + 'Tab').classList.add('active');
-        }
-
-        async function loadAllData() { loadMissingPersons(); loadSightings(); loadUsers(); }
-
-        async function loadMissingPersons() {
-            try {
-                const res = await fetch(`${API_URL}/missing-persons`);
-                const data = await res.json();
-                document.getElementById('totalMissing').textContent = data.length;
-                document.getElementById('missingTableContainer').innerHTML = data.length ? `
-                    <table class="table"><thead><tr><th>Photo</th><th>Name</th><th>Location</th><th>Date</th><th>Action</th></tr></thead><tbody>
-                    ${data.map(p => `<tr>
-                        <td><img src="${p.photo_urls?.[0]||''}" class="photo-thumb" onclick="openLightbox('${p.photo_urls?.[0]||''}')" onerror="this.src='https://via.placeholder.com/50'"></td>
-                        <td>${p.name}</td><td>${p.last_seen_location}</td><td>${formatDate(p.date_missing)}</td>
-                        <td><button class="btn btn-danger" onclick="deleteItem('missing-persons', ${p.id})">Delete</button></td>
-                    </tr>`).join('')}</tbody></table>` : '<div class="loading">No reports yet.</div>';
-            } catch(e) { document.getElementById('missingTableContainer').innerHTML = '<div class="loading" style="color:#ef4444">Error loading data</div>'; }
-        }
-
-        async function loadSightings() {
-            try {
-                const res = await fetch(`${API_URL}/sightings`);
-                const data = await res.json();
-                document.getElementById('totalSightings').textContent = data.length;
-                document.getElementById('sightingsTableContainer').innerHTML = data.length ? `
-                    <table class="table"><thead><tr><th>Photo</th><th>Seen Name</th><th>Location</th><th>Reporter</th><th>Contact</th><th>Action</th></tr></thead><tbody>
-                    ${data.map(s => `<tr>
-                        <td>${s.photo_url ? `<img src="${s.photo_url}" class="photo-thumb" onclick="openLightbox('${s.photo_url}')" onerror="this.src='https://via.placeholder.com/50?text=Error'">` : '<span style="color:#94a3b8">No photo</span>'}</td>
-                        <td>${s.missing_person_name||'Unknown'}</td><td>${s.sighting_location}</td><td>${s.reporter_name||'Anon'}</td><td><a href="tel:${s.reporter_contact}" style="color:#fbbf24">${s.reporter_contact}</a></td>
-                        <td><button class="btn btn-danger" onclick="deleteItem('sightings', ${s.id})">Delete</button></td>
-                    </tr>`).join('')}</tbody></table>` : '<div class="loading">No sightings yet.</div>';
-            } catch(e) { document.getElementById('sightingsTableContainer').innerHTML = '<div class="loading" style="color:#ef4444">Error loading data</div>'; }
-        }
-
-        async function loadUsers() {
-            try {
-                const res = await fetch(`${API_URL}/users`, { headers: { Authorization: `Bearer ${authToken}` } });
-                if (!res.ok) throw new Error('Unauthorized');
-                const data = await res.json();
-                document.getElementById('totalUsers').textContent = data.length;
-                document.getElementById('usersTableContainer').innerHTML = data.length ? `
-                    <table class="table"><thead><tr><th>ID</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead><tbody>
-                    ${data.map(u => `<tr><td>${u.id}</td><td>${u.email}</td><td><span class="role-badge ${u.role==='admin'?'role-admin':'role-user'}">${u.role}</span></td><td>${formatDate(u.created_at)}</td></tr>`).join('')}</tbody></table>` : '<div class="loading">No users yet.</div>';
-            } catch(e) { document.getElementById('usersTableContainer').innerHTML = '<div class="loading" style="color:#ef4444">Error loading users</div>'; }
-        }
-
-        async function deleteItem(endpoint, id) {
-            if (!confirm('Delete this record?')) return;
-            try {
-                await fetch(`${API_URL}/${endpoint}/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${authToken}` } });
-                alert('Deleted successfully'); loadAllData();
-            } catch(e) { alert('Failed to delete: ' + e.message); }
-        }
-
-        function formatDate(d) { return d ? new Date(d).toLocaleDateString() : 'N/A'; }
-    </script>
 </body>
 </html>
