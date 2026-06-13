@@ -466,7 +466,7 @@ function showToast(msg) {
 
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-// ✅ UPDATED SIGNUP FUNCTION WITH EMAILJS FIX
+// ✅ UPDATED SIGNUP FUNCTION WITH DETAILED LOGGING
 async function handleSignup(e) {
   e.preventDefault();
   const btn = document.getElementById('signupBtn');
@@ -480,13 +480,18 @@ async function handleSignup(e) {
     const email = document.getElementById('signupEmail').value;
     const password = document.getElementById('signupPassword').value;
 
+    console.log('📝 Starting signup for:', email);
+
     // 1. Create user in database
+    console.log('1️⃣ Creating user in database...');
     const res = await fetch(`${API_URL}/auth/register`, { 
       method: 'POST', 
       headers: { 'Content-Type': 'application/json' }, 
       body: JSON.stringify({ email, password }) 
     });
     const data = await res.json();
+    
+    console.log('Database response:', res.status, data);
     
     if (!res.ok) {
       if (res.status === 409) throw new Error('Email already registered. Please log in.');
@@ -495,24 +500,35 @@ async function handleSignup(e) {
     
     // 2. Send verification email via EmailJS
     if (data.token) {
+      console.log('2️⃣ User created, sending email...');
+      console.log('Token:', data.token);
+      
       const templateParams = {
-        to_email: email,       // For {{to_email}}
-        email: email,          // For {{email}} (Safety fix for 400 error)
-        name: 'Locate Me User', // Safety fix
+        to_email: email,
+        email: email,
+        name: 'Locate Me User',
         verification_link: `https://locate-me-app.vercel.app/?verify=${data.token}`
       };
 
-      console.log('Sending email with params:', templateParams);
+      console.log('Email params:', templateParams);
+      console.log('Service ID: service_arv347q');
+      console.log('Template ID: template_ryoa12h');
       
-      await emailjs.send('service_arv347q', 'template_ryoa12h', templateParams);
-      console.log('✅ Email sent via EmailJS');
+      try {
+        const emailResult = await emailjs.send('service_arv347q', 'template_ryoa12h', templateParams);
+        console.log('✅ Email sent successfully!', emailResult);
+      } catch (emailErr) {
+        console.error('❌ EmailJS Error:', emailErr);
+        console.error('Error text:', emailErr.text);
+        throw new Error('Account created but email failed to send: ' + (emailErr.text || emailErr.message));
+      }
     }
 
-    showToast('✅ Account created! Please check your email.');
+    showToast('✅ Account created! Please check your email (and spam folder).');
     document.getElementById('signupForm').reset();
   } catch (err) { 
-    console.error('Full Error:', err); // This will show the real error in console
-    showToast('❌ ' + (err.text || err.message || 'Failed to send email')); 
+    console.error('Full Signup Error:', err);
+    showToast('❌ ' + (err.message || 'Signup failed')); 
   } finally {
     if (btn) {
       btn.disabled = false;
