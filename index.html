@@ -356,7 +356,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="home" onclick="switchTab('home', event)">
-      <span class="nav-icon"></span>
+      <span class="nav-icon">🏠</span>
       <span class="nav-label">Home</span>
     </button>
     <button class="nav-item" data-tab="post" onclick="switchTab('post', event)">
@@ -466,7 +466,7 @@ function showToast(msg) {
 
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-// ✅ UPDATED SIGNUP FUNCTION WITH EMAILJS
+// ✅ UPDATED SIGNUP FUNCTION WITH EMAILJS FIX
 async function handleSignup(e) {
   e.preventDefault();
   const btn = document.getElementById('signupBtn');
@@ -496,10 +496,14 @@ async function handleSignup(e) {
     // 2. Send verification email via EmailJS
     if (data.token) {
       const templateParams = {
-        to_email: email,
+        to_email: email,       // For {{to_email}}
+        email: email,          // For {{email}} (Safety fix for 400 error)
+        name: 'Locate Me User', // Safety fix
         verification_link: `https://locate-me-app.vercel.app/?verify=${data.token}`
       };
 
+      console.log('Sending email with params:', templateParams);
+      
       await emailjs.send('service_arv347q', '99jtfto', templateParams);
       console.log('✅ Email sent via EmailJS');
     }
@@ -507,7 +511,8 @@ async function handleSignup(e) {
     showToast('✅ Account created! Please check your email.');
     document.getElementById('signupForm').reset();
   } catch (err) { 
-    showToast('❌ ' + err.message); 
+    console.error('Full Error:', err); // This will show the real error in console
+    showToast('❌ ' + (err.text || err.message || 'Failed to send email')); 
   } finally {
     if (btn) {
       btn.disabled = false;
@@ -577,7 +582,7 @@ async function checkVerificationLink() {
         showToast('❌ ' + (data.error || 'Verification failed'));
       }
     } catch (err) {
-      showToast(' Verification failed. Link may be expired.');
+      showToast('❌ Verification failed. Link may be expired.');
     }
   }
 }
@@ -744,7 +749,7 @@ async function loadMyPosts() {
   try {
     const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
     if (!res.ok) {
-      showToast(' Failed to load posts.');
+      showToast('❌ Failed to load posts.');
       return;
     }
     const posts = await res.json();
@@ -830,7 +835,7 @@ async function confirmDeletePost() {
     closeModal('deletePostModal');
     loadMyPosts();
     loadData();
-  } catch (err) { showToast(' ' + err.message); }
+  } catch (err) { showToast('❌ ' + err.message); }
 }
 
 window.addEventListener('load', () => {
