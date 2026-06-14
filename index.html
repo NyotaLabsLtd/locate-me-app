@@ -15,6 +15,7 @@
       });
    })();
 </script>
+<!-- Load Google Sign-In script -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 /* =========================================
@@ -122,9 +123,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .spam-notice { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; padding: 12px; margin-top: 15px; font-size: 13px; color: var(--warning); text-align: center; }
 .spam-notice strong { display: block; margin-bottom: 4px; }
 .google-terms-notice { margin: 15px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; font-size: 12px; color: var(--warning); }
+.google-signin-error { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); border-radius: 8px; padding: 12px; margin-top: 10px; font-size: 12px; color: var(--danger); text-align: center; display: none; }
 
 /* =========================================
-   LANDING PAGE STYLES (NEW)
+   LANDING PAGE STYLES
    ========================================= */
 #landing-page {
     display: flex;
@@ -229,9 +231,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 </head>
 <body>
 
-<!-- ========================================== -->
-<!-- PART 1: LANDING PAGE (Visible First)       -->
-<!-- ========================================== -->
+<!-- LANDING PAGE -->
 <div id="landing-page">
     <nav class="landing-nav">
         <div class="landing-logo">
@@ -332,9 +332,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     </div>
 </div>
 
-<!-- ========================================== -->
-<!-- PART 2: EXISTING AUTH SCREEN               -->
-<!-- ========================================== -->
+<!-- AUTH SCREEN -->
 <div class="auth-screen" id="authScreen">
   <div class="auth-box">
     <div class="auth-logo">🔍</div>
@@ -376,8 +374,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <button type="button" class="password-toggle" onclick="togglePassword('signupConfirmPassword', this)">👁️</button>
         </div>
       </div>
-      
-      <!-- ✅ MANDATORY CHECKBOX -->
       <div class="checkbox-wrapper" style="margin: 20px 0;">
         <input type="checkbox" id="agreeToTerms" required>
         <label class="form-label" for="agreeToTerms" style="margin: 0; font-size: 13px; line-height: 1.4;">
@@ -385,7 +381,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <a href="terms.html" target="_blank" style="color: var(--warning);">Terms of Service</a> *
         </label>
       </div>
-      
       <button type="submit" id="signupBtn" class="btn-submit" style="width:100%">Create Account</button>
       <div class="spam-notice">
         <strong>📧 Important:</strong>
@@ -397,12 +392,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <strong>Note:</strong> By signing in with Google, you agree to our <a href="privacy-policy.html" target="_blank" style="color: var(--warning);">Privacy Policy</a> and <a href="terms.html" target="_blank" style="color: var(--warning);">Terms of Service</a>.
     </div>
     <div id="googleSignInContainer" style="width: 100%; margin-top: 10px;"></div>
+    <div id="googleSigninError" class="google-signin-error"></div>
   </div>
 </div>
 
-<!-- ========================================== -->
-<!-- PART 3: EXISTING MAIN APP                  -->
-<!-- ========================================== -->
+<!-- MAIN APP -->
 <div class="app-container" id="mainApp">
   <div class="header">
     <h1>📍 Locate Me</h1>
@@ -623,7 +617,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </nav>
 </div>
 
-<!-- Verification Success Modal -->
+<!-- Modals remain the same... -->
 <div class="modal-overlay" id="verifySuccessModal">
   <div class="modal-content">
     <div class="verification-message">
@@ -634,7 +628,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
-<!-- Profile Modal - Full Screen -->
 <div class="modal-overlay" id="profileModal">
   <div class="modal-header">
     <button class="modal-close" onclick="closeProfileModal()">✕</button>
@@ -642,7 +635,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <div class="modal-content" id="modalContent"></div>
 </div>
 
-<!-- Edit Post Modal -->
 <div class="modal-overlay" id="editPostModal">
   <div class="modal-header">
     <button class="modal-close" onclick="closeModal('editPostModal')">✕</button>
@@ -659,7 +651,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
 <div class="modal-overlay" id="deletePostModal">
   <div class="modal-header">
     <button class="modal-close" onclick="closeModal('deletePostModal')">✕</button>
@@ -689,7 +680,7 @@ const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 const GOOGLE_CLIENT_ID = '384124217618-38rde3tgblslp1s9u3e1fn5tn7h971uk.apps.googleusercontent.com';
 let missingPersons = []; let currentUser = null;
 
-// --- LANDING PAGE CAROUSEL LOGIC (NEW) ---
+// LANDING PAGE CAROUSEL
 let currentSlide = 0;
 const slides = document.querySelectorAll('.step-slide');
 const dots = document.querySelectorAll('.dot');
@@ -721,7 +712,7 @@ function goToStep(index) {
     setTimeout(() => { currentSlide = index; updateCarousel(); }, 150);
 }
 
-// Touch/Swipe support for landing page
+// Touch/Swipe support
 let touchStartX = 0, touchStartY = 0, touchStartTime = 0, isSwiping = false;
 carouselContainer.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
@@ -750,7 +741,7 @@ carouselContainer.addEventListener('touchend', (e) => {
     isSwiping = false;
 }, { passive: true });
 
-// --- VIEW SWITCHING LOGIC (NEW) ---
+// VIEW SWITCHING
 function hideLandingPage() {
     const lp = document.getElementById('landing-page');
     if (lp) lp.style.display = 'none';
@@ -760,8 +751,6 @@ function showAuthFromLanding(tab) {
     hideLandingPage();
     document.getElementById('authScreen').classList.add('active');
     document.getElementById('mainApp').classList.remove('active');
-    
-    // Switch to the correct auth tab
     if (tab === 'signup') {
         switchAuthTab('signup');
     } else {
@@ -769,21 +758,15 @@ function showAuthFromLanding(tab) {
     }
 }
 
-// --- EXISTING APP LOGIC (MODIFIED FOR LANDING PAGE) ---
-
-// Fixed to work when called from JS (not just onclick)
+// AUTH FUNCTIONS
 function switchAuthTab(tab) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-  
-  // Find the correct tab element and activate it
   const tabEl = document.querySelector(`.auth-tab[onclick*="'${tab}'"]`);
   if (tabEl) tabEl.classList.add('active');
-  
   document.getElementById(tab + 'Form').classList.add('active');
 }
 
-// Modified to hide landing page
 function showAuth() { 
     hideLandingPage(); 
     document.getElementById('authScreen').classList.add('active'); 
@@ -791,7 +774,7 @@ function showAuth() {
 }
 
 function showApp() { 
-    hideLandingPage(); // Ensure landing page is hidden
+    hideLandingPage();
     document.getElementById('authScreen').classList.remove('active'); 
     document.getElementById('mainApp').classList.add('active'); 
 }
@@ -812,7 +795,6 @@ function showToast(msg) {
 
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-// Toggle password visibility
 function togglePassword(inputId, btn) {
   const input = document.getElementById(inputId);
   if (input.type === 'password') {
@@ -824,81 +806,51 @@ function togglePassword(inputId, btn) {
   }
 }
 
-// ✅ SIGNUP FUNCTION WITH CONFIRM PASSWORD & MANDATORY CHECKBOX
 async function handleSignup(e) {
   e.preventDefault();
   const btn = document.getElementById('signupBtn');
-  
-  // Check if terms checkbox is checked
   const agreeToTerms = document.getElementById('agreeToTerms');
   if (!agreeToTerms.checked) {
     showToast('❌ You must agree to Privacy Policy and Terms of Service');
     return;
   }
-  
   if (btn) {
     btn.disabled = true;
     btn.textContent = 'Creating Account...';
   }
-
   try {
     const email = document.getElementById('signupEmail').value;
     const password = document.getElementById('signupPassword').value;
     const confirmPassword = document.getElementById('signupConfirmPassword').value;
-
-    // Check if passwords match
     if (password !== confirmPassword) {
       throw new Error('Passwords do not match!');
     }
-
-    console.log('📝 Starting signup for:', email);
-
-    // 1. Create user in database
-    console.log('1️⃣ Creating user in database...');
     const res = await fetch(`${API_URL}/auth/register`, { 
       method: 'POST', 
       headers: { 'Content-Type': 'application/json' }, 
       body: JSON.stringify({ email, password }) 
     });
     const data = await res.json();
-    
-    console.log('Database response:', res.status, data);
-    
     if (!res.ok) {
       if (res.status === 409) throw new Error('Email already registered. Please log in.');
       throw new Error(data.error || 'Signup failed');
     }
-    
-    // 2. Send verification email via EmailJS
     if (data.token) {
-      console.log('2️⃣ User created, sending email...');
-      console.log('Token:', data.token);
-      
       const templateParams = {
         to_email: email,
         email: email,
         name: 'Locate Me User',
         verification_link: `https://locate-me-app.vercel.app/?verify=${data.token}`
       };
-
-      console.log('Email params:', templateParams);
-      console.log('Service ID: service_arv347q');
-      console.log('Template ID: template_ryoa12h');
-      
       try {
-        const emailResult = await emailjs.send('service_arv347q', 'template_ryoa12h', templateParams);
-        console.log('✅ Email sent successfully!', emailResult);
+        await emailjs.send('service_arv347q', 'template_ryoa12h', templateParams);
       } catch (emailErr) {
-        console.error('❌ EmailJS Error:', emailErr);
-        console.error('Error text:', emailErr.text);
-        throw new Error('Account created but email failed to send: ' + (emailErr.text || emailErr.message));
+        console.error('EmailJS Error:', emailErr);
       }
     }
-
     showToast('✅ Account created! Check your email (including Spam folder).');
     document.getElementById('signupForm').reset();
   } catch (err) { 
-    console.error('Full Signup Error:', err);
     showToast('❌ ' + (err.message || 'Signup failed')); 
   } finally {
     if (btn) {
@@ -911,7 +863,14 @@ async function handleSignup(e) {
 async function handleLogin(e) {
   e.preventDefault();
   try {
-    const res = await fetch(`${API_URL}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: document.getElementById('loginEmail').value, password: document.getElementById('loginPassword').value }) });
+    const res = await fetch(`${API_URL}/auth/login`, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' }, 
+      body: JSON.stringify({ 
+        email: document.getElementById('loginEmail').value, 
+        password: document.getElementById('loginPassword').value 
+      }) 
+    });
     const data = await res.json();
     if (!res.ok) {
       if (data.unverified) {
@@ -919,41 +878,92 @@ async function handleLogin(e) {
       }
       throw new Error(data.error || 'Login failed');
     }
-    localStorage.setItem('authToken', data.token); localStorage.setItem('user', JSON.stringify(data.user));
+    localStorage.setItem('authToken', data.token); 
+    localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
-    showToast('✅ Login successful!'); showApp(); loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
+    showToast('✅ Login successful!'); 
+    showApp(); 
+    loadData();
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  }
 }
 
+// IMPROVED GOOGLE SIGN-IN
+let googleSignInInitialized = false;
+
 function initializeGoogleSignIn() {
-  if (typeof google === 'undefined') { setTimeout(initializeGoogleSignIn, 500); return; }
-  google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleResponse, auto_select: false });
-  try { google.accounts.id.renderButton(document.getElementById("googleSignInContainer"), { theme: "outline", size: "large", width: "100%" }); } catch (err) {}
+  // Wait for Google script to load
+  if (typeof google === 'undefined') { 
+    setTimeout(initializeGoogleSignIn, 500); 
+    return; 
+  }
+  
+  try {
+    google.accounts.id.initialize({ 
+      client_id: GOOGLE_CLIENT_ID, 
+      callback: handleGoogleResponse,
+      auto_select: false,
+      cancel_on_tap_outside: true
+    });
+    
+    // Render the button
+    google.accounts.id.renderButton(
+      document.getElementById("googleSignInContainer"), 
+      { 
+        theme: "outline", 
+        size: "large", 
+        width: "100%",
+        text: "signin_with",
+        shape: "rectangular"
+      }
+    );
+    
+    googleSignInInitialized = true;
+    console.log('✅ Google Sign-In initialized successfully');
+  } catch (err) {
+    console.error('❌ Google Sign-In initialization error:', err);
+    const errorDiv = document.getElementById('googleSigninError');
+    if (errorDiv) {
+      errorDiv.style.display = 'block';
+      errorDiv.textContent = '⚠️ Google Sign-In is currently unavailable. Please use email/password to sign in.';
+    }
+  }
 }
 
 async function handleGoogleResponse(response) {
   try {
-    const res = await fetch(`${API_URL}/auth/google`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ credential: response.credential }) });
+    const res = await fetch(`${API_URL}/auth/google`, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' }, 
+      body: JSON.stringify({ credential: response.credential }) 
+    });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    localStorage.setItem('authToken', data.token); localStorage.setItem('user', JSON.stringify(data.user));
+    localStorage.setItem('authToken', data.token); 
+    localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
-    showToast('✅ Signed in with Google!'); showApp(); loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
+    showToast('✅ Signed in with Google!'); 
+    showApp(); 
+    loadData();
+  } catch (err) { 
+    console.error('Google Sign-In error:', err);
+    showToast('❌ Google Sign-In failed: ' + err.message + '. Please use email/password instead.');
+  }
 }
 
-// Modified to show landing page if not logged in
 function checkAuth() {
-  const token = localStorage.getItem('authToken'); const user = localStorage.getItem('user');
+  const token = localStorage.getItem('authToken'); 
+  const user = localStorage.getItem('user');
   if (token && user) {
     currentUser = JSON.parse(user);
     document.getElementById('userEmailDisplay').textContent = currentUser.email;
     hideLandingPage();
-    showApp(); loadData();
+    showApp(); 
+    loadData();
   } else { 
-    // Show landing page instead of auth screen
     document.getElementById('landing-page').style.display = 'flex';
   }
 }
@@ -961,12 +971,10 @@ function checkAuth() {
 async function checkVerificationLink() {
   const urlParams = new URLSearchParams(window.location.search);
   const verifyToken = urlParams.get('verify');
-  
   if (verifyToken) {
     try {
       const res = await fetch(`${API_URL}/auth/verify/${verifyToken}`);
       const data = await res.json();
-      
       if (data.verified || data.alreadyVerified) {
         document.getElementById('verifySuccessModal').classList.add('active');
         window.history.replaceState({}, document.title, window.location.pathname);
@@ -979,18 +987,24 @@ async function checkVerificationLink() {
   }
 }
 
-// Modified to hide landing page on logout
 function logout() {
-  localStorage.removeItem('authToken'); localStorage.removeItem('user'); currentUser = null;
-  showToast('✅ Logged out'); hideLandingPage(); showAuth();
+  localStorage.removeItem('authToken'); 
+  localStorage.removeItem('user'); 
+  currentUser = null;
+  showToast('✅ Logged out'); 
+  hideLandingPage(); 
+  showAuth();
 }
 
 async function loadData() {
   try {
     const response = await fetch(`${API_URL}/missing-persons`);
     if (!response.ok) throw new Error('Failed to fetch');
-    missingPersons = await response.json(); renderCards();
-  } catch (err) { console.error('Load error:', err); }
+    missingPersons = await response.json(); 
+    renderCards();
+  } catch (err) { 
+    console.error('Load error:', err); 
+  }
 }
 
 function renderCards() {
@@ -1005,12 +1019,18 @@ function renderCards() {
     let matchesAge = true;
     if (ageFilter) {
       const age = p.age || 0;
-      if (ageFilter === 'child') matchesAge = age <= 12; else if (ageFilter === 'teen') matchesAge = age >= 13 && age <= 19; else if (ageFilter === 'adult') matchesAge = age >= 20 && age <= 64; else if (ageFilter === 'senior') matchesAge = age >= 65;
+      if (ageFilter === 'child') matchesAge = age <= 12; 
+      else if (ageFilter === 'teen') matchesAge = age >= 13 && age <= 19; 
+      else if (ageFilter === 'adult') matchesAge = age >= 20 && age <= 64; 
+      else if (ageFilter === 'senior') matchesAge = age >= 65;
     }
     return matchesSearch && matchesGender && matchesAge;
   });
   
-  if (filtered.length === 0) { container.innerHTML = '<div class="loading">No missing persons found.</div>'; return; }
+  if (filtered.length === 0) { 
+    container.innerHTML = '<div class="loading">No missing persons found.</div>'; 
+    return; 
+  }
   container.innerHTML = filtered.map(p => `
     <div class="missing-card" onclick="openModal(${p.id})">
       <img src="${p.photo_urls?.[0] || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
@@ -1024,11 +1044,15 @@ function renderCards() {
 }
 
 function openModal(id) {
-  const p = missingPersons.find(x => x.id === id); if (!p) return;
-  const photos = p.photo_urls || []; let photoHTML = '';
+  const p = missingPersons.find(x => x.id === id); 
+  if (!p) return;
+  const photos = p.photo_urls || []; 
+  let photoHTML = '';
   if (photos.length > 0) {
     photoHTML = '<div class="photo-gallery">';
-    photos.forEach((url, index) => { photoHTML += `<div class="photo-wrapper"><img src="${url}"><div class="photo-counter">${index + 1} / ${photos.length}</div></div>`; });
+    photos.forEach((url, index) => { 
+      photoHTML += `<div class="photo-wrapper"><img src="${url}"><div class="photo-counter">${index + 1} / ${photos.length}</div></div>`; 
+    });
     photoHTML += '</div>';
   }
   document.getElementById('modalContent').innerHTML = `
@@ -1040,7 +1064,10 @@ function openModal(id) {
   `;
   document.getElementById('profileModal').classList.add('active');
 }
-function closeProfileModal() { document.getElementById('profileModal').classList.remove('active'); }
+
+function closeProfileModal() { 
+  document.getElementById('profileModal').classList.remove('active'); 
+}
 
 function toggleFilters() { 
   document.getElementById('filterPanel').classList.toggle('active'); 
@@ -1048,46 +1075,125 @@ function toggleFilters() {
 }
 
 function toggleUnknownPerson() {
-  const checkbox = document.getElementById('sightingUnknown'); const nameInput = document.getElementById('sightingName');
-  if (checkbox && nameInput) { if (checkbox.checked) { nameInput.disabled = true; nameInput.placeholder = 'Name unknown'; } else { nameInput.disabled = false; nameInput.placeholder = 'Enter the name'; } }
+  const checkbox = document.getElementById('sightingUnknown'); 
+  const nameInput = document.getElementById('sightingName');
+  if (checkbox && nameInput) { 
+    if (checkbox.checked) { 
+      nameInput.disabled = true; 
+      nameInput.placeholder = 'Name unknown'; 
+    } else { 
+      nameInput.disabled = false; 
+      nameInput.placeholder = 'Enter the name'; 
+    } 
+  }
 }
-function changeLanguage() { showToast('Language feature coming soon!'); }
-function toggleNotifications() { showToast('Notifications toggled!'); }
+
+function changeLanguage() { 
+  showToast('Language feature coming soon!'); 
+}
+
+function toggleNotifications() { 
+  showToast('Notifications toggled!'); 
+}
 
 function previewImage(input, previewId, progressId) {
   const preview = document.getElementById(previewId);
-  if (input.files?.[0] && preview) { const reader = new FileReader(); reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; }; reader.readAsDataURL(input.files[0]); }
+  if (input.files?.[0] && preview) { 
+    const reader = new FileReader(); 
+    reader.onload = e => { 
+      preview.src = e.target.result; 
+      preview.style.display = 'block'; 
+    }; 
+    reader.readAsDataURL(input.files[0]); 
+  }
 }
 
 async function uploadToCloudinary(file, progressId) {
   const formData = new FormData();
-  formData.append('file', file); formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset); formData.append('folder', CLOUDINARY_CONFIG.folder);
-  const progressEl = document.getElementById(progressId); const bar = progressEl?.querySelector('.upload-progress-bar');
-  if (progressEl) progressEl.style.display = 'block'; if (bar) bar.style.width = '30%';
+  formData.append('file', file); 
+  formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset); 
+  formData.append('folder', CLOUDINARY_CONFIG.folder);
+  const progressEl = document.getElementById(progressId); 
+  const bar = progressEl?.querySelector('.upload-progress-bar');
+  if (progressEl) progressEl.style.display = 'block'; 
+  if (bar) bar.style.width = '30%';
   try {
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`, { method: 'POST', body: formData });
-    if (!res.ok) throw new Error('Upload failed'); const data = await res.json();
-    if (bar) bar.style.width = '100%'; setTimeout(() => { if (progressEl) progressEl.style.display = 'none'; }, 500);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`, { 
+      method: 'POST', 
+      body: formData 
+    });
+    if (!res.ok) throw new Error('Upload failed'); 
+    const data = await res.json();
+    if (bar) bar.style.width = '100%'; 
+    setTimeout(() => { 
+      if (progressEl) progressEl.style.display = 'none'; 
+    }, 500);
     return data.secure_url;
-  } catch (err) { if (bar) bar.style.width = '0%'; if (progressEl) progressEl.style.display = 'none'; throw err; }
+  } catch (err) { 
+    if (bar) bar.style.width = '0%'; 
+    if (progressEl) progressEl.style.display = 'none'; 
+    throw err; 
+  }
 }
 
 async function submitMissingPerson() {
-  const name = document.getElementById('postFullName')?.value.trim(); const age = document.getElementById('postAge')?.value;
-  const location = document.getElementById('postLastLocation')?.value.trim(); const desc = document.getElementById('postDescription')?.value.trim();
-  const photo1 = document.getElementById('postPhoto1')?.files[0]; const photo2 = document.getElementById('postPhoto2')?.files[0]; const photo3 = document.getElementById('postPhoto3')?.files[0];
+  const name = document.getElementById('postFullName')?.value.trim(); 
+  const age = document.getElementById('postAge')?.value;
+  const location = document.getElementById('postLastLocation')?.value.trim(); 
+  const desc = document.getElementById('postDescription')?.value.trim();
+  const photo1 = document.getElementById('postPhoto1')?.files[0]; 
+  const photo2 = document.getElementById('postPhoto2')?.files[0]; 
+  const photo3 = document.getElementById('postPhoto3')?.files[0];
   const files = [photo1, photo2, photo3];
-  if (!name || !age || !location || !desc || files.some(f => !f)) { showToast('Please fill all required fields & select 3 photos'); return; }
-  const btn = document.getElementById('postBtn'); if (btn) { btn.disabled = true; btn.textContent = 'Uploading...'; }
+  if (!name || !age || !location || !desc || files.some(f => !f)) { 
+    showToast('Please fill all required fields & select 3 photos'); 
+    return; 
+  }
+  const btn = document.getElementById('postBtn'); 
+  if (btn) { 
+    btn.disabled = true; 
+    btn.textContent = 'Uploading...'; 
+  }
   try {
     const urls = await Promise.all(files.map((f, i) => uploadToCloudinary(f, `progress${i+1}`)));
-    const newPerson = { name, age: parseInt(age), gender: document.getElementById('postGender')?.value, description: desc, notes: document.getElementById('postNotes')?.value.trim(), residence: document.getElementById('postResidence')?.value, last_seen_location: location, police_station: document.getElementById('postPoliceStation')?.value, date_missing: new Date().toISOString().split('T')[0], photo_urls: urls };
+    const newPerson = { 
+      name, 
+      age: parseInt(age), 
+      gender: document.getElementById('postGender')?.value, 
+      description: desc, 
+      notes: document.getElementById('postNotes')?.value.trim(), 
+      residence: document.getElementById('postResidence')?.value, 
+      last_seen_location: location, 
+      police_station: document.getElementById('postPoliceStation')?.value, 
+      date_missing: new Date().toISOString().split('T')[0], 
+      photo_urls: urls 
+    };
     const token = localStorage.getItem('authToken');
-    const response = await fetch(`${API_URL}/missing-persons`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(newPerson) });
-    if (response.status === 401) { logout(); throw new Error('Session expired.'); }
+    const response = await fetch(`${API_URL}/missing-persons`, { 
+      method: 'POST', 
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${token}` 
+      }, 
+      body: JSON.stringify(newPerson) 
+    });
+    if (response.status === 401) { 
+      logout(); 
+      throw new Error('Session expired.'); 
+    }
     if (!response.ok) throw new Error('Failed to save to database');
-    showToast('✅ Posted to Database!'); resetPostForm(); loadData(); switchTab('home', null);
-  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
+    showToast('✅ Posted to Database!'); 
+    resetPostForm(); 
+    loadData(); 
+    switchTab('home', null);
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  } finally { 
+    if (btn) { 
+      btn.disabled = false; 
+      btn.textContent = 'Submit'; 
+    } 
+  }
 }
 
 function resetPostForm() {
@@ -1097,50 +1203,97 @@ function resetPostForm() {
 }
 
 async function submitSighting() {
-  const contact = document.getElementById('sightingContact')?.value.trim(); const location = document.getElementById('sightingLocation')?.value.trim();
+  const contact = document.getElementById('sightingContact')?.value.trim(); 
+  const location = document.getElementById('sightingLocation')?.value.trim();
   const phoneRegex = /^(\+254|0)?[7]\d{8}$/;
-  if (!contact || !phoneRegex.test(contact.replace(/\s/g, ''))) { showToast('Please enter a valid Kenyan phone number'); return; }
-  const btn = document.getElementById('sightingBtn'); if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
+  if (!contact || !phoneRegex.test(contact.replace(/\s/g, ''))) { 
+    showToast('Please enter a valid Kenyan phone number'); 
+    return; 
+  }
+  const btn = document.getElementById('sightingBtn'); 
+  if (btn) { 
+    btn.disabled = true; 
+    btn.textContent = 'Submitting...'; 
+  }
   try {
     const photoFile = document.getElementById('sightingPhoto')?.files[0];
     let photoUrl = null;
     if (photoFile) {
       const formData = new FormData();
-      formData.append('file', photoFile); formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset); formData.append('folder', CLOUDINARY_CONFIG.folder + '/sightings');
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`, { method: 'POST', body: formData });
+      formData.append('file', photoFile); 
+      formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset); 
+      formData.append('folder', CLOUDINARY_CONFIG.folder + '/sightings');
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`, { 
+        method: 'POST', 
+        body: formData 
+      });
       if (!res.ok) throw new Error('Photo upload failed');
-      const data = await res.json(); photoUrl = data.secure_url;
+      const data = await res.json(); 
+      photoUrl = data.secure_url;
     }
-    const sightingData = { missing_person_name: document.getElementById('sightingName')?.value, gender: document.getElementById('sightingGender')?.value, sighting_location: location, sighting_time: document.getElementById('sightingTime')?.value, description: document.getElementById('sightingDescription')?.value, reporter_name: document.getElementById('sightingYourName')?.value, reporter_contact: contact, photo_url: photoUrl };
+    const sightingData = { 
+      missing_person_name: document.getElementById('sightingName')?.value, 
+      gender: document.getElementById('sightingGender')?.value, 
+      sighting_location: location, 
+      sighting_time: document.getElementById('sightingTime')?.value, 
+      description: document.getElementById('sightingDescription')?.value, 
+      reporter_name: document.getElementById('sightingYourName')?.value, 
+      reporter_contact: contact, 
+      photo_url: photoUrl 
+    };
     const token = localStorage.getItem('authToken');
-    const response = await fetch(`${API_URL}/sightings`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(sightingData) });
-    if (response.status === 401) { logout(); throw new Error('Session expired.'); }
+    const response = await fetch(`${API_URL}/sightings`, { 
+      method: 'POST', 
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${token}` 
+      }, 
+      body: JSON.stringify(sightingData) 
+    });
+    if (response.status === 401) { 
+      logout(); 
+      throw new Error('Session expired.'); 
+    }
     if (!response.ok) throw new Error('Failed to save sighting');
     showToast('✅ Sighting reported!');
-    resetSightingForm(); switchTab('home', null);
-  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
+    resetSightingForm(); 
+    switchTab('home', null);
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  } finally { 
+    if (btn) { 
+      btn.disabled = false; 
+      btn.textContent = 'Submit'; 
+    } 
+  }
 }
 
 function resetSightingForm() {
   document.querySelectorAll('#foundTab input, #foundTab textarea').forEach(i => i.value = '');
-  const sightingUnknown = document.getElementById('sightingUnknown'); const sightingName = document.getElementById('sightingName');
-  const sightingPreview = document.getElementById('sightingPreview'); const sightingProgress = document.getElementById('sightingProgress');
-  if (sightingUnknown) sightingUnknown.checked = false; if (sightingName) sightingName.disabled = false;
-  if (sightingPreview) sightingPreview.style.display = 'none'; if (sightingProgress) sightingProgress.style.display = 'none';
+  const sightingUnknown = document.getElementById('sightingUnknown'); 
+  const sightingName = document.getElementById('sightingName');
+  const sightingPreview = document.getElementById('sightingPreview'); 
+  const sightingProgress = document.getElementById('sightingProgress');
+  if (sightingUnknown) sightingUnknown.checked = false; 
+  if (sightingName) sightingName.disabled = false;
+  if (sightingPreview) sightingPreview.style.display = 'none'; 
+  if (sightingProgress) sightingProgress.style.display = 'none';
 }
 
 function formatDate(dateString) {
   if (!dateString) return new Date().toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
-  const date = new Date(dateString); if (isNaN(date.getTime())) return new Date().toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
+  const date = new Date(dateString); 
+  if (isNaN(date.getTime())) return new Date().toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
   return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 async function loadMyPosts() {
   const token = localStorage.getItem('authToken');
   if (!token) return showToast('Please log in first');
-  
   try {
-    const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const res = await fetch(`${API_URL}/users/my-posts`, { 
+      headers: { 'Authorization': `Bearer ${token}` } 
+    });
     if (!res.ok) {
       showToast('❌ Failed to load posts.');
       return;
@@ -1148,13 +1301,11 @@ async function loadMyPosts() {
     const posts = await res.json();
     const container = document.getElementById('my-posts-container');
     const list = document.getElementById('my-posts-list');
-    
     container.style.display = 'block';
     if (posts.length === 0) {
       list.innerHTML = '<p style="color:var(--gray); padding: 10px;">You have no active posts.</p>';
       return;
     }
-    
     list.innerHTML = posts.map(p => `
       <div class="info-section" style="margin-bottom:10px; padding:15px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
@@ -1193,11 +1344,13 @@ async function savePostEdit() {
     last_seen_location: document.getElementById('editLocation').value,
     description: document.getElementById('editDesc').value
   };
-  
   try {
     const res = await fetch(`${API_URL}/missing-persons/${currentEditId}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${token}` 
+      },
       body: JSON.stringify(data)
     });
     if (!res.ok) throw new Error('Update failed');
@@ -1205,7 +1358,9 @@ async function savePostEdit() {
     closeModal('editPostModal');
     loadMyPosts();
     loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  }
 }
 
 function openDeleteModal(id) {
@@ -1216,11 +1371,13 @@ function openDeleteModal(id) {
 async function confirmDeletePost() {
   const token = localStorage.getItem('authToken');
   const reason = document.getElementById('deleteReason').value;
-  
   try {
     const res = await fetch(`${API_URL}/missing-persons/${currentDeleteId}`, {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      headers: { 
+        'Content-Type': 'application/json', 
+        'Authorization': `Bearer ${token}` 
+      },
       body: JSON.stringify({ reason })
     });
     if (!res.ok) throw new Error('Delete failed');
@@ -1228,14 +1385,17 @@ async function confirmDeletePost() {
     closeModal('deletePostModal');
     loadMyPosts();
     loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  }
 }
 
+// Initialize on load
 window.addEventListener('load', () => {
   checkAuth(); 
   initializeGoogleSignIn();
   checkVerificationLink();
-  updateCarousel(); // Initialize landing page carousel
+  updateCarousel();
 });
 
 document.getElementById('searchInput').addEventListener('input', renderCards);
