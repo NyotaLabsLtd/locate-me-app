@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0f172a">
 <title>Locate Me - Find Missing Persons</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22></text></svg>">
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script type="text/javascript">
    (function(){
@@ -15,12 +15,8 @@
       });
    })();
 </script>
-<!-- Load Google Sign-In script -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-/* =========================================
-   EXISTING APP STYLES
-   ========================================= */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 :root {
   --primary: #2563eb; --danger: #ef4444; --success: #059669;
@@ -123,11 +119,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .spam-notice { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; padding: 12px; margin-top: 15px; font-size: 13px; color: var(--warning); text-align: center; }
 .spam-notice strong { display: block; margin-bottom: 4px; }
 .google-terms-notice { margin: 15px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; font-size: 12px; color: var(--warning); }
-.google-signin-error { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); border-radius: 8px; padding: 12px; margin-top: 10px; font-size: 12px; color: var(--danger); text-align: center; display: none; }
 
-/* =========================================
-   LANDING PAGE STYLES
-   ========================================= */
+/* LANDING PAGE STYLES */
 #landing-page {
     display: flex;
     flex-direction: column;
@@ -157,7 +150,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     gap: 0.5rem;
 }
 .landing-logo-icon { font-size: 1.8rem; }
-
 .landing-main-container {
     flex: 1;
     display: flex;
@@ -179,6 +171,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
+    -webkit-user-select: none;
+    user-select: none;
 }
 .carousel { flex: 1; position: relative; overflow: hidden; }
 .step-slide {
@@ -195,38 +189,40 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes fadeOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-20px); } }
 .step-slide.slide-out { animation: fadeOut 0.3s ease-in-out; }
-
 .step-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; width: 100%; justify-content: center; flex-shrink: 0; }
 .step-badge { background: var(--warning); color: var(--dark); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; flex-shrink: 0; }
 .step-title { font-size: 1.4rem; color: var(--warning); font-weight: 700; }
 .step-icon { font-size: 3.5rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .step-description { color: var(--light); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; text-align: center; max-width: 340px; flex-shrink: 0; }
 .step-description strong { color: var(--warning); display: block; margin-bottom: 0.3rem; font-size: 1rem; }
-
 .step-features { list-style: none; width: 100%; max-width: 340px; margin-bottom: 0.5rem; flex-shrink: 0; }
 .step-features li { padding: 0.6rem 0; color: var(--gray); display: flex; align-items: center; gap: 0.8rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
 .step-features li:last-child { border-bottom: none; }
 .check-icon { color: var(--warning); font-weight: bold; font-size: 1.1rem; width: 24px; height: 24px; background: rgba(251, 191, 36, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-
 .get-started-btn { background: var(--warning); color: var(--dark); border: none; padding: 0.9rem 2.5rem; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; margin-top: 0.5rem; flex-shrink: 0; }
 .get-started-btn:hover { background: #f59e0b; transform: translateY(-2px); box-shadow: 0 10px 25px rgba(251, 191, 36, 0.3); }
 .login-link { color: var(--gray); font-size: 0.85rem; margin-top: 0.8rem; text-align: center; flex-shrink: 0; }
 .login-link a { color: var(--warning); text-decoration: none; font-weight: 600; cursor: pointer; }
 .login-link a:hover { text-decoration: underline; }
-
 .carousel-nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: rgba(15, 23, 42, 0.6); border-top: 1px solid var(--border); flex-shrink: 0; width: 100%; }
 .nav-arrow { background: transparent; color: var(--warning); border: 2px solid var(--warning); width: 45px; height: 45px; border-radius: 10px; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-weight: bold; flex-shrink: 0; }
 .nav-arrow:hover:not(:disabled) { background: var(--warning); color: var(--dark); transform: translateY(-2px); }
 .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; border-color: var(--gray); color: var(--gray); }
 .nav-arrow.next-arrow { background: var(--warning); color: var(--dark); border-color: var(--warning); }
 .nav-arrow.next-arrow:hover:not(:disabled) { background: #f59e0b; border-color: #f59e0b; }
-
 .progress-dots { display: flex; gap: 0.5rem; justify-content: center; align-items: center; flex: 1; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(251, 191, 36, 0.3); cursor: pointer; transition: all 0.3s; border: none; padding: 0; }
 .dot.active { background: var(--warning); width: 25px; border-radius: 4px; }
 .dot:hover { background: var(--warning); }
 .progress-text { text-align: center; color: var(--gray); font-size: 0.85rem; margin-top: 0.8rem; font-weight: 500; flex-shrink: 0; }
-.carousel-container { -webkit-user-select: none; user-select: none; }
+
+@media (min-width: 768px) {
+    .carousel-container { max-width: 500px; }
+    .step-title { font-size: 1.8rem; }
+    .step-description { font-size: 1.05rem; }
+    .step-icon { font-size: 4.5rem; }
+    .nav-arrow { width: 50px; height: 50px; font-size: 1.5rem; }
+}
 </style>
 </head>
 <body>
@@ -235,14 +231,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div id="landing-page">
     <nav class="landing-nav">
         <div class="landing-logo">
-            <span class="landing-logo-icon">📍</span>
+            <span class="landing-logo-icon"></span>
             <span>Locate Me</span>
         </div>
     </nav>
     <div class="landing-main-container">
         <div class="carousel-container" id="carouselContainer">
             <div class="carousel">
-                <!-- Step 1 -->
                 <div class="step-slide active" data-step="1">
                     <div class="step-header"><div class="step-badge">1</div><h3 class="step-title">Welcome</h3></div>
                     <div class="step-icon">📍</div>
@@ -253,10 +248,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                         <li><span class="check-icon">✓</span> Community-driven platform</li>
                     </ul>
                 </div>
-                <!-- Step 2 -->
                 <div class="step-slide" data-step="2">
                     <div class="step-header"><div class="step-badge">2</div><h3 class="step-title">Post Missing Person</h3></div>
-                    <div class="step-icon">📝</div>
+                    <div class="step-icon"></div>
                     <p class="step-description">Create a Missing Person Report with detailed information to help identify and locate them.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Upload multiple photos</li>
@@ -266,7 +260,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                         <li><span class="check-icon">✓</span> Contact details</li>
                     </ul>
                 </div>
-                <!-- Step 3 -->
                 <div class="step-slide" data-step="3">
                     <div class="step-header"><div class="step-badge">3</div><h3 class="step-title">Found Someone?</h3></div>
                     <div class="step-icon">🔍</div>
@@ -277,7 +270,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                         <li><span class="check-icon">✓</span> Help reunite families</li>
                     </ul>
                 </div>
-                <!-- Step 4 -->
                 <div class="step-slide" data-step="4">
                     <div class="step-header"><div class="step-badge">4</div><h3 class="step-title">Safe & Verified</h3></div>
                     <div class="step-icon">🛡️</div>
@@ -289,7 +281,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                         <li><span class="check-icon">✓</span> Verified information</li>
                     </ul>
                 </div>
-                <!-- Step 5 -->
                 <div class="step-slide" data-step="5">
                     <div class="step-header"><div class="step-badge">5</div><h3 class="step-title">Admin Oversight</h3></div>
                     <div class="step-icon">📊</div>
@@ -301,7 +292,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                         <li><span class="check-icon">✓</span> Community protection</li>
                     </ul>
                 </div>
-                <!-- Step 6 -->
                 <div class="step-slide" data-step="6">
                     <div class="step-header"><div class="step-badge">6</div><h3 class="step-title">Get Started</h3></div>
                     <div class="step-icon">❤️</div>
@@ -392,7 +382,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <strong>Note:</strong> By signing in with Google, you agree to our <a href="privacy-policy.html" target="_blank" style="color: var(--warning);">Privacy Policy</a> and <a href="terms.html" target="_blank" style="color: var(--warning);">Terms of Service</a>.
     </div>
     <div id="googleSignInContainer" style="width: 100%; margin-top: 10px;"></div>
-    <div id="googleSigninError" class="google-signin-error"></div>
   </div>
 </div>
 
@@ -426,7 +415,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <div id="missingCardsContainer"><div class="loading">Loading...</div></div>
     </div>
-    
     <div id="postTab" class="tab-content">
       <h2 class="page-title">Post Missing Person</h2>
       <div class="form-section-title">Basic Information</div>
@@ -498,7 +486,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <button class="btn-submit" onclick="submitMissingPerson()" id="postBtn">Submit</button>
       </div>
     </div>
-
     <div id="foundTab" class="tab-content">
       <h2 class="page-title">Report a Sighting</h2>
       <div class="form-section-title">Sighting Details</div>
@@ -539,7 +526,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <button class="btn-submit" onclick="submitSighting()" id="sightingBtn">Submit</button>
       </div>
     </div>
-
     <div id="settingsTab" class="tab-content">
       <h2 class="page-title">Settings</h2>
       <div class="info-section" id="userProfileSection">
@@ -549,7 +535,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <div class="info-value" id="userEmailDisplay">Loading...</div>
         </div>
       </div>
-      
       <div class="info-section" onclick="loadMyPosts()">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
@@ -562,14 +547,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <div id="my-posts-container" style="display:none; margin-bottom: 20px;">
         <div id="my-posts-list"></div>
       </div>
-
       <a href="policies.html" style="text-decoration: none; color: inherit; display: block;">
         <div class="info-section">
           <div class="info-label">Legal & Policies</div>
           <div class="info-value">Privacy, Terms, Child Safety & More</div>
         </div>
       </a>
-
       <div class="info-section">
         <div class="info-label">Language</div>
         <select class="form-select" id="settingsLanguage" onchange="changeLanguage()">
@@ -596,7 +579,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
     </div>
   </div>
-  
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="home" onclick="switchTab('home', event)">
       <span class="nav-icon">🏠</span>
@@ -617,7 +599,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </nav>
 </div>
 
-<!-- Modals remain the same... -->
+<!-- MODALS -->
 <div class="modal-overlay" id="verifySuccessModal">
   <div class="modal-content">
     <div class="verification-message">
@@ -630,7 +612,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <div class="modal-overlay" id="profileModal">
   <div class="modal-header">
-    <button class="modal-close" onclick="closeProfileModal()">✕</button>
+    <button class="modal-close" onclick="closeProfileModal()"></button>
   </div>
   <div class="modal-content" id="modalContent"></div>
 </div>
@@ -712,7 +694,6 @@ function goToStep(index) {
     setTimeout(() => { currentSlide = index; updateCarousel(); }, 150);
 }
 
-// Touch/Swipe support
 let touchStartX = 0, touchStartY = 0, touchStartTime = 0, isSwiping = false;
 carouselContainer.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
@@ -890,79 +871,32 @@ async function handleLogin(e) {
   }
 }
 
-// IMPROVED GOOGLE SIGN-IN
-let googleSignInInitialized = false;
-
+// GOOGLE SIGN-IN - EXACTLY AS ORIGINAL
 function initializeGoogleSignIn() {
-  // Wait for Google script to load
-  if (typeof google === 'undefined') { 
-    setTimeout(initializeGoogleSignIn, 500); 
-    return; 
-  }
-  
-  try {
-    google.accounts.id.initialize({ 
-      client_id: GOOGLE_CLIENT_ID, 
-      callback: handleGoogleResponse,
-      auto_select: false,
-      cancel_on_tap_outside: true
-    });
-    
-    // Render the button
-    google.accounts.id.renderButton(
-      document.getElementById("googleSignInContainer"), 
-      { 
-        theme: "outline", 
-        size: "large", 
-        width: "100%",
-        text: "signin_with",
-        shape: "rectangular"
-      }
-    );
-    
-    googleSignInInitialized = true;
-    console.log('✅ Google Sign-In initialized successfully');
-  } catch (err) {
-    console.error('❌ Google Sign-In initialization error:', err);
-    const errorDiv = document.getElementById('googleSigninError');
-    if (errorDiv) {
-      errorDiv.style.display = 'block';
-      errorDiv.textContent = '⚠️ Google Sign-In is currently unavailable. Please use email/password to sign in.';
-    }
-  }
+  if (typeof google === 'undefined') { setTimeout(initializeGoogleSignIn, 500); return; }
+  google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleResponse, auto_select: false });
+  try { google.accounts.id.renderButton(document.getElementById("googleSignInContainer"), { theme: "outline", size: "large", width: "100%" }); } catch (err) {}
 }
 
 async function handleGoogleResponse(response) {
   try {
-    const res = await fetch(`${API_URL}/auth/google`, { 
-      method: 'POST', 
-      headers: { 'Content-Type': 'application/json' }, 
-      body: JSON.stringify({ credential: response.credential }) 
-    });
+    const res = await fetch(`${API_URL}/auth/google`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ credential: response.credential }) });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    localStorage.setItem('authToken', data.token); 
-    localStorage.setItem('user', JSON.stringify(data.user));
+    localStorage.setItem('authToken', data.token); localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
-    showToast('✅ Signed in with Google!'); 
-    showApp(); 
-    loadData();
-  } catch (err) { 
-    console.error('Google Sign-In error:', err);
-    showToast('❌ Google Sign-In failed: ' + err.message + '. Please use email/password instead.');
-  }
+    showToast('✅ Signed in with Google!'); showApp(); loadData();
+  } catch (err) { showToast('❌ ' + err.message); }
 }
 
 function checkAuth() {
-  const token = localStorage.getItem('authToken'); 
-  const user = localStorage.getItem('user');
+  const token = localStorage.getItem('authToken'); const user = localStorage.getItem('user');
   if (token && user) {
     currentUser = JSON.parse(user);
     document.getElementById('userEmailDisplay').textContent = currentUser.email;
     hideLandingPage();
-    showApp(); 
-    loadData();
+    showApp(); loadData();
   } else { 
     document.getElementById('landing-page').style.display = 'flex';
   }
@@ -988,23 +922,16 @@ async function checkVerificationLink() {
 }
 
 function logout() {
-  localStorage.removeItem('authToken'); 
-  localStorage.removeItem('user'); 
-  currentUser = null;
-  showToast('✅ Logged out'); 
-  hideLandingPage(); 
-  showAuth();
+  localStorage.removeItem('authToken'); localStorage.removeItem('user'); currentUser = null;
+  showToast('✅ Logged out'); hideLandingPage(); showAuth();
 }
 
 async function loadData() {
   try {
     const response = await fetch(`${API_URL}/missing-persons`);
     if (!response.ok) throw new Error('Failed to fetch');
-    missingPersons = await response.json(); 
-    renderCards();
-  } catch (err) { 
-    console.error('Load error:', err); 
-  }
+    missingPersons = await response.json(); renderCards();
+  } catch (err) { console.error('Load error:', err); }
 }
 
 function renderCards() {
@@ -1012,25 +939,17 @@ function renderCards() {
   const term = document.getElementById('searchInput').value.toLowerCase();
   const gender = document.getElementById('filterGender').value;
   const ageFilter = document.getElementById('filterAge').value;
-  
   let filtered = missingPersons.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(term) || p.last_seen_location.toLowerCase().includes(term);
     const matchesGender = !gender || p.gender === gender;
     let matchesAge = true;
     if (ageFilter) {
       const age = p.age || 0;
-      if (ageFilter === 'child') matchesAge = age <= 12; 
-      else if (ageFilter === 'teen') matchesAge = age >= 13 && age <= 19; 
-      else if (ageFilter === 'adult') matchesAge = age >= 20 && age <= 64; 
-      else if (ageFilter === 'senior') matchesAge = age >= 65;
+      if (ageFilter === 'child') matchesAge = age <= 12; else if (ageFilter === 'teen') matchesAge = age >= 13 && age <= 19; else if (ageFilter === 'adult') matchesAge = age >= 20 && age <= 64; else if (ageFilter === 'senior') matchesAge = age >= 65;
     }
     return matchesSearch && matchesGender && matchesAge;
   });
-  
-  if (filtered.length === 0) { 
-    container.innerHTML = '<div class="loading">No missing persons found.</div>'; 
-    return; 
-  }
+  if (filtered.length === 0) { container.innerHTML = '<div class="loading">No missing persons found.</div>'; return; }
   container.innerHTML = filtered.map(p => `
     <div class="missing-card" onclick="openModal(${p.id})">
       <img src="${p.photo_urls?.[0] || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
@@ -1044,15 +963,11 @@ function renderCards() {
 }
 
 function openModal(id) {
-  const p = missingPersons.find(x => x.id === id); 
-  if (!p) return;
-  const photos = p.photo_urls || []; 
-  let photoHTML = '';
+  const p = missingPersons.find(x => x.id === id); if (!p) return;
+  const photos = p.photo_urls || []; let photoHTML = '';
   if (photos.length > 0) {
     photoHTML = '<div class="photo-gallery">';
-    photos.forEach((url, index) => { 
-      photoHTML += `<div class="photo-wrapper"><img src="${url}"><div class="photo-counter">${index + 1} / ${photos.length}</div></div>`; 
-    });
+    photos.forEach((url, index) => { photoHTML += `<div class="photo-wrapper"><img src="${url}"><div class="photo-counter">${index + 1} / ${photos.length}</div></div>`; });
     photoHTML += '</div>';
   }
   document.getElementById('modalContent').innerHTML = `
@@ -1064,10 +979,7 @@ function openModal(id) {
   `;
   document.getElementById('profileModal').classList.add('active');
 }
-
-function closeProfileModal() { 
-  document.getElementById('profileModal').classList.remove('active'); 
-}
+function closeProfileModal() { document.getElementById('profileModal').classList.remove('active'); }
 
 function toggleFilters() { 
   document.getElementById('filterPanel').classList.toggle('active'); 
@@ -1075,125 +987,46 @@ function toggleFilters() {
 }
 
 function toggleUnknownPerson() {
-  const checkbox = document.getElementById('sightingUnknown'); 
-  const nameInput = document.getElementById('sightingName');
-  if (checkbox && nameInput) { 
-    if (checkbox.checked) { 
-      nameInput.disabled = true; 
-      nameInput.placeholder = 'Name unknown'; 
-    } else { 
-      nameInput.disabled = false; 
-      nameInput.placeholder = 'Enter the name'; 
-    } 
-  }
+  const checkbox = document.getElementById('sightingUnknown'); const nameInput = document.getElementById('sightingName');
+  if (checkbox && nameInput) { if (checkbox.checked) { nameInput.disabled = true; nameInput.placeholder = 'Name unknown'; } else { nameInput.disabled = false; nameInput.placeholder = 'Enter the name'; } }
 }
-
-function changeLanguage() { 
-  showToast('Language feature coming soon!'); 
-}
-
-function toggleNotifications() { 
-  showToast('Notifications toggled!'); 
-}
+function changeLanguage() { showToast('Language feature coming soon!'); }
+function toggleNotifications() { showToast('Notifications toggled!'); }
 
 function previewImage(input, previewId, progressId) {
   const preview = document.getElementById(previewId);
-  if (input.files?.[0] && preview) { 
-    const reader = new FileReader(); 
-    reader.onload = e => { 
-      preview.src = e.target.result; 
-      preview.style.display = 'block'; 
-    }; 
-    reader.readAsDataURL(input.files[0]); 
-  }
+  if (input.files?.[0] && preview) { const reader = new FileReader(); reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; }; reader.readAsDataURL(input.files[0]); }
 }
 
 async function uploadToCloudinary(file, progressId) {
   const formData = new FormData();
-  formData.append('file', file); 
-  formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset); 
-  formData.append('folder', CLOUDINARY_CONFIG.folder);
-  const progressEl = document.getElementById(progressId); 
-  const bar = progressEl?.querySelector('.upload-progress-bar');
-  if (progressEl) progressEl.style.display = 'block'; 
-  if (bar) bar.style.width = '30%';
+  formData.append('file', file); formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset); formData.append('folder', CLOUDINARY_CONFIG.folder);
+  const progressEl = document.getElementById(progressId); const bar = progressEl?.querySelector('.upload-progress-bar');
+  if (progressEl) progressEl.style.display = 'block'; if (bar) bar.style.width = '30%';
   try {
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`, { 
-      method: 'POST', 
-      body: formData 
-    });
-    if (!res.ok) throw new Error('Upload failed'); 
-    const data = await res.json();
-    if (bar) bar.style.width = '100%'; 
-    setTimeout(() => { 
-      if (progressEl) progressEl.style.display = 'none'; 
-    }, 500);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`, { method: 'POST', body: formData });
+    if (!res.ok) throw new Error('Upload failed'); const data = await res.json();
+    if (bar) bar.style.width = '100%'; setTimeout(() => { if (progressEl) progressEl.style.display = 'none'; }, 500);
     return data.secure_url;
-  } catch (err) { 
-    if (bar) bar.style.width = '0%'; 
-    if (progressEl) progressEl.style.display = 'none'; 
-    throw err; 
-  }
+  } catch (err) { if (bar) bar.style.width = '0%'; if (progressEl) progressEl.style.display = 'none'; throw err; }
 }
 
 async function submitMissingPerson() {
-  const name = document.getElementById('postFullName')?.value.trim(); 
-  const age = document.getElementById('postAge')?.value;
-  const location = document.getElementById('postLastLocation')?.value.trim(); 
-  const desc = document.getElementById('postDescription')?.value.trim();
-  const photo1 = document.getElementById('postPhoto1')?.files[0]; 
-  const photo2 = document.getElementById('postPhoto2')?.files[0]; 
-  const photo3 = document.getElementById('postPhoto3')?.files[0];
+  const name = document.getElementById('postFullName')?.value.trim(); const age = document.getElementById('postAge')?.value;
+  const location = document.getElementById('postLastLocation')?.value.trim(); const desc = document.getElementById('postDescription')?.value.trim();
+  const photo1 = document.getElementById('postPhoto1')?.files[0]; const photo2 = document.getElementById('postPhoto2')?.files[0]; const photo3 = document.getElementById('postPhoto3')?.files[0];
   const files = [photo1, photo2, photo3];
-  if (!name || !age || !location || !desc || files.some(f => !f)) { 
-    showToast('Please fill all required fields & select 3 photos'); 
-    return; 
-  }
-  const btn = document.getElementById('postBtn'); 
-  if (btn) { 
-    btn.disabled = true; 
-    btn.textContent = 'Uploading...'; 
-  }
+  if (!name || !age || !location || !desc || files.some(f => !f)) { showToast('Please fill all required fields & select 3 photos'); return; }
+  const btn = document.getElementById('postBtn'); if (btn) { btn.disabled = true; btn.textContent = 'Uploading...'; }
   try {
     const urls = await Promise.all(files.map((f, i) => uploadToCloudinary(f, `progress${i+1}`)));
-    const newPerson = { 
-      name, 
-      age: parseInt(age), 
-      gender: document.getElementById('postGender')?.value, 
-      description: desc, 
-      notes: document.getElementById('postNotes')?.value.trim(), 
-      residence: document.getElementById('postResidence')?.value, 
-      last_seen_location: location, 
-      police_station: document.getElementById('postPoliceStation')?.value, 
-      date_missing: new Date().toISOString().split('T')[0], 
-      photo_urls: urls 
-    };
+    const newPerson = { name, age: parseInt(age), gender: document.getElementById('postGender')?.value, description: desc, notes: document.getElementById('postNotes')?.value.trim(), residence: document.getElementById('postResidence')?.value, last_seen_location: location, police_station: document.getElementById('postPoliceStation')?.value, date_missing: new Date().toISOString().split('T')[0], photo_urls: urls };
     const token = localStorage.getItem('authToken');
-    const response = await fetch(`${API_URL}/missing-persons`, { 
-      method: 'POST', 
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${token}` 
-      }, 
-      body: JSON.stringify(newPerson) 
-    });
-    if (response.status === 401) { 
-      logout(); 
-      throw new Error('Session expired.'); 
-    }
+    const response = await fetch(`${API_URL}/missing-persons`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(newPerson) });
+    if (response.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!response.ok) throw new Error('Failed to save to database');
-    showToast('✅ Posted to Database!'); 
-    resetPostForm(); 
-    loadData(); 
-    switchTab('home', null);
-  } catch (err) { 
-    showToast('❌ ' + err.message); 
-  } finally { 
-    if (btn) { 
-      btn.disabled = false; 
-      btn.textContent = 'Submit'; 
-    } 
-  }
+    showToast('✅ Posted to Database!'); resetPostForm(); loadData(); switchTab('home', null);
+  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
 }
 
 function resetPostForm() {
@@ -1203,87 +1036,41 @@ function resetPostForm() {
 }
 
 async function submitSighting() {
-  const contact = document.getElementById('sightingContact')?.value.trim(); 
-  const location = document.getElementById('sightingLocation')?.value.trim();
+  const contact = document.getElementById('sightingContact')?.value.trim(); const location = document.getElementById('sightingLocation')?.value.trim();
   const phoneRegex = /^(\+254|0)?[7]\d{8}$/;
-  if (!contact || !phoneRegex.test(contact.replace(/\s/g, ''))) { 
-    showToast('Please enter a valid Kenyan phone number'); 
-    return; 
-  }
-  const btn = document.getElementById('sightingBtn'); 
-  if (btn) { 
-    btn.disabled = true; 
-    btn.textContent = 'Submitting...'; 
-  }
+  if (!contact || !phoneRegex.test(contact.replace(/\s/g, ''))) { showToast('Please enter a valid Kenyan phone number'); return; }
+  const btn = document.getElementById('sightingBtn'); if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
   try {
     const photoFile = document.getElementById('sightingPhoto')?.files[0];
     let photoUrl = null;
     if (photoFile) {
       const formData = new FormData();
-      formData.append('file', photoFile); 
-      formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset); 
-      formData.append('folder', CLOUDINARY_CONFIG.folder + '/sightings');
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`, { 
-        method: 'POST', 
-        body: formData 
-      });
+      formData.append('file', photoFile); formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset); formData.append('folder', CLOUDINARY_CONFIG.folder + '/sightings');
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`, { method: 'POST', body: formData });
       if (!res.ok) throw new Error('Photo upload failed');
-      const data = await res.json(); 
-      photoUrl = data.secure_url;
+      const data = await res.json(); photoUrl = data.secure_url;
     }
-    const sightingData = { 
-      missing_person_name: document.getElementById('sightingName')?.value, 
-      gender: document.getElementById('sightingGender')?.value, 
-      sighting_location: location, 
-      sighting_time: document.getElementById('sightingTime')?.value, 
-      description: document.getElementById('sightingDescription')?.value, 
-      reporter_name: document.getElementById('sightingYourName')?.value, 
-      reporter_contact: contact, 
-      photo_url: photoUrl 
-    };
+    const sightingData = { missing_person_name: document.getElementById('sightingName')?.value, gender: document.getElementById('sightingGender')?.value, sighting_location: location, sighting_time: document.getElementById('sightingTime')?.value, description: document.getElementById('sightingDescription')?.value, reporter_name: document.getElementById('sightingYourName')?.value, reporter_contact: contact, photo_url: photoUrl };
     const token = localStorage.getItem('authToken');
-    const response = await fetch(`${API_URL}/sightings`, { 
-      method: 'POST', 
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${token}` 
-      }, 
-      body: JSON.stringify(sightingData) 
-    });
-    if (response.status === 401) { 
-      logout(); 
-      throw new Error('Session expired.'); 
-    }
+    const response = await fetch(`${API_URL}/sightings`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(sightingData) });
+    if (response.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!response.ok) throw new Error('Failed to save sighting');
     showToast('✅ Sighting reported!');
-    resetSightingForm(); 
-    switchTab('home', null);
-  } catch (err) { 
-    showToast('❌ ' + err.message); 
-  } finally { 
-    if (btn) { 
-      btn.disabled = false; 
-      btn.textContent = 'Submit'; 
-    } 
-  }
+    resetSightingForm(); switchTab('home', null);
+  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
 }
 
 function resetSightingForm() {
   document.querySelectorAll('#foundTab input, #foundTab textarea').forEach(i => i.value = '');
-  const sightingUnknown = document.getElementById('sightingUnknown'); 
-  const sightingName = document.getElementById('sightingName');
-  const sightingPreview = document.getElementById('sightingPreview'); 
-  const sightingProgress = document.getElementById('sightingProgress');
-  if (sightingUnknown) sightingUnknown.checked = false; 
-  if (sightingName) sightingName.disabled = false;
-  if (sightingPreview) sightingPreview.style.display = 'none'; 
-  if (sightingProgress) sightingProgress.style.display = 'none';
+  const sightingUnknown = document.getElementById('sightingUnknown'); const sightingName = document.getElementById('sightingName');
+  const sightingPreview = document.getElementById('sightingPreview'); const sightingProgress = document.getElementById('sightingProgress');
+  if (sightingUnknown) sightingUnknown.checked = false; if (sightingName) sightingName.disabled = false;
+  if (sightingPreview) sightingPreview.style.display = 'none'; if (sightingProgress) sightingProgress.style.display = 'none';
 }
 
 function formatDate(dateString) {
   if (!dateString) return new Date().toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
-  const date = new Date(dateString); 
-  if (isNaN(date.getTime())) return new Date().toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
+  const date = new Date(dateString); if (isNaN(date.getTime())) return new Date().toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
   return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
@@ -1291,13 +1078,8 @@ async function loadMyPosts() {
   const token = localStorage.getItem('authToken');
   if (!token) return showToast('Please log in first');
   try {
-    const res = await fetch(`${API_URL}/users/my-posts`, { 
-      headers: { 'Authorization': `Bearer ${token}` } 
-    });
-    if (!res.ok) {
-      showToast('❌ Failed to load posts.');
-      return;
-    }
+    const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
+    if (!res.ok) { showToast('❌ Failed to load posts.'); return; }
     const posts = await res.json();
     const container = document.getElementById('my-posts-container');
     const list = document.getElementById('my-posts-list');
@@ -1318,10 +1100,7 @@ async function loadMyPosts() {
         <div style="font-size:13px; color:var(--gray)"> ${p.last_seen_location} | 👤 Age: ${p.age}</div>
       </div>
     `).join('');
-  } catch (err) { 
-    console.error(err); 
-    showToast('❌ Failed to load posts.'); 
-  }
+  } catch (err) { console.error(err); showToast('❌ Failed to load posts.'); }
 }
 
 let currentEditId = null;
@@ -1347,10 +1126,7 @@ async function savePostEdit() {
   try {
     const res = await fetch(`${API_URL}/missing-persons/${currentEditId}`, {
       method: 'PUT',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${token}` 
-      },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify(data)
     });
     if (!res.ok) throw new Error('Update failed');
@@ -1358,9 +1134,7 @@ async function savePostEdit() {
     closeModal('editPostModal');
     loadMyPosts();
     loadData();
-  } catch (err) { 
-    showToast('❌ ' + err.message); 
-  }
+  } catch (err) { showToast(' ' + err.message); }
 }
 
 function openDeleteModal(id) {
@@ -1374,10 +1148,7 @@ async function confirmDeletePost() {
   try {
     const res = await fetch(`${API_URL}/missing-persons/${currentDeleteId}`, {
       method: 'DELETE',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'Authorization': `Bearer ${token}` 
-      },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ reason })
     });
     if (!res.ok) throw new Error('Delete failed');
@@ -1385,12 +1156,9 @@ async function confirmDeletePost() {
     closeModal('deletePostModal');
     loadMyPosts();
     loadData();
-  } catch (err) { 
-    showToast('❌ ' + err.message); 
-  }
+  } catch (err) { showToast('❌ ' + err.message); }
 }
 
-// Initialize on load
 window.addEventListener('load', () => {
   checkAuth(); 
   initializeGoogleSignIn();
