@@ -17,6 +17,9 @@
 </script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
+/* =========================================
+   EXISTING APP STYLES
+   ========================================= */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 :root {
   --primary: #2563eb; --danger: #ef4444; --success: #059669;
@@ -119,10 +122,219 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .spam-notice { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; padding: 12px; margin-top: 15px; font-size: 13px; color: var(--warning); text-align: center; }
 .spam-notice strong { display: block; margin-bottom: 4px; }
 .google-terms-notice { margin: 15px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; font-size: 12px; color: var(--warning); }
+
+/* =========================================
+   LANDING PAGE STYLES (NEW)
+   ========================================= */
+#landing-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    background: var(--dark);
+}
+.landing-nav {
+    padding: 0.8rem 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--dark);
+    flex-shrink: 0;
+    height: 60px;
+}
+.landing-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--warning);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.landing-logo-icon { font-size: 1.8rem; }
+
+.landing-main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    width: 100%;
+}
+.carousel-container {
+    width: 100%;
+    max-width: 400px;
+    height: 82vh;
+    max-height: 700px;
+    background: var(--dark-card);
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+.carousel { flex: 1; position: relative; overflow: hidden; }
+.step-slide {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 1.5rem;
+    overflow-y: auto;
+    animation: fadeIn 0.4s ease-in-out;
+}
+.step-slide.active { display: flex; }
+@keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes fadeOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-20px); } }
+.step-slide.slide-out { animation: fadeOut 0.3s ease-in-out; }
+
+.step-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; width: 100%; justify-content: center; flex-shrink: 0; }
+.step-badge { background: var(--warning); color: var(--dark); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; flex-shrink: 0; }
+.step-title { font-size: 1.4rem; color: var(--warning); font-weight: 700; }
+.step-icon { font-size: 3.5rem; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-description { color: var(--light); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1rem; text-align: center; max-width: 340px; flex-shrink: 0; }
+.step-description strong { color: var(--warning); display: block; margin-bottom: 0.3rem; font-size: 1rem; }
+
+.step-features { list-style: none; width: 100%; max-width: 340px; margin-bottom: 0.5rem; flex-shrink: 0; }
+.step-features li { padding: 0.6rem 0; color: var(--gray); display: flex; align-items: center; gap: 0.8rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+.step-features li:last-child { border-bottom: none; }
+.check-icon { color: var(--warning); font-weight: bold; font-size: 1.1rem; width: 24px; height: 24px; background: rgba(251, 191, 36, 0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+.get-started-btn { background: var(--warning); color: var(--dark); border: none; padding: 0.9rem 2.5rem; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; margin-top: 0.5rem; flex-shrink: 0; }
+.get-started-btn:hover { background: #f59e0b; transform: translateY(-2px); box-shadow: 0 10px 25px rgba(251, 191, 36, 0.3); }
+.login-link { color: var(--gray); font-size: 0.85rem; margin-top: 0.8rem; text-align: center; flex-shrink: 0; }
+.login-link a { color: var(--warning); text-decoration: none; font-weight: 600; cursor: pointer; }
+.login-link a:hover { text-decoration: underline; }
+
+.carousel-nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; background: rgba(15, 23, 42, 0.6); border-top: 1px solid var(--border); flex-shrink: 0; width: 100%; }
+.nav-arrow { background: transparent; color: var(--warning); border: 2px solid var(--warning); width: 45px; height: 45px; border-radius: 10px; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-weight: bold; flex-shrink: 0; }
+.nav-arrow:hover:not(:disabled) { background: var(--warning); color: var(--dark); transform: translateY(-2px); }
+.nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; border-color: var(--gray); color: var(--gray); }
+.nav-arrow.next-arrow { background: var(--warning); color: var(--dark); border-color: var(--warning); }
+.nav-arrow.next-arrow:hover:not(:disabled) { background: #f59e0b; border-color: #f59e0b; }
+
+.progress-dots { display: flex; gap: 0.5rem; justify-content: center; align-items: center; flex: 1; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(251, 191, 36, 0.3); cursor: pointer; transition: all 0.3s; border: none; padding: 0; }
+.dot.active { background: var(--warning); width: 25px; border-radius: 4px; }
+.dot:hover { background: var(--warning); }
+.progress-text { text-align: center; color: var(--gray); font-size: 0.85rem; margin-top: 0.8rem; font-weight: 500; flex-shrink: 0; }
+.carousel-container { -webkit-user-select: none; user-select: none; }
 </style>
 </head>
 <body>
 
+<!-- ========================================== -->
+<!-- PART 1: LANDING PAGE (Visible First)       -->
+<!-- ========================================== -->
+<div id="landing-page">
+    <nav class="landing-nav">
+        <div class="landing-logo">
+            <span class="landing-logo-icon">📍</span>
+            <span>Locate Me</span>
+        </div>
+    </nav>
+    <div class="landing-main-container">
+        <div class="carousel-container" id="carouselContainer">
+            <div class="carousel">
+                <!-- Step 1 -->
+                <div class="step-slide active" data-step="1">
+                    <div class="step-header"><div class="step-badge">1</div><h3 class="step-title">Welcome</h3></div>
+                    <div class="step-icon">📍</div>
+                    <p class="step-description">Locate Me helps families, communities, organizations and authorities share verified missing person reports and reunite loved ones safely.</p>
+                    <ul class="step-features">
+                        <li><span class="check-icon">✓</span> Quick and easy to use</li>
+                        <li><span class="check-icon">✓</span> Secure and verified reports</li>
+                        <li><span class="check-icon">✓</span> Community-driven platform</li>
+                    </ul>
+                </div>
+                <!-- Step 2 -->
+                <div class="step-slide" data-step="2">
+                    <div class="step-header"><div class="step-badge">2</div><h3 class="step-title">Post Missing Person</h3></div>
+                    <div class="step-icon">📝</div>
+                    <p class="step-description">Create a Missing Person Report with detailed information to help identify and locate them.</p>
+                    <ul class="step-features">
+                        <li><span class="check-icon">✓</span> Upload multiple photos</li>
+                        <li><span class="check-icon">✓</span> Last seen location</li>
+                        <li><span class="check-icon">✓</span> Clothing description</li>
+                        <li><span class="check-icon">✓</span> Police information</li>
+                        <li><span class="check-icon">✓</span> Contact details</li>
+                    </ul>
+                </div>
+                <!-- Step 3 -->
+                <div class="step-slide" data-step="3">
+                    <div class="step-header"><div class="step-badge">3</div><h3 class="step-title">Found Someone?</h3></div>
+                    <div class="step-icon">🔍</div>
+                    <p class="step-description">If you find someone who may be missing, submit a Found Report with details and photos.</p>
+                    <ul class="step-features">
+                        <li><span class="check-icon">✓</span> Upload evidence</li>
+                        <li><span class="check-icon">✓</span> Submit sighting reports</li>
+                        <li><span class="check-icon">✓</span> Help reunite families</li>
+                    </ul>
+                </div>
+                <!-- Step 4 -->
+                <div class="step-slide" data-step="4">
+                    <div class="step-header"><div class="step-badge">4</div><h3 class="step-title">Safe & Verified</h3></div>
+                    <div class="step-icon">🛡️</div>
+                    <p class="step-description"><strong>Accuracy Saves Lives</strong>Please provide truthful and accurate information. False reports can delay investigations.</p>
+                    <ul class="step-features">
+                        <li><span class="check-icon">✓</span> Content moderation</li>
+                        <li><span class="check-icon">✓</span> Community guidelines</li>
+                        <li><span class="check-icon">✓</span> Report abuse prevention</li>
+                        <li><span class="check-icon">✓</span> Verified information</li>
+                    </ul>
+                </div>
+                <!-- Step 5 -->
+                <div class="step-slide" data-step="5">
+                    <div class="step-header"><div class="step-badge">5</div><h3 class="step-title">Admin Oversight</h3></div>
+                    <div class="step-icon">📊</div>
+                    <p class="step-description"><strong>Monitored For Safety</strong>Our administration team monitors reports and can review, edit, remove, or investigate inappropriate content.</p>
+                    <ul class="step-features">
+                        <li><span class="check-icon">✓</span> Admin dashboard</li>
+                        <li><span class="check-icon">✓</span> Report review</li>
+                        <li><span class="check-icon">✓</span> Case management</li>
+                        <li><span class="check-icon">✓</span> Community protection</li>
+                    </ul>
+                </div>
+                <!-- Step 6 -->
+                <div class="step-slide" data-step="6">
+                    <div class="step-header"><div class="step-badge">6</div><h3 class="step-title">Get Started</h3></div>
+                    <div class="step-icon">❤️</div>
+                    <p class="step-description"><strong>Every Report Matters</strong>Together we can help reunite families and locate missing persons across our communities.</p>
+                    <ul class="step-features">
+                        <li><span class="check-icon">✓</span> Join our community</li>
+                        <li><span class="check-icon">✓</span> Make a difference</li>
+                        <li><span class="check-icon">✓</span> Help bring people home</li>
+                    </ul>
+                    <button class="get-started-btn" onclick="showAuthFromLanding('signup')">Get Started</button>
+                    <p class="login-link">Already have an account? <a onclick="showAuthFromLanding('login')">Login</a></p>
+                </div>
+            </div>
+            <div class="carousel-nav">
+                <button class="nav-arrow prev-arrow" onclick="changeStep(-1)" id="prevBtn" type="button">←</button>
+                <div class="progress-dots">
+                    <button class="dot active" onclick="goToStep(0)"></button>
+                    <button class="dot" onclick="goToStep(1)"></button>
+                    <button class="dot" onclick="goToStep(2)"></button>
+                    <button class="dot" onclick="goToStep(3)"></button>
+                    <button class="dot" onclick="goToStep(4)"></button>
+                    <button class="dot" onclick="goToStep(5)"></button>
+                </div>
+                <button class="nav-arrow next-arrow" onclick="changeStep(1)" id="nextBtn" type="button">→</button>
+            </div>
+        </div>
+        <p class="progress-text">Step <span id="currentStep">1</span> of 6</p>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- PART 2: EXISTING AUTH SCREEN               -->
+<!-- ========================================== -->
 <div class="auth-screen" id="authScreen">
   <div class="auth-box">
     <div class="auth-logo">🔍</div>
@@ -188,6 +400,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
+<!-- ========================================== -->
+<!-- PART 3: EXISTING MAIN APP                  -->
+<!-- ========================================== -->
 <div class="app-container" id="mainApp">
   <div class="header">
     <h1>📍 Locate Me</h1>
@@ -474,15 +689,112 @@ const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 const GOOGLE_CLIENT_ID = '384124217618-38rde3tgblslp1s9u3e1fn5tn7h971uk.apps.googleusercontent.com';
 let missingPersons = []; let currentUser = null;
 
+// --- LANDING PAGE CAROUSEL LOGIC (NEW) ---
+let currentSlide = 0;
+const slides = document.querySelectorAll('.step-slide');
+const dots = document.querySelectorAll('.dot');
+const totalSlides = slides.length;
+const carouselContainer = document.getElementById('carouselContainer');
+
+function updateCarousel() {
+    slides.forEach(slide => { slide.classList.remove('active'); slide.classList.remove('slide-out'); });
+    slides[currentSlide].classList.add('active');
+    dots.forEach((dot, index) => { dot.classList.toggle('active', index === currentSlide); });
+    document.getElementById('currentStep').textContent = currentSlide + 1;
+    document.getElementById('prevBtn').disabled = currentSlide === 0;
+    const nextBtn = document.getElementById('nextBtn');
+    if (currentSlide === totalSlides - 1) { nextBtn.style.display = 'none'; } 
+    else { nextBtn.style.display = 'flex'; }
+}
+
+function changeStep(direction) {
+    const newSlide = currentSlide + direction;
+    if (newSlide >= 0 && newSlide < totalSlides) {
+        slides[currentSlide].classList.add('slide-out');
+        setTimeout(() => { currentSlide = newSlide; updateCarousel(); }, 150);
+    }
+}
+
+function goToStep(index) {
+    if (index === currentSlide) return;
+    slides[currentSlide].classList.add('slide-out');
+    setTimeout(() => { currentSlide = index; updateCarousel(); }, 150);
+}
+
+// Touch/Swipe support for landing page
+let touchStartX = 0, touchStartY = 0, touchStartTime = 0, isSwiping = false;
+carouselContainer.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+    touchStartTime = new Date().getTime();
+    isSwiping = true;
+}, { passive: true });
+carouselContainer.addEventListener('touchmove', (e) => {
+    if (!isSwiping) return;
+    const currentX = e.changedTouches[0].screenX;
+    const currentY = e.changedTouches[0].screenY;
+    if (Math.abs(currentX - touchStartX) > Math.abs(currentY - touchStartY) && Math.abs(currentX - touchStartX) > 10) {
+        e.preventDefault();
+    }
+}, { passive: false });
+carouselContainer.addEventListener('touchend', (e) => {
+    if (!isSwiping) return;
+    const touchEndX = e.changedTouches[0].screenX;
+    const touchEndY = e.changedTouches[0].screenY;
+    const timeDiff = new Date().getTime() - touchStartTime;
+    const diffX = touchStartX - touchEndX;
+    const diffY = Math.abs(touchStartY - touchEndY);
+    if (Math.abs(diffX) > diffY && timeDiff < 500 && Math.abs(diffX) > 50) {
+        if (diffX > 0) changeStep(1); else changeStep(-1);
+    }
+    isSwiping = false;
+}, { passive: true });
+
+// --- VIEW SWITCHING LOGIC (NEW) ---
+function hideLandingPage() {
+    const lp = document.getElementById('landing-page');
+    if (lp) lp.style.display = 'none';
+}
+
+function showAuthFromLanding(tab) {
+    hideLandingPage();
+    document.getElementById('authScreen').classList.add('active');
+    document.getElementById('mainApp').classList.remove('active');
+    
+    // Switch to the correct auth tab
+    if (tab === 'signup') {
+        switchAuthTab('signup');
+    } else {
+        switchAuthTab('login');
+    }
+}
+
+// --- EXISTING APP LOGIC (MODIFIED FOR LANDING PAGE) ---
+
+// Fixed to work when called from JS (not just onclick)
 function switchAuthTab(tab) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-  event.target.classList.add('active');
+  
+  // Find the correct tab element and activate it
+  const tabEl = document.querySelector(`.auth-tab[onclick*="'${tab}'"]`);
+  if (tabEl) tabEl.classList.add('active');
+  
   document.getElementById(tab + 'Form').classList.add('active');
 }
 
-function showAuth() { document.getElementById('authScreen').classList.add('active'); document.getElementById('mainApp').classList.remove('active'); }
-function showApp() { document.getElementById('authScreen').classList.remove('active'); document.getElementById('mainApp').classList.add('active'); }
+// Modified to hide landing page
+function showAuth() { 
+    hideLandingPage(); 
+    document.getElementById('authScreen').classList.add('active'); 
+    document.getElementById('mainApp').classList.remove('active'); 
+}
+
+function showApp() { 
+    hideLandingPage(); // Ensure landing page is hidden
+    document.getElementById('authScreen').classList.remove('active'); 
+    document.getElementById('mainApp').classList.add('active'); 
+}
 
 function switchTab(tab, eventObj) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -632,13 +944,18 @@ async function handleGoogleResponse(response) {
   } catch (err) { showToast('❌ ' + err.message); }
 }
 
+// Modified to show landing page if not logged in
 function checkAuth() {
   const token = localStorage.getItem('authToken'); const user = localStorage.getItem('user');
   if (token && user) {
     currentUser = JSON.parse(user);
     document.getElementById('userEmailDisplay').textContent = currentUser.email;
+    hideLandingPage();
     showApp(); loadData();
-  } else { showAuth(); }
+  } else { 
+    // Show landing page instead of auth screen
+    document.getElementById('landing-page').style.display = 'flex';
+  }
 }
 
 async function checkVerificationLink() {
@@ -662,9 +979,10 @@ async function checkVerificationLink() {
   }
 }
 
+// Modified to hide landing page on logout
 function logout() {
   localStorage.removeItem('authToken'); localStorage.removeItem('user'); currentUser = null;
-  showToast('✅ Logged out'); showAuth();
+  showToast('✅ Logged out'); hideLandingPage(); showAuth();
 }
 
 async function loadData() {
@@ -917,6 +1235,7 @@ window.addEventListener('load', () => {
   checkAuth(); 
   initializeGoogleSignIn();
   checkVerificationLink();
+  updateCarousel(); // Initialize landing page carousel
 });
 
 document.getElementById('searchInput').addEventListener('input', renderCards);
