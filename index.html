@@ -534,32 +534,20 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     <div id="settingsTab" class="tab-content">
       <h2 class="page-title">Settings</h2>
       <div class="info-section" id="userProfileSection">
-        <div class="info-label">Logged in as</div>
+        <div class="info-label">LOGGED IN AS</div>
         <div style="display:flex; align-items:center;">
           <img id="userAvatar" class="user-avatar" src="" style="display:none">
           <div class="info-value" id="userEmailDisplay">Loading...</div>
         </div>
       </div>
-      <div class="info-section" onclick="loadMyPosts()">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <div class="info-label">My Posts</div>
-            <div class="info-value">View, edit or delete your reports</div>
-          </div>
-          <span style="font-size: 20px;">➡️</span>
-        </div>
-      </div>
-      <div id="my-posts-container" style="display:none; margin-bottom: 20px;">
-        <div id="my-posts-list"></div>
-      </div>
       <a href="policies.html" style="text-decoration: none; color: inherit; display: block;">
         <div class="info-section">
-          <div class="info-label">Legal & Policies</div>
+          <div class="info-label">LEGAL & POLICIES</div>
           <div class="info-value">Privacy, Terms, Child Safety & More</div>
         </div>
       </a>
       <div class="info-section">
-        <div class="info-label">Language</div>
+        <div class="info-label">LANGUAGE</div>
         <select class="form-select" id="settingsLanguage" onchange="changeLanguage()">
           <option value="en">English</option>
           <option value="sw">Kiswahili</option>
@@ -567,19 +555,19 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <div class="info-section">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div class="info-label">Push Notifications</div>
+          <div class="info-label">PUSH NOTIFICATIONS</div>
           <label class="toggle-switch"><input type="checkbox" checked id="notifToggle" onchange="toggleNotifications()"><span class="toggle-slider"></span></label>
         </div>
       </div>
       <a href="mailto:nyotalabs@gmail.com" style="text-decoration: none; color: inherit; display: block;">
         <div class="info-section">
-          <div class="info-label">Contact Support</div>
+          <div class="info-label">CONTACT SUPPORT</div>
           <div class="info-value">Get help or report issues</div>
         </div>
       </a>
       <button class="logout-btn" onclick="logout()">Logout</button>
       <div class="info-section" style="margin-top: 20px;">
-        <div class="info-label">App Version</div>
+        <div class="info-label">APP VERSION</div>
         <div class="info-value">1.1.0</div>
       </div>
     </div>
@@ -620,43 +608,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     <button class="modal-close" onclick="closeProfileModal()">✕</button>
   </div>
   <div class="modal-content" id="modalContent"></div>
-</div>
-
-<div class="modal-overlay" id="editPostModal">
-  <div class="modal-header">
-    <button class="modal-close" onclick="closeModal('editPostModal')">✕</button>
-    <div style="font-weight:700">Edit Post</div>
-    <div style="width:36px"></div>
-  </div>
-  <div class="modal-content">
-    <input type="hidden" id="editPostId">
-    <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="editName"></div>
-    <div class="form-group"><label class="form-label">Age</label><input type="number" class="form-input" id="editAge"></div>
-    <div class="form-group"><label class="form-label">Last Seen Location</label><input type="text" class="form-input" id="editLocation"></div>
-    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="editDesc" rows="3"></textarea></div>
-    <button class="btn-submit" style="width:100%" onclick="savePostEdit()">Save Changes</button>
-  </div>
-</div>
-
-<div class="modal-overlay" id="deletePostModal">
-  <div class="modal-header">
-    <button class="modal-close" onclick="closeModal('deletePostModal')">✕</button>
-    <div style="font-weight:700">Delete Post</div>
-    <div style="width:36px"></div>
-  </div>
-  <div class="modal-content">
-    <h3 style="color:var(--danger)">Are you sure?</h3>
-    <p>Please select a reason for deletion:</p>
-    <select class="form-select" id="deleteReason" style="margin-bottom: 20px;">
-      <option value="found">✅ The missing person has been found</option>
-      <option value="duplicate">📑 This is a duplicate post</option>
-      <option value="wrong_info">❌ Contains wrong information</option>
-      <option value="resolved">🛑 Issue resolved</option>
-      <option value="other">📝 Other reason</option>
-    </select>
-    <button class="btn-submit" style="width:100%; background:var(--danger); color:white;" onclick="confirmDeletePost()">Yes, Delete Post</button>
-    <button class="btn-cancel" style="width:100%; margin-top:10px;" onclick="closeModal('deletePostModal')">Cancel</button>
-  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -864,7 +815,6 @@ async function handleLogin(e) {
       }
       throw new Error(data.error || 'Login failed');
     }
-    // Store user info only (token is in HttpOnly cookie)
     localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
@@ -893,7 +843,6 @@ async function handleGoogleResponse(response) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    // Store user info only (token is in HttpOnly cookie)
     localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
@@ -962,7 +911,6 @@ async function loadData() {
   } catch (err) { console.error('Load error:', err); }
 }
 
-// Calculate days missing
 function getDaysMissing(dateString) {
     if (!dateString) return 0;
     const lastSeen = new Date(dateString);
@@ -1048,7 +996,6 @@ function previewImage(input, previewId, progressId) {
   if (input.files?.[0] && preview) { const reader = new FileReader(); reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; }; reader.readAsDataURL(input.files[0]); }
 }
 
-// UPLOAD TO BACKEND
 async function uploadToBackend(file, progressId) {
   const formData = new FormData();
   formData.append('image', file);
@@ -1228,101 +1175,6 @@ function formatDate(dateString) {
   if (!dateString) return 'Not specified';
   const date = new Date(dateString); if (isNaN(date.getTime())) return dateString;
   return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-async function loadMyPosts() {
-  try {
-    const res = await fetch(`${API_URL}/users/my-posts`, { 
-      credentials: 'include'
-    });
-    if (!res.ok) { 
-      showToast('❌ Failed to load posts.'); 
-      return; 
-    }
-    const posts = await res.json();
-    const container = document.getElementById('my-posts-container');
-    const list = document.getElementById('my-posts-list');
-    container.style.display = 'block';
-    if (posts.length === 0) {
-      list.innerHTML = '<p style="color:var(--gray); padding: 10px;">You have no active posts.</p>';
-      return;
-    }
-    list.innerHTML = posts.map(p => `
-      <div class="info-section" style="margin-bottom:10px; padding:15px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
-          <strong style="font-size: 16px;">${p.name}</strong>
-          <div>
-            <button onclick="openEditModal(${p.id}, '${p.name}', ${p.age}, '${p.last_seen_location}', '${p.description || ''}')" style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:5px; margin-right:5px; cursor:pointer;">Edit</button>
-            <button onclick="openDeleteModal(${p.id})" style="background:var(--danger); color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">Delete</button>
-          </div>
-        </div>
-        <div style="font-size:13px; color:var(--gray)"> ${p.last_seen_location} | 👤 Age: ${p.age}</div>
-      </div>
-    `).join('');
-  } catch (err) { 
-    console.error(err); 
-    showToast('❌ Failed to load posts.'); 
-  }
-}
-
-let currentEditId = null;
-let currentDeleteId = null;
-
-function openEditModal(id, name, age, location, desc) {
-  currentEditId = id;
-  document.getElementById('editName').value = name;
-  document.getElementById('editAge').value = age;
-  document.getElementById('editLocation').value = location;
-  document.getElementById('editDesc').value = desc;
-  document.getElementById('editPostModal').classList.add('active');
-}
-
-async function savePostEdit() {
-  const data = {
-    name: document.getElementById('editName').value,
-    age: document.getElementById('editAge').value,
-    last_seen_location: document.getElementById('editLocation').value,
-    description: document.getElementById('editDesc').value
-  };
-  try {
-    const res = await fetch(`${API_URL}/missing-persons/${currentEditId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Update failed');
-    showToast('✅ Post updated!');
-    closeModal('editPostModal');
-    loadMyPosts();
-    loadData();
-  } catch (err) { 
-    showToast('❌ ' + err.message); 
-  }
-}
-
-function openDeleteModal(id) {
-  currentDeleteId = id;
-  document.getElementById('deletePostModal').classList.add('active');
-}
-
-async function confirmDeletePost() {
-  const reason = document.getElementById('deleteReason').value;
-  try {
-    const res = await fetch(`${API_URL}/missing-persons/${currentDeleteId}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ reason })
-    });
-    if (!res.ok) throw new Error('Delete failed');
-    showToast('✅ Post deleted.');
-    closeModal('deletePostModal');
-    loadMyPosts();
-    loadData();
-  } catch (err) { 
-    showToast('❌ ' + err.message); 
-  }
 }
 
 window.addEventListener('load', () => {
