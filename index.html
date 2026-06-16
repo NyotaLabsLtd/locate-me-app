@@ -224,6 +224,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     .step-icon { font-size: 4.5rem; }
     .nav-arrow { width: 50px; height: 50px; font-size: 1.5rem; }
 }
+
+/* Offline Banner */
+#offlineBanner {
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -662,7 +672,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div class="toast" id="toast"></div>
 
 <script>
-const CLOUDINARY_CONFIG = { cloud_name: 'dvvz0dcrj', upload_preset: 'locate-me-uploads', folder: 'locate-me/missing-persons' };
 const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 const GOOGLE_CLIENT_ID = '384124217618-38rde3tgblslp1s9u3e1fn5tn7h971uk.apps.googleusercontent.com';
 let missingPersons = []; let currentUser = null;
@@ -855,7 +864,8 @@ async function handleLogin(e) {
       body: JSON.stringify({ 
         email: document.getElementById('loginEmail').value, 
         password: document.getElementById('loginPassword').value 
-      }) 
+      }),
+      credentials: 'include'
     });
     const data = await res.json();
     if (!res.ok) {
@@ -864,7 +874,7 @@ async function handleLogin(e) {
       }
       throw new Error(data.error || 'Login failed');
     }
-    localStorage.setItem('authToken', data.token); 
+    // Store user info only (not token)
     localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
@@ -885,23 +895,34 @@ function initializeGoogleSignIn() {
 
 async function handleGoogleResponse(response) {
   try {
-    const res = await fetch(`${API_URL}/auth/google`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ credential: response.credential }) });
+    const res = await fetch(`${API_URL}/auth/google`, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' }, 
+      body: JSON.stringify({ credential: response.credential }),
+      credentials: 'include'
+    });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    localStorage.setItem('authToken', data.token); localStorage.setItem('user', JSON.stringify(data.user));
+    // Store user info only (not token)
+    localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
-    showToast('✅ Signed in with Google!'); showApp(); loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
+    showToast('✅ Signed in with Google!'); 
+    showApp(); 
+    loadData();
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  }
 }
 
 function checkAuth() {
-  const token = localStorage.getItem('authToken'); const user = localStorage.getItem('user');
-  if (token && user) {
+  const user = localStorage.getItem('user');
+  if (user) {
     currentUser = JSON.parse(user);
     document.getElementById('userEmailDisplay').textContent = currentUser.email;
     hideLandingPage();
-    showApp(); loadData();
+    showApp(); 
+    loadData();
   } else { 
     document.getElementById('landing-page').style.display = 'flex';
   }
@@ -926,18 +947,149 @@ async function checkVerificationLink() {
   }
 }
 
-function logout() {
-  localStorage.removeItem('authToken'); localStorage.removeItem('user'); currentUser = null;
-  showToast('✅ Logged out'); hideLandingPage(); showAuth();
+async function logout() {
+  try {
+    await fetch(`${API_URL}/auth/logout`, { 
+      method: 'POST',
+      credentials: 'include'
+    });
+  } catch (err) {
+    console.error('Logout error:', err);
+  }
+  
+  localStorage.removeItem('user');
+  currentUser = null;
+  showToast('✅ Logged out'); 
+  hideLandingPage(); 
+  showAuth();
 }
 
 async function loadData() {
+  // FIRST: Show cached data immediately (instant load!)
+  const cachedData = localStorage.getItem('missingPersonsCache');
+  const cacheTime = localStorage.getItem('missingPersonsCacheTime');
+  
+  if (cachedData) {
+    try {
+      const data = JSON.parse(cachedData);
+      missingPersons = data;
+      renderCards();
+      
+      // Show indicator if data is old (more than 1 hour)
+      if (cacheTime) {
+        const age = Date.now() - parseInt(cacheTime);
+        const minutes = Math.floor(age / (1000 * 60));
+        const hours = Math.floor(minutes / 60);
+        
+        if (hours > 0) {
+          showToast(`📱 Showing cached data (${hours}h old)`);
+        } else if (minutes > 5) {
+          showToast(`📱 Showing cached data (${minutes}m old)`);
+        }
+      }
+    } catch (e) {
+      console.error('Cache parse error:', e);
+    }
+  }
+  
+  // THEN: Try to fetch fresh data if online
   try {
     const response = await fetch(`${API_URL}/missing-persons`);
     if (!response.ok) throw new Error('Failed to fetch');
-    missingPersons = await response.json(); renderCards();
-  } catch (err) { console.error('Load error:', err); }
+    const freshData = await response.json();
+    
+    // Update cache
+    missingPersons = freshData;
+    localStorage.setItem('missingPersonsCache', JSON.stringify(freshData));
+    localStorage.setItem('missingPersonsCacheTime', Date.now().toString());
+    
+    // Re-render with fresh data
+    renderCards();
+    
+    // Cache images for offline viewing
+    cacheImages(freshData);
+    
+    // Hide offline indicator if it was showing
+    const offlineBanner = document.getElementById('offlineBanner');
+    if (offlineBanner) offlineBanner.style.display = 'none';
+    
+  } catch (err) {
+    console.error('Load error (showing cached data):', err);
+    
+    if (!cachedData) {
+      // No cache and offline - show error
+      const container = document.getElementById('missingCardsContainer');
+      container.innerHTML = `
+        <div class="loading">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
+          <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">You're Offline</div>
+          <div style="font-size: 0.9rem;">Check your connection to see the latest reports</div>
+        </div>
+      `;
+      
+      // Show offline banner
+      showOfflineBanner();
+    }
+  }
 }
+
+// Cache images for offline viewing
+function cacheImages(data) {
+  if ('caches' in window) {
+    caches.open('locate-me-images').then((cache) => {
+      data.forEach(person => {
+        if (person.photo_urls && person.photo_urls.length > 0) {
+          person.photo_urls.forEach(url => {
+            cache.add(url).catch(err => {
+              console.log('Image cache failed:', err);
+            });
+          });
+        }
+      });
+    }).catch(err => {
+      console.log('Image caching failed:', err);
+    });
+  }
+}
+
+// Show offline banner
+function showOfflineBanner() {
+  let banner = document.getElementById('offlineBanner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'offlineBanner';
+    banner.style.cssText = `
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: var(--warning);
+      color: var(--dark);
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 99;
+      display: none;
+    `;
+    banner.innerHTML = '📱 You are viewing cached data - Connect to internet for updates';
+    document.body.appendChild(banner);
+  }
+  banner.style.display = 'block';
+}
+
+// Listen for online/offline events
+window.addEventListener('online', () => {
+  showToast('✅ Back online! Refreshing data...');
+  const offlineBanner = document.getElementById('offlineBanner');
+  if (offlineBanner) offlineBanner.style.display = 'none';
+  loadData();
+});
+
+window.addEventListener('offline', () => {
+  showToast('📱 You are offline - Showing cached data');
+  showOfflineBanner();
+});
 
 // Calculate days missing
 function getDaysMissing(dateString) {
@@ -1037,13 +1189,9 @@ async function uploadToBackend(file, progressId) {
   if (bar) bar.style.width = '30%';
   
   try {
-    const token = localStorage.getItem('authToken');
-    
     const res = await fetch(`${API_URL}/upload`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
+      credentials: 'include',
       body: formData
     });
     
@@ -1068,13 +1216,24 @@ async function uploadToBackend(file, progressId) {
 }
 
 async function submitMissingPerson() {
-  const name = document.getElementById('postFullName')?.value.trim(); const age = document.getElementById('postAge')?.value;
-  const location = document.getElementById('postLastLocation')?.value.trim(); const desc = document.getElementById('postDescription')?.value.trim();
+  const name = document.getElementById('postFullName')?.value.trim(); 
+  const age = document.getElementById('postAge')?.value;
+  const location = document.getElementById('postLastLocation')?.value.trim(); 
+  const desc = document.getElementById('postDescription')?.value.trim();
   const dateLastSeen = document.getElementById('postDateLastSeen')?.value;
-  const photo1 = document.getElementById('postPhoto1')?.files[0]; const photo2 = document.getElementById('postPhoto2')?.files[0]; const photo3 = document.getElementById('postPhoto3')?.files[0];
+  const photo1 = document.getElementById('postPhoto1')?.files[0]; 
+  const photo2 = document.getElementById('postPhoto2')?.files[0]; 
+  const photo3 = document.getElementById('postPhoto3')?.files[0];
   const files = [photo1, photo2, photo3];
-  if (!name || !age || !location || !desc || !dateLastSeen || files.some(f => !f)) { showToast('Please fill all required fields & select 3 photos'); return; }
-  const btn = document.getElementById('postBtn'); if (btn) { btn.disabled = true; btn.textContent = 'Uploading...'; }
+  if (!name || !age || !location || !desc || !dateLastSeen || files.some(f => !f)) { 
+    showToast('Please fill all required fields & select 3 photos'); 
+    return; 
+  }
+  const btn = document.getElementById('postBtn'); 
+  if (btn) { 
+    btn.disabled = true; 
+    btn.textContent = 'Uploading...'; 
+  }
   try {
     const urls = await Promise.all(files.map((f, i) => uploadToBackend(f, `progress${i+1}`)));
     const newPerson = { 
@@ -1090,12 +1249,29 @@ async function submitMissingPerson() {
         date_missing: new Date().toISOString().split('T')[0], 
         photo_urls: urls 
     };
-    const token = localStorage.getItem('authToken');
-    const response = await fetch(`${API_URL}/missing-persons`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(newPerson) });
-    if (response.status === 401) { logout(); throw new Error('Session expired.'); }
+    const response = await fetch(`${API_URL}/missing-persons`, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(newPerson) 
+    });
+    if (response.status === 401) { 
+      logout(); 
+      throw new Error('Session expired.'); 
+    }
     if (!response.ok) throw new Error('Failed to save to database');
-    showToast('✅ Posted to Database!'); resetPostForm(); loadData(); switchTab('home', null);
-  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
+    showToast('✅ Report submitted successfully!'); 
+    resetPostForm(); 
+    loadData(); 
+    switchTab('home', null);
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  } finally { 
+    if (btn) { 
+      btn.disabled = false; 
+      btn.textContent = 'Submit'; 
+    } 
+  }
 }
 
 function resetPostForm() {
@@ -1105,22 +1281,27 @@ function resetPostForm() {
 }
 
 async function submitSighting() {
-  const contact = document.getElementById('sightingContact')?.value.trim(); const location = document.getElementById('sightingLocation')?.value.trim();
+  const contact = document.getElementById('sightingContact')?.value.trim(); 
+  const location = document.getElementById('sightingLocation')?.value.trim();
   const phoneRegex = /^(\+254|0)?[7]\d{8}$/;
-  if (!contact || !phoneRegex.test(contact.replace(/\s/g, ''))) { showToast('Please enter a valid Kenyan phone number'); return; }
-  const btn = document.getElementById('sightingBtn'); if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
+  if (!contact || !phoneRegex.test(contact.replace(/\s/g, ''))) { 
+    showToast('Please enter a valid Kenyan phone number'); 
+    return; 
+  }
+  const btn = document.getElementById('sightingBtn'); 
+  if (btn) { 
+    btn.disabled = true; 
+    btn.textContent = 'Submitting...'; 
+  }
   try {
     const photoFile = document.getElementById('sightingPhoto')?.files[0];
     let photoUrl = null;
     if (photoFile) {
-      const token = localStorage.getItem('authToken');
       const formData = new FormData();
       formData.append('image', photoFile);
       const res = await fetch(`${API_URL}/upload`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
+        credentials: 'include',
         body: formData
       });
       if (!res.ok) {
@@ -1130,14 +1311,38 @@ async function submitSighting() {
       const data = await res.json();
       photoUrl = data.secure_url;
     }
-    const sightingData = { missing_person_name: document.getElementById('sightingName')?.value, gender: document.getElementById('sightingGender')?.value, sighting_location: location, sighting_time: document.getElementById('sightingTime')?.value, description: document.getElementById('sightingDescription')?.value, reporter_name: document.getElementById('sightingYourName')?.value, reporter_contact: contact, photo_url: photoUrl };
-    const token = localStorage.getItem('authToken');
-    const response = await fetch(`${API_URL}/sightings`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(sightingData) });
-    if (response.status === 401) { logout(); throw new Error('Session expired.'); }
+    const sightingData = { 
+      missing_person_name: document.getElementById('sightingName')?.value, 
+      gender: document.getElementById('sightingGender')?.value, 
+      sighting_location: location, 
+      sighting_time: document.getElementById('sightingTime')?.value, 
+      description: document.getElementById('sightingDescription')?.value, 
+      reporter_name: document.getElementById('sightingYourName')?.value, 
+      reporter_contact: contact, 
+      photo_url: photoUrl 
+    };
+    const response = await fetch(`${API_URL}/sightings`, { 
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(sightingData) 
+    });
+    if (response.status === 401) { 
+      logout(); 
+      throw new Error('Session expired.'); 
+    }
     if (!response.ok) throw new Error('Failed to save sighting');
     showToast('✅ Sighting reported!');
-    resetSightingForm(); switchTab('home', null);
-  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
+    resetSightingForm(); 
+    switchTab('home', null);
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  } finally { 
+    if (btn) { 
+      btn.disabled = false; 
+      btn.textContent = 'Submit'; 
+    } 
+  }
 }
 
 function resetSightingForm() {
@@ -1155,11 +1360,14 @@ function formatDate(dateString) {
 }
 
 async function loadMyPosts() {
-  const token = localStorage.getItem('authToken');
-  if (!token) return showToast('Please log in first');
   try {
-    const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
-    if (!res.ok) { showToast('❌ Failed to load posts.'); return; }
+    const res = await fetch(`${API_URL}/users/my-posts`, { 
+      credentials: 'include'
+    });
+    if (!res.ok) { 
+      showToast('❌ Failed to load posts.'); 
+      return; 
+    }
     const posts = await res.json();
     const container = document.getElementById('my-posts-container');
     const list = document.getElementById('my-posts-list');
@@ -1180,7 +1388,10 @@ async function loadMyPosts() {
         <div style="font-size:13px; color:var(--gray)"> ${p.last_seen_location} | 👤 Age: ${p.age}</div>
       </div>
     `).join('');
-  } catch (err) { console.error(err); showToast('❌ Failed to load posts.'); }
+  } catch (err) { 
+    console.error(err); 
+    showToast('❌ Failed to load posts.'); 
+  }
 }
 
 let currentEditId = null;
@@ -1196,7 +1407,6 @@ function openEditModal(id, name, age, location, desc) {
 }
 
 async function savePostEdit() {
-  const token = localStorage.getItem('authToken');
   const data = {
     name: document.getElementById('editName').value,
     age: document.getElementById('editAge').value,
@@ -1206,7 +1416,8 @@ async function savePostEdit() {
   try {
     const res = await fetch(`${API_URL}/missing-persons/${currentEditId}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(data)
     });
     if (!res.ok) throw new Error('Update failed');
@@ -1214,7 +1425,9 @@ async function savePostEdit() {
     closeModal('editPostModal');
     loadMyPosts();
     loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  }
 }
 
 function openDeleteModal(id) {
@@ -1223,12 +1436,12 @@ function openDeleteModal(id) {
 }
 
 async function confirmDeletePost() {
-  const token = localStorage.getItem('authToken');
   const reason = document.getElementById('deleteReason').value;
   try {
     const res = await fetch(`${API_URL}/missing-persons/${currentDeleteId}`, {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ reason })
     });
     if (!res.ok) throw new Error('Delete failed');
@@ -1236,7 +1449,22 @@ async function confirmDeletePost() {
     closeModal('deletePostModal');
     loadMyPosts();
     loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  }
+}
+
+// Register Service Worker for offline support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((reg) => {
+        console.log('✅ Service Worker registered:', reg.scope);
+      })
+      .catch((err) => {
+        console.error('❌ Service Worker registration failed:', err);
+      });
+  });
 }
 
 window.addEventListener('load', () => {
