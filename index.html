@@ -17,6 +17,9 @@
 </script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
+/* =========================================
+   ALL YOUR EXISTING CSS STAYS THE SAME
+   ========================================= */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 :root {
   --primary: #2563eb; --danger: #ef4444; --success: #059669;
@@ -396,8 +399,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <h2 class="page-title">Reported Missing People</h2>
       <div class="search-bar">
         <input type="text" class="search-input" placeholder="Search by name or location..." id="searchInput">
-        <button class="filter-btn" id="filterBtn" onclick="toggleFilters()">⚙️</button>
-      </div>
+       <button class="filter-btn" id="filterBtn" onclick="toggleFilters()">Filter</button>
       <div class="filter-panel" id="filterPanel">
         <div class="filter-grid">
           <select class="filter-select" id="filterGender">
@@ -1025,17 +1027,49 @@ function previewImage(input, previewId, progressId) {
   if (input.files?.[0] && preview) { const reader = new FileReader(); reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; }; reader.readAsDataURL(input.files[0]); }
 }
 
-async function uploadToCloudinary(file, progressId) {
+// ==========================================
+// UPDATED UPLOAD FUNCTION - USES BACKEND
+// ==========================================
+async function uploadToBackend(file, progressId) {
   const formData = new FormData();
-  formData.append('file', file); formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset); formData.append('folder', CLOUDINARY_CONFIG.folder);
-  const progressEl = document.getElementById(progressId); const bar = progressEl?.querySelector('.upload-progress-bar');
-  if (progressEl) progressEl.style.display = 'block'; if (bar) bar.style.width = '30%';
+  formData.append('image', file);
+  
+  const progressEl = document.getElementById(progressId);
+  const bar = progressEl?.querySelector('.upload-progress-bar');
+  
+  if (progressEl) progressEl.style.display = 'block';
+  if (bar) bar.style.width = '30%';
+  
   try {
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`, { method: 'POST', body: formData });
-    if (!res.ok) throw new Error('Upload failed'); const data = await res.json();
-    if (bar) bar.style.width = '100%'; setTimeout(() => { if (progressEl) progressEl.style.display = 'none'; }, 500);
+    const token = localStorage.getItem('authToken');
+    
+    // Upload to our backend instead of Cloudinary directly
+    const res = await fetch(`${API_URL}/upload`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData
+    });
+    
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || 'Upload failed');
+    }
+    
+    const data = await res.json();
+    
+    if (bar) bar.style.width = '100%';
+    setTimeout(() => {
+      if (progressEl) progressEl.style.display = 'none';
+    }, 500);
+    
     return data.secure_url;
-  } catch (err) { if (bar) bar.style.width = '0%'; if (progressEl) progressEl.style.display = 'none'; throw err; }
+  } catch (err) {
+    if (bar) bar.style.width = '0%';
+    if (progressEl) progressEl.style.display = 'none';
+    throw err;
+  }
 }
 
 async function submitMissingPerson() {
@@ -1047,7 +1081,8 @@ async function submitMissingPerson() {
   if (!name || !age || !location || !desc || !dateLastSeen || files.some(f => !f)) { showToast('Please fill all required fields & select 3 photos'); return; }
   const btn = document.getElementById('postBtn'); if (btn) { btn.disabled = true; btn.textContent = 'Uploading...'; }
   try {
-    const urls = await Promise.all(files.map((f, i) => uploadToCloudinary(f, `progress${i+1}`)));
+    // Changed from uploadToCloudinary to uploadToBackend
+    const urls = await Promise.all(files.map((f, i) => uploadToBackend(f, `progress${i+1}`)));
     const newPerson = { 
         name, 
         age: parseInt(age), 
@@ -1084,11 +1119,23 @@ async function submitSighting() {
     const photoFile = document.getElementById('sightingPhoto')?.files[0];
     let photoUrl = null;
     if (photoFile) {
+      // Upload to backend instead of Cloudinary directly
+      const token = localStorage.getItem('authToken');
       const formData = new FormData();
-      formData.append('file', photoFile); formData.append('upload_preset', CLOUDINARY_CONFIG.upload_preset); formData.append('folder', CLOUDINARY_CONFIG.folder + '/sightings');
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/image/upload`, { method: 'POST', body: formData });
-      if (!res.ok) throw new Error('Photo upload failed');
-      const data = await res.json(); photoUrl = data.secure_url;
+      formData.append('image', photoFile);
+      const res = await fetch(`${API_URL}/upload`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Photo upload failed');
+      }
+      const data = await res.json();
+      photoUrl = data.secure_url;
     }
     const sightingData = { missing_person_name: document.getElementById('sightingName')?.value, gender: document.getElementById('sightingGender')?.value, sighting_location: location, sighting_time: document.getElementById('sightingTime')?.value, description: document.getElementById('sightingDescription')?.value, reporter_name: document.getElementById('sightingYourName')?.value, reporter_contact: contact, photo_url: photoUrl };
     const token = localStorage.getItem('authToken');
