@@ -224,16 +224,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     .step-icon { font-size: 4.5rem; }
     .nav-arrow { width: 50px; height: 50px; font-size: 1.5rem; }
 }
-
-/* Offline Banner */
-#offlineBanner {
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(0); }
-}
 </style>
 </head>
 <body>
@@ -874,7 +864,7 @@ async function handleLogin(e) {
       }
       throw new Error(data.error || 'Login failed');
     }
-    // Store user info only (not token)
+    // Store user info only (token is in HttpOnly cookie)
     localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
@@ -903,7 +893,7 @@ async function handleGoogleResponse(response) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    // Store user info only (not token)
+    // Store user info only (token is in HttpOnly cookie)
     localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
@@ -965,131 +955,12 @@ async function logout() {
 }
 
 async function loadData() {
-  // FIRST: Show cached data immediately (instant load!)
-  const cachedData = localStorage.getItem('missingPersonsCache');
-  const cacheTime = localStorage.getItem('missingPersonsCacheTime');
-  
-  if (cachedData) {
-    try {
-      const data = JSON.parse(cachedData);
-      missingPersons = data;
-      renderCards();
-      
-      // Show indicator if data is old (more than 1 hour)
-      if (cacheTime) {
-        const age = Date.now() - parseInt(cacheTime);
-        const minutes = Math.floor(age / (1000 * 60));
-        const hours = Math.floor(minutes / 60);
-        
-        if (hours > 0) {
-          showToast(`📱 Showing cached data (${hours}h old)`);
-        } else if (minutes > 5) {
-          showToast(`📱 Showing cached data (${minutes}m old)`);
-        }
-      }
-    } catch (e) {
-      console.error('Cache parse error:', e);
-    }
-  }
-  
-  // THEN: Try to fetch fresh data if online
   try {
     const response = await fetch(`${API_URL}/missing-persons`);
     if (!response.ok) throw new Error('Failed to fetch');
-    const freshData = await response.json();
-    
-    // Update cache
-    missingPersons = freshData;
-    localStorage.setItem('missingPersonsCache', JSON.stringify(freshData));
-    localStorage.setItem('missingPersonsCacheTime', Date.now().toString());
-    
-    // Re-render with fresh data
-    renderCards();
-    
-    // Cache images for offline viewing
-    cacheImages(freshData);
-    
-    // Hide offline indicator if it was showing
-    const offlineBanner = document.getElementById('offlineBanner');
-    if (offlineBanner) offlineBanner.style.display = 'none';
-    
-  } catch (err) {
-    console.error('Load error (showing cached data):', err);
-    
-    if (!cachedData) {
-      // No cache and offline - show error
-      const container = document.getElementById('missingCardsContainer');
-      container.innerHTML = `
-        <div class="loading">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">📱</div>
-          <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">You're Offline</div>
-          <div style="font-size: 0.9rem;">Check your connection to see the latest reports</div>
-        </div>
-      `;
-      
-      // Show offline banner
-      showOfflineBanner();
-    }
-  }
+    missingPersons = await response.json(); renderCards();
+  } catch (err) { console.error('Load error:', err); }
 }
-
-// Cache images for offline viewing
-function cacheImages(data) {
-  if ('caches' in window) {
-    caches.open('locate-me-images').then((cache) => {
-      data.forEach(person => {
-        if (person.photo_urls && person.photo_urls.length > 0) {
-          person.photo_urls.forEach(url => {
-            cache.add(url).catch(err => {
-              console.log('Image cache failed:', err);
-            });
-          });
-        }
-      });
-    }).catch(err => {
-      console.log('Image caching failed:', err);
-    });
-  }
-}
-
-// Show offline banner
-function showOfflineBanner() {
-  let banner = document.getElementById('offlineBanner');
-  if (!banner) {
-    banner = document.createElement('div');
-    banner.id = 'offlineBanner';
-    banner.style.cssText = `
-      position: fixed;
-      top: 60px;
-      left: 0;
-      right: 0;
-      background: var(--warning);
-      color: var(--dark);
-      padding: 10px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 600;
-      z-index: 99;
-      display: none;
-    `;
-    banner.innerHTML = '📱 You are viewing cached data - Connect to internet for updates';
-    document.body.appendChild(banner);
-  }
-  banner.style.display = 'block';
-}
-
-// Listen for online/offline events
-window.addEventListener('online', () => {
-  showToast('✅ Back online! Refreshing data...');
-  const offlineBanner = document.getElementById('offlineBanner');
-  if (offlineBanner) offlineBanner.style.display = 'none';
-  loadData();
-});
-
-window.addEventListener('offline', () => {
-  showToast('📱 You are offline - Showing cached data');
-  showOfflineBanner();
-});
 
 // Calculate days missing
 function getDaysMissing(dateString) {
@@ -1452,19 +1323,6 @@ async function confirmDeletePost() {
   } catch (err) { 
     showToast('❌ ' + err.message); 
   }
-}
-
-// Register Service Worker for offline support
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((reg) => {
-        console.log('✅ Service Worker registered:', reg.scope);
-      })
-      .catch((err) => {
-        console.error('❌ Service Worker registration failed:', err);
-      });
-  });
 }
 
 window.addEventListener('load', () => {
