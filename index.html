@@ -121,14 +121,71 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .spam-notice strong { display: block; margin-bottom: 4px; }
 .google-terms-notice { margin: 15px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; font-size: 12px; color: var(--warning); }
 
-#landing-page { display: flex; flex-direction: column; height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; z-index: 9999; background: var(--dark); }
-.landing-nav { padding: 0.8rem 5%; display: flex; justify-content: center; align-items: center; background: var(--dark); flex-shrink: 0; height: 60px; }
-.landing-logo { font-size: 1.5rem; font-weight: bold; color: var(--warning); display: flex; align-items: center; gap: 0.5rem; }
+/* LANDING PAGE STYLES */
+#landing-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    background: var(--dark);
+}
+.landing-nav {
+    padding: 0.8rem 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--dark);
+    flex-shrink: 0;
+    height: 60px;
+}
+.landing-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--warning);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
 .landing-logo-icon { font-size: 1.8rem; }
-.landing-main-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1rem; width: 100%; }
-.carousel-container { width: 100%; max-width: 400px; height: 82vh; max-height: 700px; background: var(--dark-card); border-radius: 20px; border: 2px solid var(--border); overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; -webkit-user-select: none; user-select: none; }
+.landing-main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    width: 100%;
+}
+.carousel-container {
+    width: 100%;
+    max-width: 400px;
+    height: 82vh;
+    max-height: 700px;
+    background: var(--dark-card);
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    -webkit-user-select: none;
+    user-select: none;
+}
 .carousel { flex: 1; position: relative; overflow: hidden; }
-.step-slide { display: none; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 1.5rem; overflow-y: auto; animation: fadeIn 0.4s ease-in-out; }
+.step-slide {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 1.5rem;
+    overflow-y: auto;
+    animation: fadeIn 0.4s ease-in-out;
+}
 .step-slide.active { display: flex; }
 @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes fadeOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-20px); } }
@@ -269,7 +326,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <!-- AUTH SCREEN -->
 <div class="auth-screen" id="authScreen">
   <div class="auth-box">
-    <div class="auth-logo"></div>
+    <div class="auth-logo">🔍</div>
     <div class="auth-title">Locate Me</div>
     <div class="auth-tabs">
       <div class="auth-tab active" onclick="switchAuthTab('login')">Login</div>
@@ -298,7 +355,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">👁️</button>
         </div>
       </div>
       <div class="form-group">
@@ -317,7 +374,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <button type="submit" id="signupBtn" class="btn-submit" style="width:100%">Create Account</button>
       <div class="spam-notice">
-        <strong> Important:</strong>
+        <strong>📧 Important:</strong>
         After signing up, check your email (including Spam/Promotions folder) to verify your account.
       </div>
     </form>
@@ -332,7 +389,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <!-- MAIN APP -->
 <div class="app-container" id="mainApp">
   <div class="header">
-    <h1> Locate Me</h1>
+    <h1>📍 Locate Me</h1>
   </div>
   <div class="content">
     <div id="homeTab" class="tab-content active">
@@ -483,8 +540,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <div class="info-value" id="userEmailDisplay">Loading...</div>
         </div>
       </div>
-      
-      <!-- MY POSTS BUTTON -->
       <div class="info-section" onclick="loadMyPosts()">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
@@ -497,7 +552,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <div id="my-posts-container" style="display:none; margin-bottom: 20px;">
         <div id="my-posts-list"></div>
       </div>
-
       <a href="policies.html" style="text-decoration: none; color: inherit; display: block;">
         <div class="info-section">
           <div class="info-label">LEGAL & POLICIES</div>
@@ -568,10 +622,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <div class="modal-content" id="modalContent"></div>
 </div>
 
-<!-- EDIT POST MODAL -->
 <div class="modal-overlay" id="editPostModal">
   <div class="modal-header">
-    <button class="modal-close" onclick="closeModal('editPostModal')"></button>
+    <button class="modal-close" onclick="closeModal('editPostModal')">✕</button>
     <div style="font-weight:700">Edit Post</div>
     <div style="width:36px"></div>
   </div>
@@ -600,10 +653,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
-<!-- DELETE POST MODAL -->
 <div class="modal-overlay" id="deletePostModal">
   <div class="modal-header">
-    <button class="modal-close" onclick="closeModal('deletePostModal')"></button>
+    <button class="modal-close" onclick="closeModal('deletePostModal')">✕</button>
     <div style="font-weight:700">Delete Post</div>
     <div style="width:36px"></div>
   </div>
@@ -629,7 +681,9 @@ const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 const GOOGLE_CLIENT_ID = '384124217618-38rde3tgblslp1s9u3e1fn5tn7h971uk.apps.googleusercontent.com';
 let missingPersons = []; let currentUser = null;
 
+// ==========================================
 // LANDING PAGE CAROUSEL
+// ==========================================
 let currentSlide = 0;
 const slides = document.querySelectorAll('.step-slide');
 const dots = document.querySelectorAll('.dot');
@@ -689,6 +743,9 @@ carouselContainer.addEventListener('touchend', (e) => {
     isSwiping = false;
 }, { passive: true });
 
+// ==========================================
+// VIEW SWITCHING
+// ==========================================
 function hideLandingPage() {
     const lp = document.getElementById('landing-page');
     if (lp) lp.style.display = 'none';
@@ -752,6 +809,9 @@ function togglePassword(inputId, btn) {
   }
 }
 
+// ==========================================
+// AUTHENTICATION
+// ==========================================
 async function handleSignup(e) {
   e.preventDefault();
   const btn = document.getElementById('signupBtn');
@@ -815,8 +875,7 @@ async function handleLogin(e) {
       body: JSON.stringify({ 
         email: document.getElementById('loginEmail').value, 
         password: document.getElementById('loginPassword').value 
-      }),
-      credentials: 'include'
+      })
     });
     const data = await res.json();
     if (!res.ok) {
@@ -825,6 +884,8 @@ async function handleLogin(e) {
       }
       throw new Error(data.error || 'Login failed');
     }
+    // ✅ SAVE TOKEN TO LOCALSTORAGE
+    localStorage.setItem('authToken', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
@@ -847,11 +908,12 @@ async function handleGoogleResponse(response) {
     const res = await fetch(`${API_URL}/auth/google`, { 
       method: 'POST', 
       headers: { 'Content-Type': 'application/json' }, 
-      body: JSON.stringify({ credential: response.credential }),
-      credentials: 'include'
+      body: JSON.stringify({ credential: response.credential })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
+    // ✅ SAVE TOKEN TO LOCALSTORAGE
+    localStorage.setItem('authToken', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
@@ -864,8 +926,9 @@ async function handleGoogleResponse(response) {
 }
 
 function checkAuth() {
+  const token = localStorage.getItem('authToken');
   const user = localStorage.getItem('user');
-  if (user) {
+  if (token && user) {
     currentUser = JSON.parse(user);
     document.getElementById('userEmailDisplay').textContent = currentUser.email;
     hideLandingPage();
@@ -895,16 +958,8 @@ async function checkVerificationLink() {
   }
 }
 
-async function logout() {
-  try {
-    await fetch(`${API_URL}/auth/logout`, { 
-      method: 'POST',
-      credentials: 'include'
-    });
-  } catch (err) {
-    console.error('Logout error:', err);
-  }
-  
+function logout() {
+  localStorage.removeItem('authToken');
   localStorage.removeItem('user');
   currentUser = null;
   showToast('✅ Logged out'); 
@@ -912,14 +967,21 @@ async function logout() {
   showAuth();
 }
 
+// ==========================================
+// DATA LOADING
+// ==========================================
 async function loadData() {
   try {
     const response = await fetch(`${API_URL}/missing-persons`);
     if (!response.ok) throw new Error('Failed to fetch');
-    missingPersons = await response.json(); renderCards();
-  } catch (err) { console.error('Load error:', err); }
+    missingPersons = await response.json(); 
+    renderCards();
+  } catch (err) { 
+    console.error('Load error:', err); 
+  }
 }
 
+// Calculate days missing
 function getDaysMissing(dateString) {
     if (!dateString) return 0;
     const lastSeen = new Date(dateString);
@@ -929,6 +991,28 @@ function getDaysMissing(dateString) {
     const diffTime = Math.abs(today - lastSeen);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
+}
+
+// ✅ SMART TIME FORMATTING: days → weeks → months → years
+function formatMissingTime(days) {
+    if (!days || days <= 0) return '0 days';
+    
+    if (days < 14) {
+        // 1-13 days → show as days
+        return `${days} day${days !== 1 ? 's' : ''}`;
+    } else if (days < 60) {
+        // 14-59 days → show as weeks
+        const weeks = Math.round(days / 7);
+        return `${weeks} week${weeks !== 1 ? 's' : ''}`;
+    } else if (days < 365) {
+        // 60-364 days → show as months
+        const months = Math.round(days / 30);
+        return `${months} month${months !== 1 ? 's' : ''}`;
+    } else {
+        // 365+ days → show as years
+        const years = Math.round(days / 365);
+        return `${years} year${years !== 1 ? 's' : ''}`;
+    }
 }
 
 function renderCards() {
@@ -942,19 +1026,26 @@ function renderCards() {
     let matchesAge = true;
     if (ageFilter) {
       const age = p.age || 0;
-      if (ageFilter === 'child') matchesAge = age <= 12; else if (ageFilter === 'teen') matchesAge = age >= 13 && age <= 19; else if (ageFilter === 'adult') matchesAge = age >= 20 && age <= 64; else if (ageFilter === 'senior') matchesAge = age >= 65;
+      if (ageFilter === 'child') matchesAge = age <= 12; 
+      else if (ageFilter === 'teen') matchesAge = age >= 13 && age <= 19; 
+      else if (ageFilter === 'adult') matchesAge = age >= 20 && age <= 64; 
+      else if (ageFilter === 'senior') matchesAge = age >= 65;
     }
     return matchesSearch && matchesGender && matchesAge;
   });
-  if (filtered.length === 0) { container.innerHTML = '<div class="loading">No missing persons found.</div>'; return; }
+  if (filtered.length === 0) { 
+    container.innerHTML = '<div class="loading">No missing persons found.</div>'; 
+    return; 
+  }
   container.innerHTML = filtered.map(p => {
       const daysMissing = getDaysMissing(p.date_last_seen || p.date_missing);
+      const missingTime = formatMissingTime(daysMissing);
       return `
     <div class="missing-card" onclick="openModal(${p.id})">
       <img src="${p.photo_urls?.[0] || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
       <div class="card-content">
         <div class="card-name">${p.name}</div>
-        <div class="card-days-missing">⏰ Missing for ${daysMissing} day${daysMissing !== 1 ? 's' : ''}</div>
+        <div class="card-days-missing">⏰ Missing for ${missingTime}</div>
         <div class="card-info">Last Seen: ${p.last_seen_location}</div>
       </div>
     </div>
@@ -994,17 +1085,36 @@ function toggleFilters() {
 }
 
 function toggleUnknownPerson() {
-  const checkbox = document.getElementById('sightingUnknown'); const nameInput = document.getElementById('sightingName');
-  if (checkbox && nameInput) { if (checkbox.checked) { nameInput.disabled = true; nameInput.placeholder = 'Name unknown'; } else { nameInput.disabled = false; nameInput.placeholder = 'Enter the name'; } }
+  const checkbox = document.getElementById('sightingUnknown'); 
+  const nameInput = document.getElementById('sightingName');
+  if (checkbox && nameInput) { 
+    if (checkbox.checked) { 
+      nameInput.disabled = true; 
+      nameInput.placeholder = 'Name unknown'; 
+    } else { 
+      nameInput.disabled = false; 
+      nameInput.placeholder = 'Enter the name'; 
+    } 
+  }
 }
 function changeLanguage() { showToast('Language feature coming soon!'); }
 function toggleNotifications() { showToast('Notifications toggled!'); }
 
 function previewImage(input, previewId, progressId) {
   const preview = document.getElementById(previewId);
-  if (input.files?.[0] && preview) { const reader = new FileReader(); reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; }; reader.readAsDataURL(input.files[0]); }
+  if (input.files?.[0] && preview) { 
+    const reader = new FileReader(); 
+    reader.onload = e => { 
+      preview.src = e.target.result; 
+      preview.style.display = 'block'; 
+    }; 
+    reader.readAsDataURL(input.files[0]); 
+  }
 }
 
+// ==========================================
+// UPLOAD TO BACKEND (with Authorization header)
+// ==========================================
 async function uploadToBackend(file, progressId) {
   const formData = new FormData();
   formData.append('image', file);
@@ -1016,9 +1126,12 @@ async function uploadToBackend(file, progressId) {
   if (bar) bar.style.width = '30%';
   
   try {
+    const token = localStorage.getItem('authToken');
     const res = await fetch(`${API_URL}/upload`, {
       method: 'POST',
-      credentials: 'include',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
       body: formData
     });
     
@@ -1042,6 +1155,9 @@ async function uploadToBackend(file, progressId) {
   }
 }
 
+// ==========================================
+// SUBMIT MISSING PERSON
+// ==========================================
 async function submitMissingPerson() {
   const name = document.getElementById('postFullName')?.value.trim(); 
   const age = document.getElementById('postAge')?.value;
@@ -1076,10 +1192,13 @@ async function submitMissingPerson() {
         date_missing: new Date().toISOString().split('T')[0], 
         photo_urls: urls 
     };
+    const token = localStorage.getItem('authToken');
     const response = await fetch(`${API_URL}/missing-persons`, { 
       method: 'POST', 
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }, 
       body: JSON.stringify(newPerson) 
     });
     if (response.status === 401) { 
@@ -1107,6 +1226,9 @@ function resetPostForm() {
   document.querySelectorAll('#postTab .upload-progress').forEach(p => { if (p) p.style.display = 'none'; });
 }
 
+// ==========================================
+// SUBMIT SIGHTING
+// ==========================================
 async function submitSighting() {
   const contact = document.getElementById('sightingContact')?.value.trim(); 
   const location = document.getElementById('sightingLocation')?.value.trim();
@@ -1126,9 +1248,12 @@ async function submitSighting() {
     if (photoFile) {
       const formData = new FormData();
       formData.append('image', photoFile);
+      const token = localStorage.getItem('authToken');
       const res = await fetch(`${API_URL}/upload`, {
         method: 'POST',
-        credentials: 'include',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
         body: formData
       });
       if (!res.ok) {
@@ -1148,10 +1273,13 @@ async function submitSighting() {
       reporter_contact: contact, 
       photo_url: photoUrl 
     };
+    const token = localStorage.getItem('authToken');
     const response = await fetch(`${API_URL}/sightings`, { 
       method: 'POST', 
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }, 
       body: JSON.stringify(sightingData) 
     });
     if (response.status === 401) { 
@@ -1174,27 +1302,42 @@ async function submitSighting() {
 
 function resetSightingForm() {
   document.querySelectorAll('#foundTab input, #foundTab textarea').forEach(i => i.value = '');
-  const sightingUnknown = document.getElementById('sightingUnknown'); const sightingName = document.getElementById('sightingName');
-  const sightingPreview = document.getElementById('sightingPreview'); const sightingProgress = document.getElementById('sightingProgress');
-  if (sightingUnknown) sightingUnknown.checked = false; if (sightingName) sightingName.disabled = false;
-  if (sightingPreview) sightingPreview.style.display = 'none'; if (sightingProgress) sightingProgress.style.display = 'none';
+  const sightingUnknown = document.getElementById('sightingUnknown'); 
+  const sightingName = document.getElementById('sightingName');
+  const sightingPreview = document.getElementById('sightingPreview'); 
+  const sightingProgress = document.getElementById('sightingProgress');
+  if (sightingUnknown) sightingUnknown.checked = false; 
+  if (sightingName) sightingName.disabled = false;
+  if (sightingPreview) sightingPreview.style.display = 'none'; 
+  if (sightingProgress) sightingProgress.style.display = 'none';
 }
 
 function formatDate(dateString) {
   if (!dateString) return 'Not specified';
-  const date = new Date(dateString); if (isNaN(date.getTime())) return dateString;
+  const date = new Date(dateString); 
+  if (isNaN(date.getTime())) return dateString;
   return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 // ==========================================
-// MY POSTS, EDIT & DELETE FUNCTIONS
+// MY POSTS, EDIT & DELETE
 // ==========================================
-
 async function loadMyPosts() {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    showToast('❌ Please log in first');
+    return;
+  }
   try {
     const res = await fetch(`${API_URL}/users/my-posts`, { 
-      credentials: 'include'
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
+    if (res.status === 401) {
+      logout();
+      throw new Error('Session expired. Please log in again.');
+    }
     if (!res.ok) { 
       showToast('❌ Failed to load posts.'); 
       return; 
@@ -1207,21 +1350,25 @@ async function loadMyPosts() {
       list.innerHTML = '<p style="color:var(--gray); padding: 10px;">You have no active posts.</p>';
       return;
     }
-    list.innerHTML = posts.map(p => `
+    list.innerHTML = posts.map(p => {
+      const daysMissing = getDaysMissing(p.date_last_seen || p.date_missing);
+      const missingTime = formatMissingTime(daysMissing);
+      return `
       <div class="info-section" style="margin-bottom:10px; padding:15px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
           <strong style="font-size: 16px;">${p.name}</strong>
           <div>
-            <button onclick="openEditModal(${p.id}, '${p.name}', ${p.age}, '${p.gender || ''}', '${p.date_last_seen || ''}', '${p.description || ''}', '${p.notes || ''}', '${p.last_seen_location}', '${p.residence || ''}', '${p.police_station || ''}')" style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:5px; margin-right:5px; cursor:pointer;">Edit</button>
+            <button onclick="openEditModal(${p.id}, '${(p.name || '').replace(/'/g, "\\'")}', ${p.age}, '${(p.gender || '').replace(/'/g, "\\'")}', '${(p.date_last_seen || '').replace(/'/g, "\\'")}', '${(p.description || '').replace(/'/g, "\\'")}', '${(p.notes || '').replace(/'/g, "\\'")}', '${(p.last_seen_location || '').replace(/'/g, "\\'")}', '${(p.residence || '').replace(/'/g, "\\'")}', '${(p.police_station || '').replace(/'/g, "\\'")}')" style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:5px; margin-right:5px; cursor:pointer;">Edit</button>
             <button onclick="openDeleteModal(${p.id})" style="background:var(--danger); color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">Delete</button>
           </div>
         </div>
-        <div style="font-size:13px; color:var(--gray)"> ${p.last_seen_location} |  Age: ${p.age}</div>
+        <div style="font-size:13px; color:var(--warning); font-weight:600; margin-bottom:4px;">⏰ Missing for ${missingTime}</div>
+        <div style="font-size:13px; color:var(--gray)">📍 ${p.last_seen_location} | 👤 Age: ${p.age}</div>
       </div>
-    `).join('');
+    `}).join('');
   } catch (err) { 
     console.error(err); 
-    showToast('❌ Failed to load posts.'); 
+    showToast('❌ ' + err.message); 
   }
 }
 
@@ -1243,6 +1390,7 @@ function openEditModal(id, name, age, gender, dateLastSeen, desc, notes, locatio
 }
 
 async function savePostEdit() {
+  const token = localStorage.getItem('authToken');
   const data = {
     name: document.getElementById('editName').value,
     age: document.getElementById('editAge').value,
@@ -1257,10 +1405,16 @@ async function savePostEdit() {
   try {
     const res = await fetch(`${API_URL}/missing-persons/${currentEditId}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify(data)
     });
+    if (res.status === 401) {
+      logout();
+      throw new Error('Session expired.');
+    }
     if (!res.ok) throw new Error('Update failed');
     showToast('✅ Post updated!');
     closeModal('editPostModal');
@@ -1277,14 +1431,21 @@ function openDeleteModal(id) {
 }
 
 async function confirmDeletePost() {
+  const token = localStorage.getItem('authToken');
   const reason = document.getElementById('deleteReason').value;
   try {
     const res = await fetch(`${API_URL}/missing-persons/${currentDeleteId}`, {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({ reason })
     });
+    if (res.status === 401) {
+      logout();
+      throw new Error('Session expired.');
+    }
     if (!res.ok) throw new Error('Delete failed');
     showToast('✅ Post deleted.');
     closeModal('deletePostModal');
@@ -1295,6 +1456,9 @@ async function confirmDeletePost() {
   }
 }
 
+// ==========================================
+// INITIALIZATION
+// ==========================================
 window.addEventListener('load', () => {
   checkAuth(); 
   initializeGoogleSignIn();
