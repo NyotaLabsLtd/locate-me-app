@@ -4,9 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#0f172a">
-<title>Locate Me - Find Missing Persons</title>
+<title>Locate Me - Find Missing Persons in Kenya</title>
+
+<!-- SEO Meta Tags (Helps Google find your app) -->
+<meta name="description" content="Locate Me is a community-driven platform to report and find missing persons in Kenya. Help reunite families today.">
+<meta name="keywords" content="missing persons, find missing people, Kenya missing persons, lost family, Locate Me app, report missing person, Nairobi">
+<meta name="author" content="Nyota Labs">
+
+<!-- Open Graph (How it looks when shared on WhatsApp/Facebook) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://locate-me-app.vercel.app/">
+<meta property="og:title" content="Locate Me - Find Missing Persons">
+<meta property="og:description" content="Help us find missing loved ones. Post reports and sightings instantly.">
+<meta property="og:image" content="https://locate-me-app.vercel.app/icon.png">
+
+<!-- PWA Manifest Link -->
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>">
+<link rel="icon" href="icon.png" type="image/png">
+
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script type="text/javascript">
    (function(){
@@ -17,6 +32,7 @@
 </script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
+/* [All your existing CSS remains exactly the same] */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 :root {
   --primary: #2563eb; --danger: #ef4444; --success: #059669;
@@ -122,70 +138,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .google-terms-notice { margin: 15px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; font-size: 12px; color: var(--warning); }
 
 /* LANDING PAGE STYLES */
-#landing-page {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100vw;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    background: var(--dark);
-}
-.landing-nav {
-    padding: 0.8rem 5%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--dark);
-    flex-shrink: 0;
-    height: 60px;
-}
-.landing-logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--warning);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+#landing-page { display: flex; flex-direction: column; height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; z-index: 9999; background: var(--dark); }
+.landing-nav { padding: 0.8rem 5%; display: flex; justify-content: center; align-items: center; background: var(--dark); flex-shrink: 0; height: 60px; }
+.landing-logo { font-size: 1.5rem; font-weight: bold; color: var(--warning); display: flex; align-items: center; gap: 0.5rem; }
 .landing-logo-icon { font-size: 1.8rem; }
-.landing-main-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    width: 100%;
-}
-.carousel-container {
-    width: 100%;
-    max-width: 400px;
-    height: 82vh;
-    max-height: 700px;
-    background: var(--dark-card);
-    border-radius: 20px;
-    border: 2px solid var(--border);
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    -webkit-user-select: none;
-    user-select: none;
-}
+.landing-main-container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1rem; width: 100%; }
+.carousel-container { width: 100%; max-width: 400px; height: 82vh; max-height: 700px; background: var(--dark-card); border-radius: 20px; border: 2px solid var(--border); overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; -webkit-user-select: none; user-select: none; }
 .carousel { flex: 1; position: relative; overflow: hidden; }
-.step-slide {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    padding: 1.5rem;
-    overflow-y: auto;
-    animation: fadeIn 0.4s ease-in-out;
-}
+.step-slide { display: none; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 1.5rem; overflow-y: auto; animation: fadeIn 0.4s ease-in-out; }
 .step-slide.active { display: flex; }
 @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes fadeOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-20px); } }
@@ -232,7 +192,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div id="landing-page">
     <nav class="landing-nav">
         <div class="landing-logo">
-            <span class="landing-logo-icon">📍</span>
+            <span class="landing-logo-icon"></span>
             <span>Locate Me</span>
         </div>
     </nav>
@@ -326,7 +286,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <!-- AUTH SCREEN -->
 <div class="auth-screen" id="authScreen">
   <div class="auth-box">
-    <div class="auth-logo">🔍</div>
+    <div class="auth-logo"></div>
     <div class="auth-title">Locate Me</div>
     <div class="auth-tabs">
       <div class="auth-tab active" onclick="switchAuthTab('login')">Login</div>
@@ -355,7 +315,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">👁️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">️</button>
         </div>
       </div>
       <div class="form-group">
@@ -374,7 +334,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <button type="submit" id="signupBtn" class="btn-submit" style="width:100%">Create Account</button>
       <div class="spam-notice">
-        <strong>📧 Important:</strong>
+        <strong> Important:</strong>
         After signing up, check your email (including Spam/Promotions folder) to verify your account.
       </div>
     </form>
@@ -895,7 +855,6 @@ async function handleLogin(e) {
       }
       throw new Error(data.error || 'Login failed');
     }
-    // ✅ SAVE TOKEN TO LOCALSTORAGE
     localStorage.setItem('authToken', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
@@ -923,7 +882,6 @@ async function handleGoogleResponse(response) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    // ✅ SAVE TOKEN TO LOCALSTORAGE
     localStorage.setItem('authToken', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
     currentUser = data.user;
@@ -992,7 +950,6 @@ async function loadData() {
   }
 }
 
-// Calculate days missing
 function getDaysMissing(dateString) {
     if (!dateString) return 0;
     const lastSeen = new Date(dateString);
@@ -1004,29 +961,21 @@ function getDaysMissing(dateString) {
     return diffDays;
 }
 
-// ✅ SMART TIME FORMATTING: days → weeks → months → years
 function formatMissingTime(days) {
     if (!days || days <= 0) return '0 days';
-    
-    if (days < 14) {
-        // 1-13 days → show as days
-        return `${days} day${days !== 1 ? 's' : ''}`;
-    } else if (days < 60) {
-        // 14-59 days → show as weeks
+    if (days < 14) return `${days} day${days !== 1 ? 's' : ''}`;
+    else if (days < 60) {
         const weeks = Math.round(days / 7);
         return `${weeks} week${weeks !== 1 ? 's' : ''}`;
     } else if (days < 365) {
-        // 60-364 days → show as months
         const months = Math.round(days / 30);
         return `${months} month${months !== 1 ? 's' : ''}`;
     } else {
-        // 365+ days → show as years
         const years = Math.round(days / 365);
         return `${years} year${years !== 1 ? 's' : ''}`;
     }
 }
 
-// ✅ UPDATED WITH XSS PROTECTION
 function renderCards() {
   const container = document.getElementById('missingCardsContainer');
   const term = document.getElementById('searchInput').value.toLowerCase();
@@ -1057,14 +1006,13 @@ function renderCards() {
       <img src="${p.photo_urls?.[0] || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
       <div class="card-content">
         <div class="card-name">${escapeHTML(p.name)}</div>
-        <div class="card-days-missing">⏰ Missing for ${missingTime}</div>
+        <div class="card-days-missing"> Missing for ${missingTime}</div>
         <div class="card-info">Last Seen: ${escapeHTML(p.last_seen_location)}</div>
       </div>
     </div>
   `}).join('');
 }
 
-// ✅ UPDATED WITH XSS PROTECTION
 function openModal(id) {
   const p = missingPersons.find(x => x.id === id); if (!p) return;
   const photos = p.photo_urls || []; let photoHTML = '';
@@ -1101,13 +1049,8 @@ function toggleUnknownPerson() {
   const checkbox = document.getElementById('sightingUnknown'); 
   const nameInput = document.getElementById('sightingName');
   if (checkbox && nameInput) { 
-    if (checkbox.checked) { 
-      nameInput.disabled = true; 
-      nameInput.placeholder = 'Name unknown'; 
-    } else { 
-      nameInput.disabled = false; 
-      nameInput.placeholder = 'Enter the name'; 
-    } 
+    if (checkbox.checked) { nameInput.disabled = true; nameInput.placeholder = 'Name unknown'; } 
+    else { nameInput.disabled = false; nameInput.placeholder = 'Enter the name'; } 
   }
 }
 function changeLanguage() { showToast('Language feature coming soon!'); }
@@ -1117,60 +1060,29 @@ function previewImage(input, previewId, progressId) {
   const preview = document.getElementById(previewId);
   if (input.files?.[0] && preview) { 
     const reader = new FileReader(); 
-    reader.onload = e => { 
-      preview.src = e.target.result; 
-      preview.style.display = 'block'; 
-    }; 
+    reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; }; 
     reader.readAsDataURL(input.files[0]); 
   }
 }
 
-// ==========================================
-// UPLOAD TO BACKEND (with Authorization header)
-// ==========================================
 async function uploadToBackend(file, progressId) {
   const formData = new FormData();
   formData.append('image', file);
-  
   const progressEl = document.getElementById(progressId);
   const bar = progressEl?.querySelector('.upload-progress-bar');
-  
   if (progressEl) progressEl.style.display = 'block';
   if (bar) bar.style.width = '30%';
-  
   try {
     const token = localStorage.getItem('authToken');
-    const res = await fetch(`${API_URL}/upload`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      },
-      body: formData
-    });
-    
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.error || 'Upload failed');
-    }
-    
+    const res = await fetch(`${API_URL}/upload`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: formData });
+    if (!res.ok) { const errorData = await res.json(); throw new Error(errorData.error || 'Upload failed'); }
     const data = await res.json();
-    
     if (bar) bar.style.width = '100%';
-    setTimeout(() => {
-      if (progressEl) progressEl.style.display = 'none';
-    }, 500);
-    
+    setTimeout(() => { if (progressEl) progressEl.style.display = 'none'; }, 500);
     return data.secure_url;
-  } catch (err) {
-    if (bar) bar.style.width = '0%';
-    if (progressEl) progressEl.style.display = 'none';
-    throw err;
-  }
+  } catch (err) { if (bar) bar.style.width = '0%'; if (progressEl) progressEl.style.display = 'none'; throw err; }
 }
 
-// ==========================================
-// SUBMIT MISSING PERSON
-// ==========================================
 async function submitMissingPerson() {
   const name = document.getElementById('postFullName')?.value.trim(); 
   const age = document.getElementById('postAge')?.value;
@@ -1181,56 +1093,18 @@ async function submitMissingPerson() {
   const photo2 = document.getElementById('postPhoto2')?.files[0]; 
   const photo3 = document.getElementById('postPhoto3')?.files[0];
   const files = [photo1, photo2, photo3];
-  if (!name || !age || !location || !desc || !dateLastSeen || files.some(f => !f)) { 
-    showToast('Please fill all required fields & select 3 photos'); 
-    return; 
-  }
+  if (!name || !age || !location || !desc || !dateLastSeen || files.some(f => !f)) { showToast('Please fill all required fields & select 3 photos'); return; }
   const btn = document.getElementById('postBtn'); 
-  if (btn) { 
-    btn.disabled = true; 
-    btn.textContent = 'Uploading...'; 
-  }
+  if (btn) { btn.disabled = true; btn.textContent = 'Uploading...'; }
   try {
     const urls = await Promise.all(files.map((f, i) => uploadToBackend(f, `progress${i+1}`)));
-    const newPerson = { 
-        name, 
-        age: parseInt(age), 
-        gender: document.getElementById('postGender')?.value, 
-        description: desc, 
-        notes: document.getElementById('postNotes')?.value.trim(), 
-        residence: document.getElementById('postResidence')?.value, 
-        last_seen_location: location, 
-        date_last_seen: dateLastSeen,
-        police_station: document.getElementById('postPoliceStation')?.value, 
-        date_missing: new Date().toISOString().split('T')[0], 
-        photo_urls: urls 
-    };
+    const newPerson = { name, age: parseInt(age), gender: document.getElementById('postGender')?.value, description: desc, notes: document.getElementById('postNotes')?.value.trim(), residence: document.getElementById('postResidence')?.value, last_seen_location: location, date_last_seen: dateLastSeen, police_station: document.getElementById('postPoliceStation')?.value, date_missing: new Date().toISOString().split('T')[0], photo_urls: urls };
     const token = localStorage.getItem('authToken');
-    const response = await fetch(`${API_URL}/missing-persons`, { 
-      method: 'POST', 
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }, 
-      body: JSON.stringify(newPerson) 
-    });
-    if (response.status === 401) { 
-      logout(); 
-      throw new Error('Session expired.'); 
-    }
+    const response = await fetch(`${API_URL}/missing-persons`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(newPerson) });
+    if (response.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!response.ok) throw new Error('Failed to save to database');
-    showToast('✅ Report submitted successfully!'); 
-    resetPostForm(); 
-    loadData(); 
-    switchTab('home', null);
-  } catch (err) { 
-    showToast('❌ ' + err.message); 
-  } finally { 
-    if (btn) { 
-      btn.disabled = false; 
-      btn.textContent = 'Submit'; 
-    } 
-  }
+    showToast('✅ Report submitted successfully!'); resetPostForm(); loadData(); switchTab('home', null);
+  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
 }
 
 function resetPostForm() {
@@ -1239,78 +1113,30 @@ function resetPostForm() {
   document.querySelectorAll('#postTab .upload-progress').forEach(p => { if (p) p.style.display = 'none'; });
 }
 
-// ==========================================
-// SUBMIT SIGHTING
-// ==========================================
 async function submitSighting() {
   const contact = document.getElementById('sightingContact')?.value.trim(); 
   const location = document.getElementById('sightingLocation')?.value.trim();
   const phoneRegex = /^(\+254|0)?[7]\d{8}$/;
-  if (!contact || !phoneRegex.test(contact.replace(/\s/g, ''))) { 
-    showToast('Please enter a valid Kenyan phone number'); 
-    return; 
-  }
+  if (!contact || !phoneRegex.test(contact.replace(/\s/g, ''))) { showToast('Please enter a valid Kenyan phone number'); return; }
   const btn = document.getElementById('sightingBtn'); 
-  if (btn) { 
-    btn.disabled = true; 
-    btn.textContent = 'Submitting...'; 
-  }
+  if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
   try {
     const photoFile = document.getElementById('sightingPhoto')?.files[0];
     let photoUrl = null;
     if (photoFile) {
-      const formData = new FormData();
-      formData.append('image', photoFile);
+      const formData = new FormData(); formData.append('image', photoFile);
       const token = localStorage.getItem('authToken');
-      const res = await fetch(`${API_URL}/upload`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData
-      });
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Photo upload failed');
-      }
-      const data = await res.json();
-      photoUrl = data.secure_url;
+      const res = await fetch(`${API_URL}/upload`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` }, body: formData });
+      if (!res.ok) { const errorData = await res.json(); throw new Error(errorData.error || 'Photo upload failed'); }
+      const data = await res.json(); photoUrl = data.secure_url;
     }
-    const sightingData = { 
-      missing_person_name: document.getElementById('sightingName')?.value, 
-      gender: document.getElementById('sightingGender')?.value, 
-      sighting_location: location, 
-      sighting_time: document.getElementById('sightingTime')?.value, 
-      description: document.getElementById('sightingDescription')?.value, 
-      reporter_name: document.getElementById('sightingYourName')?.value, 
-      reporter_contact: contact, 
-      photo_url: photoUrl 
-    };
+    const sightingData = { missing_person_name: document.getElementById('sightingName')?.value, gender: document.getElementById('sightingGender')?.value, sighting_location: location, sighting_time: document.getElementById('sightingTime')?.value, description: document.getElementById('sightingDescription')?.value, reporter_name: document.getElementById('sightingYourName')?.value, reporter_contact: contact, photo_url: photoUrl };
     const token = localStorage.getItem('authToken');
-    const response = await fetch(`${API_URL}/sightings`, { 
-      method: 'POST', 
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }, 
-      body: JSON.stringify(sightingData) 
-    });
-    if (response.status === 401) { 
-      logout(); 
-      throw new Error('Session expired.'); 
-    }
+    const response = await fetch(`${API_URL}/sightings`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(sightingData) });
+    if (response.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!response.ok) throw new Error('Failed to save sighting');
-    showToast('✅ Sighting reported!');
-    resetSightingForm(); 
-    switchTab('home', null);
-  } catch (err) { 
-    showToast('❌ ' + err.message); 
-  } finally { 
-    if (btn) { 
-      btn.disabled = false; 
-      btn.textContent = 'Submit'; 
-    } 
-  }
+    showToast('✅ Sighting reported!'); resetSightingForm(); switchTab('home', null);
+  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
 }
 
 function resetSightingForm() {
@@ -1332,37 +1158,18 @@ function formatDate(dateString) {
   return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// ==========================================
-// MY POSTS, EDIT & DELETE
-// ==========================================
 async function loadMyPosts() {
   const token = localStorage.getItem('authToken');
-  if (!token) {
-    showToast('❌ Please log in first');
-    return;
-  }
+  if (!token) { showToast('❌ Please log in first'); return; }
   try {
-    const res = await fetch(`${API_URL}/users/my-posts`, { 
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    if (res.status === 401) {
-      logout();
-      throw new Error('Session expired. Please log in again.');
-    }
-    if (!res.ok) { 
-      showToast('❌ Failed to load posts.'); 
-      return; 
-    }
+    const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
+    if (res.status === 401) { logout(); throw new Error('Session expired. Please log in again.'); }
+    if (!res.ok) { showToast('❌ Failed to load posts.'); return; }
     const posts = await res.json();
     const container = document.getElementById('my-posts-container');
     const list = document.getElementById('my-posts-list');
     container.style.display = 'block';
-    if (posts.length === 0) {
-      list.innerHTML = '<p style="color:var(--gray); padding: 10px;">You have no active posts.</p>';
-      return;
-    }
+    if (posts.length === 0) { list.innerHTML = '<p style="color:var(--gray); padding: 10px;">You have no active posts.</p>'; return; }
     list.innerHTML = posts.map(p => {
       const daysMissing = getDaysMissing(p.date_last_seen || p.date_missing);
       const missingTime = formatMissingTime(daysMissing);
@@ -1376,13 +1183,10 @@ async function loadMyPosts() {
           </div>
         </div>
         <div style="font-size:13px; color:var(--warning); font-weight:600; margin-bottom:4px;">⏰ Missing for ${missingTime}</div>
-        <div style="font-size:13px; color:var(--gray)">📍 ${escapeHTML(p.last_seen_location)} | 👤 Age: ${p.age}</div>
+        <div style="font-size:13px; color:var(--gray)"> ${escapeHTML(p.last_seen_location)} |  Age: ${p.age}</div>
       </div>
     `}).join('');
-  } catch (err) { 
-    console.error(err); 
-    showToast('❌ ' + err.message); 
-  }
+  } catch (err) { console.error(err); showToast(' ' + err.message); }
 }
 
 let currentEditId = null;
@@ -1404,74 +1208,27 @@ function openEditModal(id, name, age, gender, dateLastSeen, desc, notes, locatio
 
 async function savePostEdit() {
   const token = localStorage.getItem('authToken');
-  const data = {
-    name: document.getElementById('editName').value,
-    age: document.getElementById('editAge').value,
-    gender: document.getElementById('editGender').value,
-    date_last_seen: document.getElementById('editDateLastSeen').value,
-    description: document.getElementById('editDesc').value,
-    notes: document.getElementById('editNotes').value,
-    last_seen_location: document.getElementById('editLocation').value,
-    residence: document.getElementById('editResidence').value,
-    police_station: document.getElementById('editPoliceStation').value
-  };
+  const data = { name: document.getElementById('editName').value, age: document.getElementById('editAge').value, gender: document.getElementById('editGender').value, date_last_seen: document.getElementById('editDateLastSeen').value, description: document.getElementById('editDesc').value, notes: document.getElementById('editNotes').value, last_seen_location: document.getElementById('editLocation').value, residence: document.getElementById('editResidence').value, police_station: document.getElementById('editPoliceStation').value };
   try {
-    const res = await fetch(`${API_URL}/missing-persons/${currentEditId}`, {
-      method: 'PUT',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data)
-    });
-    if (res.status === 401) {
-      logout();
-      throw new Error('Session expired.');
-    }
+    const res = await fetch(`${API_URL}/missing-persons/${currentEditId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(data) });
+    if (res.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!res.ok) throw new Error('Update failed');
-    showToast('✅ Post updated!');
-    closeModal('editPostModal');
-    loadMyPosts();
-    loadData();
-  } catch (err) { 
-    showToast('❌ ' + err.message); 
-  }
+    showToast('✅ Post updated!'); closeModal('editPostModal'); loadMyPosts(); loadData();
+  } catch (err) { showToast(' ' + err.message); }
 }
 
-function openDeleteModal(id) {
-  currentDeleteId = id;
-  document.getElementById('deletePostModal').classList.add('active');
-}
-
+function openDeleteModal(id) { currentDeleteId = id; document.getElementById('deletePostModal').classList.add('active'); }
 async function confirmDeletePost() {
   const token = localStorage.getItem('authToken');
   const reason = document.getElementById('deleteReason').value;
   try {
-    const res = await fetch(`${API_URL}/missing-persons/${currentDeleteId}`, {
-      method: 'DELETE',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ reason })
-    });
-    if (res.status === 401) {
-      logout();
-      throw new Error('Session expired.');
-    }
+    const res = await fetch(`${API_URL}/missing-persons/${currentDeleteId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ reason }) });
+    if (res.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!res.ok) throw new Error('Delete failed');
-    showToast('✅ Post deleted.');
-    closeModal('deletePostModal');
-    loadMyPosts();
-    loadData();
-  } catch (err) { 
-    showToast('❌ ' + err.message); 
-  }
+    showToast('✅ Post deleted.'); closeModal('deletePostModal'); loadMyPosts(); loadData();
+  } catch (err) { showToast('❌ ' + err.message); }
 }
 
-// ==========================================
-// INITIALIZATION
-// ==========================================
 window.addEventListener('load', () => {
   checkAuth(); 
   initializeGoogleSignIn();
@@ -1482,6 +1239,21 @@ window.addEventListener('load', () => {
 document.getElementById('searchInput').addEventListener('input', renderCards);
 document.getElementById('filterGender').addEventListener('change', renderCards);
 document.getElementById('filterAge').addEventListener('change', renderCards);
+
+// ==========================================
+// 🚀 REGISTER SERVICE WORKER FOR PWA
+// ==========================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((reg) => {
+        console.log('✅ Service Worker registered with scope:', reg.scope);
+      })
+      .catch((err) => {
+        console.error('❌ Service Worker registration failed:', err);
+      });
+  });
+}
 </script>
 </body>
 </html>
