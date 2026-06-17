@@ -682,6 +682,17 @@ const GOOGLE_CLIENT_ID = '384124217618-38rde3tgblslp1s9u3e1fn5tn7h971uk.apps.goo
 let missingPersons = []; let currentUser = null;
 
 // ==========================================
+// 🔒 SECURITY: HTML ESCAPE FUNCTION (XSS Protection)
+// ==========================================
+function escapeHTML(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, function(match) {
+        const escapeMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+        return escapeMap[match];
+    });
+}
+
+// ==========================================
 // LANDING PAGE CAROUSEL
 // ==========================================
 let currentSlide = 0;
@@ -1015,6 +1026,7 @@ function formatMissingTime(days) {
     }
 }
 
+// ✅ UPDATED WITH XSS PROTECTION
 function renderCards() {
   const container = document.getElementById('missingCardsContainer');
   const term = document.getElementById('searchInput').value.toLowerCase();
@@ -1044,14 +1056,15 @@ function renderCards() {
     <div class="missing-card" onclick="openModal(${p.id})">
       <img src="${p.photo_urls?.[0] || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
       <div class="card-content">
-        <div class="card-name">${p.name}</div>
+        <div class="card-name">${escapeHTML(p.name)}</div>
         <div class="card-days-missing">⏰ Missing for ${missingTime}</div>
-        <div class="card-info">Last Seen: ${p.last_seen_location}</div>
+        <div class="card-info">Last Seen: ${escapeHTML(p.last_seen_location)}</div>
       </div>
     </div>
   `}).join('');
 }
 
+// ✅ UPDATED WITH XSS PROTECTION
 function openModal(id) {
   const p = missingPersons.find(x => x.id === id); if (!p) return;
   const photos = p.photo_urls || []; let photoHTML = '';
@@ -1063,17 +1076,17 @@ function openModal(id) {
   document.getElementById('modalContent').innerHTML = `
     ${photoHTML}
     <div class="info-section">
-        <div class="info-label">NAME</div><div class="info-value">${p.name}</div>
+        <div class="info-label">NAME</div><div class="info-value">${escapeHTML(p.name)}</div>
         <div class="info-label">AGE</div><div class="info-value">${p.age || 'N/A'} years old</div>
-        <div class="info-label">GENDER</div><div class="info-value">${p.gender || 'N/A'}</div>
+        <div class="info-label">GENDER</div><div class="info-value">${escapeHTML(p.gender || 'N/A')}</div>
     </div>
     <div class="info-section">
         <div class="info-label">DATE LAST SEEN</div><div class="info-value">${formatDate(p.date_last_seen)}</div>
         <div class="info-label">DATE REPORTED</div><div class="info-value">${formatDate(p.date_missing)}</div>
-        <div class="info-label">LAST SEEN LOCATION</div><div class="info-value">${p.last_seen_location}</div>
+        <div class="info-label">LAST SEEN LOCATION</div><div class="info-value">${escapeHTML(p.last_seen_location)}</div>
     </div>
-    ${p.description ? `<div class="info-section"><div class="info-label">CLOTHING & APPEARANCE</div><div class="info-value">${p.description}</div></div>` : ''}
-    ${p.police_station ? `<div class="info-section"><div class="info-label">NEAREST POLICE STATION</div><div class="info-value" style="color:var(--warning); font-weight:600">${p.police_station}</div></div>` : ''}
+    ${p.description ? `<div class="info-section"><div class="info-label">CLOTHING & APPEARANCE</div><div class="info-value">${escapeHTML(p.description)}</div></div>` : ''}
+    ${p.police_station ? `<div class="info-section"><div class="info-label">NEAREST POLICE STATION</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(p.police_station)}</div></div>` : ''}
   `;
   document.getElementById('profileModal').classList.add('active');
 }
@@ -1356,14 +1369,14 @@ async function loadMyPosts() {
       return `
       <div class="info-section" style="margin-bottom:10px; padding:15px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
-          <strong style="font-size: 16px;">${p.name}</strong>
+          <strong style="font-size: 16px;">${escapeHTML(p.name)}</strong>
           <div>
             <button onclick="openEditModal(${p.id}, '${(p.name || '').replace(/'/g, "\\'")}', ${p.age}, '${(p.gender || '').replace(/'/g, "\\'")}', '${(p.date_last_seen || '').replace(/'/g, "\\'")}', '${(p.description || '').replace(/'/g, "\\'")}', '${(p.notes || '').replace(/'/g, "\\'")}', '${(p.last_seen_location || '').replace(/'/g, "\\'")}', '${(p.residence || '').replace(/'/g, "\\'")}', '${(p.police_station || '').replace(/'/g, "\\'")}')" style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:5px; margin-right:5px; cursor:pointer;">Edit</button>
             <button onclick="openDeleteModal(${p.id})" style="background:var(--danger); color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">Delete</button>
           </div>
         </div>
         <div style="font-size:13px; color:var(--warning); font-weight:600; margin-bottom:4px;">⏰ Missing for ${missingTime}</div>
-        <div style="font-size:13px; color:var(--gray)">📍 ${p.last_seen_location} | 👤 Age: ${p.age}</div>
+        <div style="font-size:13px; color:var(--gray)">📍 ${escapeHTML(p.last_seen_location)} | 👤 Age: ${p.age}</div>
       </div>
     `}).join('');
   } catch (err) { 
