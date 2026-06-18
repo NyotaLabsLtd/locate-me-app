@@ -6,19 +6,19 @@
 <meta name="theme-color" content="#0f172a">
 <title>Locate Me - Find Missing Persons in Kenya</title>
 
-<!-- SEO Meta Tags (Helps Google find your app) -->
+<!-- SEO Meta Tags -->
 <meta name="description" content="Locate Me is a community-driven platform to report and find missing persons in Kenya. Help reunite families today.">
 <meta name="keywords" content="missing persons, find missing people, Kenya missing persons, lost family, Locate Me app, report missing person, Nairobi">
 <meta name="author" content="Nyota Labs">
 
-<!-- Open Graph (How it looks when shared on WhatsApp/Facebook) -->
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://locate-me-app.vercel.app/">
 <meta property="og:title" content="Locate Me - Find Missing Persons">
 <meta property="og:description" content="Help us find missing loved ones. Post reports and sightings instantly.">
 <meta property="og:image" content="https://locate-me-app.vercel.app/icon.png">
 
-<!-- PWA Manifest Link -->
+<!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.png" type="image/png">
 
@@ -32,7 +32,6 @@
 </script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-/* [All your existing CSS remains exactly the same] */
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 :root {
   --primary: #2563eb; --danger: #ef4444; --success: #059669;
@@ -60,15 +59,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .card-name { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
 .card-info { font-size: 14px; color: var(--gray); margin-bottom: 4px; }
 .card-days-missing { font-size: 15px; color: var(--warning); font-weight: 700; margin-bottom: 6px; }
-.card-date { font-size: 13px; color: var(--gray); }
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: none; overflow-y: auto; }
 .modal-overlay.active { display: block; }
 .modal-header { position: sticky; top: 0; background: var(--dark); padding: 15px 20px; display: flex; align-items: center; justify-content: flex-end; border-bottom: 1px solid var(--border); z-index: 10; width: 100%; }
 .modal-close { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--dark-card); color: var(--light); font-size: 20px; cursor: pointer; }
 .modal-content { padding: 20px; max-width: 600px; width: 100%; margin: 0 auto; max-height: 90vh; overflow-y: auto; }
-.modal-content h2 { margin-bottom: 20px; color: var(--warning); }
-.modal-content p { margin-bottom: 15px; line-height: 1.6; }
-.modal-content h3 { margin: 20px 0 10px; color: var(--light); }
 .photo-gallery { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
 .photo-wrapper { position: relative; width: 100%; }
 .photo-wrapper img { width: 100%; height: 400px; object-fit: cover; border-radius: 12px; border: 2px solid var(--border); }
@@ -84,7 +79,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .form-input:focus, .form-select:focus, textarea.form-input:focus { outline: none; border-color: var(--warning); }
 .password-wrapper { position: relative; }
 .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--gray); cursor: pointer; font-size: 18px; padding: 4px; }
-.password-toggle:hover { color: var(--light); }
 .file-input-wrapper { margin-bottom: 16px; }
 .file-input { width: 100%; padding: 12px; background: var(--dark-card); border: 1px solid var(--border); border-radius: 8px; color: var(--gray); }
 .file-preview { max-width: 100%; margin-top: 10px; border-radius: 8px; display: none; }
@@ -137,7 +131,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .spam-notice strong { display: block; margin-bottom: 4px; }
 .google-terms-notice { margin: 15px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; font-size: 12px; color: var(--warning); }
 
-/* LANDING PAGE STYLES */
 #landing-page { display: flex; flex-direction: column; height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; z-index: 9999; background: var(--dark); }
 .landing-nav { padding: 0.8rem 5%; display: flex; justify-content: center; align-items: center; background: var(--dark); flex-shrink: 0; height: 60px; }
 .landing-logo { font-size: 1.5rem; font-weight: bold; color: var(--warning); display: flex; align-items: center; gap: 0.5rem; }
@@ -192,7 +185,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div id="landing-page">
     <nav class="landing-nav">
         <div class="landing-logo">
-            <span class="landing-logo-icon"></span>
+            <span class="landing-logo-icon">📍</span>
             <span>Locate Me</span>
         </div>
     </nav>
@@ -262,7 +255,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                         <li><span class="check-icon">✓</span> Make a difference</li>
                         <li><span class="check-icon">✓</span> Help bring people home</li>
                     </ul>
-                    <button class="get-started-btn" onclick="showAuthFromLanding('signup')">Get Started</button>
+                    <!-- UPDATED: Now enters app as guest -->
+                    <button class="get-started-btn" onclick="enterAppAsGuest()">Get Started</button>
                     <p class="login-link">Already have an account? <a onclick="showAuthFromLanding('login')">Login</a></p>
                 </div>
             </div>
@@ -286,7 +280,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <!-- AUTH SCREEN -->
 <div class="auth-screen" id="authScreen">
   <div class="auth-box">
-    <div class="auth-logo"></div>
+    <div class="auth-logo">🔍</div>
     <div class="auth-title">Locate Me</div>
     <div class="auth-tabs">
       <div class="auth-tab active" onclick="switchAuthTab('login')">Login</div>
@@ -315,7 +309,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">👁️</button>
         </div>
       </div>
       <div class="form-group">
@@ -334,7 +328,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <button type="submit" id="signupBtn" class="btn-submit" style="width:100%">Create Account</button>
       <div class="spam-notice">
-        <strong> Important:</strong>
+        <strong>📧 Important:</strong>
         After signing up, check your email (including Spam/Promotions folder) to verify your account.
       </div>
     </form>
@@ -641,9 +635,6 @@ const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 const GOOGLE_CLIENT_ID = '384124217618-38rde3tgblslp1s9u3e1fn5tn7h971uk.apps.googleusercontent.com';
 let missingPersons = []; let currentUser = null;
 
-// ==========================================
-// 🔒 SECURITY: HTML ESCAPE FUNCTION (XSS Protection)
-// ==========================================
 function escapeHTML(str) {
     if (!str) return '';
     return str.replace(/[&<>"']/g, function(match) {
@@ -652,9 +643,6 @@ function escapeHTML(str) {
     });
 }
 
-// ==========================================
-// LANDING PAGE CAROUSEL
-// ==========================================
 let currentSlide = 0;
 const slides = document.querySelectorAll('.step-slide');
 const dots = document.querySelectorAll('.dot');
@@ -714,12 +702,18 @@ carouselContainer.addEventListener('touchend', (e) => {
     isSwiping = false;
 }, { passive: true });
 
-// ==========================================
-// VIEW SWITCHING
-// ==========================================
 function hideLandingPage() {
     const lp = document.getElementById('landing-page');
     if (lp) lp.style.display = 'none';
+}
+
+// UPDATED: Guest entry function
+function enterAppAsGuest() {
+    hideLandingPage();
+    document.getElementById('authScreen').classList.remove('active');
+    document.getElementById('mainApp').classList.add('active');
+    switchTab('home', null);
+    loadData();
 }
 
 function showAuthFromLanding(tab) {
@@ -753,13 +747,30 @@ function showApp() {
     document.getElementById('mainApp').classList.add('active'); 
 }
 
+// UPDATED: The Bouncer logic
 function switchTab(tab, eventObj) {
+  const token = localStorage.getItem('authToken');
+
+  if (!token && tab !== 'home') {
+    document.getElementById('mainApp').classList.remove('active');
+    document.getElementById('authScreen').classList.add('active');
+    switchAuthTab('signup');
+    showToast('🔒 Please sign up or log in to access this feature.');
+    return;
+  }
+
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  
   const targetTab = document.getElementById(tab + 'Tab');
   if (targetTab) targetTab.classList.add('active');
-  if (eventObj && eventObj.currentTarget) { eventObj.currentTarget.classList.add('active'); }
-  else { const navItem = document.querySelector(`.nav-item[data-tab="${tab}"]`); if (navItem) navItem.classList.add('active'); }
+  
+  if (eventObj && eventObj.currentTarget) { 
+    eventObj.currentTarget.classList.add('active'); 
+  } else { 
+    const navItem = document.querySelector(`.nav-item[data-tab="${tab}"]`); 
+    if (navItem) navItem.classList.add('active'); 
+  }
 }
 
 function showToast(msg) {
@@ -780,9 +791,6 @@ function togglePassword(inputId, btn) {
   }
 }
 
-// ==========================================
-// AUTHENTICATION
-// ==========================================
 async function handleSignup(e) {
   e.preventDefault();
   const btn = document.getElementById('signupBtn');
@@ -828,7 +836,7 @@ async function handleSignup(e) {
     showToast('✅ Account created! Check your email (including Spam folder).');
     document.getElementById('signupForm').reset();
   } catch (err) { 
-    showToast('❌ ' + (err.message || 'Signup failed')); 
+    showToast(' ' + (err.message || 'Signup failed')); 
   } finally {
     if (btn) {
       btn.disabled = false;
@@ -936,9 +944,6 @@ function logout() {
   showAuth();
 }
 
-// ==========================================
-// DATA LOADING
-// ==========================================
 async function loadData() {
   try {
     const response = await fetch(`${API_URL}/missing-persons`);
@@ -1183,10 +1188,10 @@ async function loadMyPosts() {
           </div>
         </div>
         <div style="font-size:13px; color:var(--warning); font-weight:600; margin-bottom:4px;">⏰ Missing for ${missingTime}</div>
-        <div style="font-size:13px; color:var(--gray)"> ${escapeHTML(p.last_seen_location)} |  Age: ${p.age}</div>
+        <div style="font-size:13px; color:var(--gray)">📍 ${escapeHTML(p.last_seen_location)} | 👤 Age: ${p.age}</div>
       </div>
     `}).join('');
-  } catch (err) { console.error(err); showToast(' ' + err.message); }
+  } catch (err) { console.error(err); showToast('❌ ' + err.message); }
 }
 
 let currentEditId = null;
@@ -1214,7 +1219,7 @@ async function savePostEdit() {
     if (res.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!res.ok) throw new Error('Update failed');
     showToast('✅ Post updated!'); closeModal('editPostModal'); loadMyPosts(); loadData();
-  } catch (err) { showToast(' ' + err.message); }
+  } catch (err) { showToast('❌ ' + err.message); }
 }
 
 function openDeleteModal(id) { currentDeleteId = id; document.getElementById('deletePostModal').classList.add('active'); }
@@ -1240,9 +1245,6 @@ document.getElementById('searchInput').addEventListener('input', renderCards);
 document.getElementById('filterGender').addEventListener('change', renderCards);
 document.getElementById('filterAge').addEventListener('change', renderCards);
 
-// ==========================================
-// 🚀 REGISTER SERVICE WORKER FOR PWA
-// ==========================================
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
