@@ -1,5 +1,5 @@
 // Service Worker for Locate Me PWA
-const CACHE_NAME = 'locate-me-v1';
+const CACHE_NAME = 'locate-me-v3';
 const urlsToCache = [
   '/',
   '/index.html',

@@ -20,7 +20,8 @@
 
 <!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.png" type="image/png">
+<link rel="icon" href="/icon.png?v=2" type="image/png">
+<link rel="apple-touch-icon" href="/icon.png">
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script type="text/javascript">
@@ -255,7 +256,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                         <li><span class="check-icon">✓</span> Make a difference</li>
                         <li><span class="check-icon">✓</span> Help bring people home</li>
                     </ul>
-                    <!-- UPDATED: Now enters app as guest -->
                     <button class="get-started-btn" onclick="enterAppAsGuest()">Get Started</button>
                     <p class="login-link">Already have an account? <a onclick="showAuthFromLanding('login')">Login</a></p>
                 </div>
@@ -707,7 +707,6 @@ function hideLandingPage() {
     if (lp) lp.style.display = 'none';
 }
 
-// UPDATED: Guest entry function
 function enterAppAsGuest() {
     hideLandingPage();
     document.getElementById('authScreen').classList.remove('active');
@@ -747,7 +746,6 @@ function showApp() {
     document.getElementById('mainApp').classList.add('active'); 
 }
 
-// UPDATED: The Bouncer logic
 function switchTab(tab, eventObj) {
   const token = localStorage.getItem('authToken');
 
