@@ -571,8 +571,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <div class="modal-content">
     <div class="verification-message">
       <h2>📧 Check Your Email!</h2>
-      <p><strong>Important:</strong> After signing up, check your email (including Spam/Promotions folder) to verify your account.</p>
-      <button class="btn-submit" onclick="closeModal('emailVerificationModal')" style="width:100%">Got it!</button>
+      <p style="font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
+        <strong style="color: var(--warning);">Important:</strong> We've sent a verification link to your email.
+      </p>
+      <div style="background: rgba(251, 191, 36, 0.15); border: 2px solid var(--warning); border-radius: 10px; padding: 15px; margin: 15px 0;">
+        <p style="margin: 0; font-weight: 600; color: var(--warning); font-size: 15px;">
+          ⚠️ Check your SPAM or Promotions folder!
+        </p>
+        <p style="margin: 8px 0 0 0; font-size: 13px; color: var(--light);">
+          The verification email may not be in your inbox. Please check your Spam, Junk, or Promotions folder.
+        </p>
+      </div>
+      <p style="font-size: 14px; color: var(--gray); margin-top: 15px;">
+        Can't find it? Wait a few minutes and check again.
+      </p>
+      <button class="btn-submit" onclick="closeModal('emailVerificationModal')" style="width:100%; margin-top: 15px;">Got it!</button>
     </div>
   </div>
 </div>
