@@ -20,7 +20,6 @@
 
 <!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
-<!-- Favicon with cache buster -->
 <link rel="icon" href="/icon.png?v=3" type="image/png">
 <link rel="apple-touch-icon" href="/icon.png">
 <link rel="shortcut icon" href="/icon.png?v=3" type="image/png">
@@ -329,16 +328,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         </label>
       </div>
       <button type="submit" id="signupBtn" class="btn-submit" style="width:100%">Create Account</button>
-      <div class="spam-notice">
-        <strong>📧 Important:</strong>
-        After signing up, check your email (including Spam/Promotions folder) to verify your account.
-      </div>
     </form>
     <div class="auth-divider"><span>or continue with</span></div>
+    <div id="googleSignInContainer" style="width: 100%; margin-top: 10px;"></div>
     <div class="google-terms-notice">
       <strong>Note:</strong> By signing in with Google, you agree to our <a href="privacy-policy.html" target="_blank" style="color: var(--warning);">Privacy Policy</a> and <a href="terms.html" target="_blank" style="color: var(--warning);">Terms of Service</a>.
     </div>
-    <div id="googleSignInContainer" style="width: 100%; margin-top: 10px;"></div>
   </div>
 </div>
 
@@ -567,6 +562,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <h2>✅ Email Verified!</h2>
       <p>Your email has been successfully verified. You can now log in to your account.</p>
       <button class="btn-submit" onclick="closeModal('verifySuccessModal'); switchAuthTab('login'); showAuth();" style="width:100%">Go to Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- Email Verification Popup Modal -->
+<div class="modal-overlay" id="emailVerificationModal">
+  <div class="modal-content">
+    <div class="verification-message">
+      <h2>📧 Check Your Email!</h2>
+      <p><strong>Important:</strong> After signing up, check your email (including Spam/Promotions folder) to verify your account.</p>
+      <button class="btn-submit" onclick="closeModal('emailVerificationModal')" style="width:100%">Got it!</button>
     </div>
   </div>
 </div>
@@ -833,8 +839,10 @@ async function handleSignup(e) {
         console.error('EmailJS Error:', emailErr);
       }
     }
-    showToast('✅ Account created! Check your email (including Spam folder).');
+    // Show popup instead of static message
+    showToast('✅ Account created!');
     document.getElementById('signupForm').reset();
+    document.getElementById('emailVerificationModal').classList.add('active');
   } catch (err) { 
     showToast(' ' + (err.message || 'Signup failed')); 
   } finally {
