@@ -111,7 +111,7 @@ tr:hover td { background: rgba(251, 191, 36, 0.05); }
 <script>
 const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 
-// 🛡️ ADMIN SECURITY GUARD
+// ️ ADMIN SECURITY GUARD
 (function checkAdminAccess() {
     const token = localStorage.getItem('authToken');
     const userStr = localStorage.getItem('user');
@@ -156,19 +156,43 @@ async function loadUsers() {
         
         if (users.length === 0) { container.innerHTML = '<div class="loading">No users found</div>'; return; }
         
-        let html = `<table><thead><tr><th>Email</th><th>Role</th><th>Verified</th><th>Joined</th></tr></thead><tbody>`;
+        // Added "Action" column header
+        let html = `<table><thead><tr><th>Email</th><th>Role</th><th>Verified</th><th>Joined</th><th>Action</th></tr></thead><tbody>`;
         users.forEach(user => {
             const verifiedBadge = user.is_verified ? '<span style="color: var(--success); font-weight: bold;">✅ Yes</span>' : '<span style="color: var(--gray);">❌ No</span>';
             const roleClass = user.role === 'admin' ? 'role-admin' : 'role-user';
             const joinDate = new Date(user.created_at).toLocaleDateString('en-KE');
-            html += `<tr><td>${user.email}</td><td><span class="role-badge ${roleClass}">${user.role}</span></td><td>${verifiedBadge}</td><td>${joinDate}</td></tr>`;
+            // Added Delete button for each user
+            html += `<tr><td>${user.email}</td><td><span class="role-badge ${roleClass}">${user.role}</span></td><td>${verifiedBadge}</td><td>${joinDate}</td><td><button class="btn-delete" onclick="deleteUser('${user.id}', '${user.email}')">Delete User</button></td></tr>`;
         });
         html += `</tbody></table>`;
         container.innerHTML = html;
     } catch (err) { container.innerHTML = `<div class="error">❌ ${err.message}</div>`; }
 }
 
-// ✅ Load Missing Persons WITH POSTER EMAIL & DELETE
+// ✅ NEW: Delete User Function
+async function deleteUser(id, email) {
+    if (!confirm(`Are you sure you want to permanently delete the user "${email}"? This cannot be undone.`)) return;
+    
+    const token = localStorage.getItem('authToken');
+    try {
+        const res = await fetch(`${API_URL}/admin/users/${id}`, {
+            method: 'DELETE',
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (!res.ok) throw new Error('Failed to delete user');
+        alert('✅ User deleted successfully');
+        loadUsers(); // Reload the list
+    } catch (err) {
+        alert('❌ Failed to delete: ' + err.message);
+    }
+}
+
+// Load Missing Persons
 async function loadMissingPersons() {
     const token = localStorage.getItem('authToken');
     const container = document.getElementById('missingContainer');
@@ -198,7 +222,7 @@ async function loadMissingPersons() {
     } catch (err) { container.innerHTML = `<div class="error">❌ ${err.message}</div>`; }
 }
 
-// ✅ Load Sightings WITH REPORTER EMAIL & DELETE
+// Load Sightings
 async function loadSightings() {
     const token = localStorage.getItem('authToken');
     const container = document.getElementById('foundContainer');
@@ -229,7 +253,7 @@ async function loadSightings() {
     } catch (err) { container.innerHTML = `<div class="error">❌ ${err.message}</div>`; }
 }
 
-// ✅ Delete Missing Post
+// Delete Missing Post
 async function deleteMissingPost(id, name) {
     if (!confirm(`Are you sure you want to delete the missing person report for "${name}"? This cannot be undone.`)) return;
     
@@ -246,13 +270,13 @@ async function deleteMissingPost(id, name) {
         
         if (!res.ok) throw new Error('Failed to delete');
         alert('✅ Post deleted successfully');
-        loadMissingPersons(); // Reload the list
+        loadMissingPersons(); 
     } catch (err) {
         alert('❌ Failed to delete: ' + err.message);
     }
 }
 
-// ✅ Delete Sighting
+// Delete Sighting
 async function deleteSighting(id) {
     if (!confirm('Are you sure you want to delete this sighting report? This cannot be undone.')) return;
     
@@ -269,7 +293,7 @@ async function deleteSighting(id) {
         
         if (!res.ok) throw new Error('Failed to delete');
         alert('✅ Sighting deleted successfully');
-        loadSightings(); // Reload the list
+        loadSightings(); 
     } catch (err) {
         alert('❌ Failed to delete: ' + err.message);
     }
