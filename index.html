@@ -133,6 +133,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .spam-notice strong { display: block; margin-bottom: 4px; }
 .google-terms-notice { margin: 15px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; font-size: 12px; color: var(--warning); }
 
+/* NEW: Google Button Overlay Styles */
+.google-btn-wrapper { position: relative; width: 100%; margin-top: 10px; }
+.google-overlay { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(15, 23, 42, 0.3); cursor: not-allowed; z-index: 10; 
+    border-radius: 4px; 
+}
+.google-overlay.hidden { display: none; }
+
 #landing-page { display: flex; flex-direction: column; height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; z-index: 9999; background: var(--dark); }
 .landing-nav { padding: 0.8rem 5%; display: flex; justify-content: center; align-items: center; background: var(--dark); flex-shrink: 0; height: 60px; }
 .landing-logo { font-size: 1.5rem; font-weight: bold; color: var(--warning); display: flex; align-items: center; gap: 0.5rem; }
@@ -196,7 +205,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
             <div class="carousel">
                 <div class="step-slide active" data-step="1">
                     <div class="step-header"><div class="step-badge">1</div><h3 class="step-title">Welcome</h3></div>
-                    <div class="step-icon">📍</div>
+                    <div class="step-icon"></div>
                     <p class="step-description">Locate Me helps families, communities, organizations and authorities share verified missing person reports and reunite loved ones safely.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Quick and easy to use</li>
@@ -218,7 +227,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="3">
                     <div class="step-header"><div class="step-badge">3</div><h3 class="step-title">Found Someone?</h3></div>
-                    <div class="step-icon">🔍</div>
+                    <div class="step-icon"></div>
                     <p class="step-description">If you find someone who may be missing, submit a Found Report with details and photos.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Upload evidence</li>
@@ -239,7 +248,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="5">
                     <div class="step-header"><div class="step-badge">5</div><h3 class="step-title">Admin Oversight</h3></div>
-                    <div class="step-icon">📊</div>
+                    <div class="step-icon"></div>
                     <p class="step-description"><strong>Monitored For Safety</strong>Our administration team monitors reports and can review, edit, remove, or investigate inappropriate content.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Admin dashboard</li>
@@ -330,7 +339,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <button type="submit" id="signupBtn" class="btn-submit" style="width:100%">Create Account</button>
     </form>
     <div class="auth-divider"><span>or continue with</span></div>
-    <div id="googleSignInContainer" style="width: 100%; margin-top: 10px;"></div>
+    
+    <!-- UPDATED: Wrapped Google button in a container with an overlay -->
+    <div class="google-btn-wrapper">
+        <div id="googleSignInContainer" style="width: 100%;"></div>
+        <div id="googleOverlay" class="google-overlay" title="Please accept the Terms and Privacy Policy first"></div>
+    </div>
+    
     <div class="google-terms-notice">
       <strong>Note:</strong> By signing in with Google, you agree to our <a href="privacy-policy.html" target="_blank" style="color: var(--warning);">Privacy Policy</a> and <a href="terms.html" target="_blank" style="color: var(--warning);">Terms of Service</a>.
     </div>
@@ -537,7 +552,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="home" onclick="switchTab('home', event)">
-      <span class="nav-icon">🏠</span>
+      <span class="nav-icon"></span>
       <span class="nav-label">Home</span>
     </button>
     <button class="nav-item" data-tab="post" onclick="switchTab('post', event)">
@@ -570,7 +585,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div class="modal-overlay" id="emailVerificationModal">
   <div class="modal-content">
     <div class="verification-message">
-      <h2>📧 Check Your Email!</h2>
+      <h2> Check Your Email!</h2>
       <p style="font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
         <strong style="color: var(--warning);">Important:</strong> We've sent a verification link to your email.
       </p>
@@ -606,7 +621,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <div class="modal-content">
     <input type="hidden" id="editPostId">
     <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; padding: 12px; margin-bottom: 20px; font-size: 13px; color: var(--warning);">
-        <strong>📸 Note:</strong> Images cannot be edited. To change photos, please delete this post and create a new one.
+        <strong> Note:</strong> Images cannot be edited. To change photos, please delete this post and create a new one.
     </div>
     <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="editName"></div>
     <div class="form-group"><label class="form-label">Age</label><input type="number" class="form-input" id="editAge"></div>
@@ -753,6 +768,9 @@ function switchAuthTab(tab) {
   const tabEl = document.querySelector(`.auth-tab[onclick*="'${tab}'"]`);
   if (tabEl) tabEl.classList.add('active');
   document.getElementById(tab + 'Form').classList.add('active');
+  
+  // NEW: Update Google button state when switching tabs
+  updateGoogleButtonState();
 }
 
 function showAuth() { 
@@ -810,6 +828,25 @@ function togglePassword(inputId, btn) {
   }
 }
 
+// NEW: Function to control the Google Sign-In button overlay
+function updateGoogleButtonState() {
+    const termsCheckbox = document.getElementById('agreeToTerms');
+    const googleOverlay = document.getElementById('googleOverlay');
+    const isSignupActive = document.getElementById('signupForm').classList.contains('active');
+    
+    if (isSignupActive) {
+        // If on Signup tab, only allow Google sign-in if terms are checked
+        if (termsCheckbox && termsCheckbox.checked) {
+            googleOverlay.classList.add('hidden');
+        } else {
+            googleOverlay.classList.remove('hidden');
+        }
+    } else {
+        // If on Login tab, always allow Google sign-in
+        googleOverlay.classList.add('hidden');
+    }
+}
+
 async function handleSignup(e) {
   e.preventDefault();
   const btn = document.getElementById('signupBtn');
@@ -852,7 +889,6 @@ async function handleSignup(e) {
         console.error('EmailJS Error:', emailErr);
       }
     }
-    // Show popup instead of static message
     showToast('✅ Account created!');
     document.getElementById('signupForm').reset();
     document.getElementById('emailVerificationModal').classList.add('active');
@@ -900,6 +936,13 @@ function initializeGoogleSignIn() {
   if (typeof google === 'undefined') { setTimeout(initializeGoogleSignIn, 500); return; }
   google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleResponse, auto_select: false });
   try { google.accounts.id.renderButton(document.getElementById("googleSignInContainer"), { theme: "outline", size: "large", width: "100%" }); } catch (err) {}
+  
+  // NEW: Set up the checkbox listener for the Google button overlay
+  const termsCheckbox = document.getElementById('agreeToTerms');
+  if (termsCheckbox) {
+      termsCheckbox.addEventListener('change', updateGoogleButtonState);
+      updateGoogleButtonState(); // Run once on load
+  }
 }
 
 async function handleGoogleResponse(response) {
@@ -919,7 +962,7 @@ async function handleGoogleResponse(response) {
     showApp(); 
     loadData();
   } catch (err) { 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
