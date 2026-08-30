@@ -207,6 +207,76 @@ app.get('/api/missing-persons', async (req, res) => {
     }
 });
 
+// Get missing persons by police station (For Police Dashboard)
+app.get('/api/missing-persons/station/:stationId', authenticateToken, async (req, res) => {
+    try {
+        const { stationId } = req.params;
+        
+        // Verify this is a valid police station request
+        const result = await pool.query(
+            'SELECT * FROM missing_persons WHERE police_station = $1 ORDER BY date_missing DESC',
+            [stationId]
+        );
+        
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Fetch station cases error:', err);
+        res.status(500).json({ error: 'Failed to fetch cases for this station' });
+    }
+});
+
+// Get all police stations (For dropdown)
+app.get('/api/police-stations', async (req, res) => {
+    try {
+        const stations = [
+            { id: 'RUI-2026-001', name: 'Ruiru Police Station', county: 'Kiambu' },
+            { id: 'KAS-2026-001', name: 'Kasarani Police Station', county: 'Nairobi' },
+            { id: 'NRB-2026-001', name: 'Central Police Station - Nairobi', county: 'Nairobi' },
+            { id: 'KIL-2026-001', name: 'Kilimani Police Station', county: 'Nairobi' },
+            { id: 'WES-2026-001', name: 'Westlands Police Station', county: 'Nairobi' },
+            { id: 'LAN-2026-001', name: "Lang'ata Police Station", county: 'Nairobi' },
+            { id: 'EMB-2026-001', name: 'Embakasi Police Station', county: 'Nairobi' },
+            { id: 'RUA-2026-001', name: 'Ruaraka Police Station', county: 'Nairobi' },
+            { id: 'DON-2026-001', name: 'Donholm Police Station', county: 'Nairobi' },
+            { id: 'KAY-2026-001', name: 'Kayole Police Station', county: 'Nairobi' },
+            { id: 'PUM-2026-001', name: 'Pumwani Police Station', county: 'Nairobi' },
+            { id: 'KAM-2026-001', name: 'Kamukunji Police Station', county: 'Nairobi' },
+            { id: 'STA-2026-001', name: 'Starehe Police Station', county: 'Nairobi' },
+            { id: 'MAK-2026-001', name: 'Makadara Police Station', county: 'Nairobi' },
+            { id: 'KIB-2026-001', name: 'Kibera Police Station', county: 'Nairobi' },
+            { id: 'PAR-2026-001', name: 'Parklands Police Station', county: 'Nairobi' },
+            { id: 'THI-2026-001', name: 'Thika Police Station', county: 'Kiambu' },
+            { id: 'KIA-2026-001', name: 'Kiambu Town Police Station', county: 'Kiambu' },
+            { id: 'LIM-2026-001', name: 'Limuru Police Station', county: 'Kiambu' },
+            { id: 'JUJ-2026-001', name: 'Juja Police Station', county: 'Kiambu' },
+            { id: 'KAR-2026-001', name: 'Karuri Police Station', county: 'Kiambu' },
+            { id: 'KIK-2026-001', name: 'Kikuyu Police Station', county: 'Kiambu' },
+            { id: 'MOM-2026-001', name: 'Mombasa Central Police Station', county: 'Mombasa' },
+            { id: 'TUD-2026-001', name: 'Tudor Police Station', county: 'Mombasa' },
+            { id: 'CHA-2026-001', name: 'Changamwe Police Station', county: 'Mombasa' },
+            { id: 'KIS-2026-001', name: 'Kisauni Police Station', county: 'Mombasa' },
+            { id: 'LIK-2026-001', name: 'Likoni Police Station', county: 'Mombasa' },
+            { id: 'KIS-CEN-001', name: 'Kisumu Central Police Station', county: 'Kisumu' },
+            { id: 'KIS-TOW-001', name: 'Kisumu Town Police Station', county: 'Kisumu' },
+            { id: 'NYA-2026-001', name: 'Nyando Police Station', county: 'Kisumu' },
+            { id: 'MUH-2026-001', name: 'Muhoroni Police Station', county: 'Kisumu' },
+            { id: 'NAK-CEN-001', name: 'Nakuru Central Police Station', county: 'Nakuru' },
+            { id: 'NAK-TOW-001', name: 'Nakuru Town Police Station', county: 'Nakuru' },
+            { id: 'NAI-2026-001', name: 'Naivasha Police Station', county: 'Nakuru' },
+            { id: 'GIL-2026-001', name: 'Gilgil Police Station', county: 'Nakuru' },
+            { id: 'MOL-2026-001', name: 'Molo Police Station', county: 'Nakuru' },
+            { id: 'ELD-2026-001', name: 'Eldoret Police Station', county: 'Uasin Gishu' },
+            { id: 'ELD-TOW-001', name: 'Eldoret Town Police Station', county: 'Uasin Gishu' },
+            { id: 'TUR-2026-001', name: 'Turbo Police Station', county: 'Uasin Gishu' }
+        ];
+        
+        res.json(stations);
+    } catch (err) {
+        console.error('Fetch police stations error:', err);
+        res.status(500).json({ error: 'Failed to fetch police stations' });
+    }
+});
+
 // Create missing person (Protected)
 app.post('/api/missing-persons', authenticateToken, async (req, res) => {
     try {
