@@ -216,7 +216,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="2">
                     <div class="step-header"><div class="step-badge">2</div><h3 class="step-title">Post Missing Person</h3></div>
-                    <div class="step-icon">📝</div>
+                    <div class="step-icon"></div>
                     <p class="step-description">Create a Missing Person Report with detailed information to help identify and locate them.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Upload multiple photos</li>
@@ -238,7 +238,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="4">
                     <div class="step-header"><div class="step-badge">4</div><h3 class="step-title">Safe & Verified</h3></div>
-                    <div class="step-icon">️</div>
+                    <div class="step-icon"></div>
                     <p class="step-description"><strong>Accuracy Saves Lives</strong>Please provide truthful and accurate information. False reports can delay investigations.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Content moderation</li>
@@ -320,7 +320,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">👁️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">️</button>
         </div>
       </div>
       <div class="form-group">
@@ -443,15 +443,91 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Residence</label>
         <input type="text" class="form-input" id="postResidence" placeholder="Where do they live?">
       </div>
-      <div class="form-section-title">Police Info <span class="optional-badge">(Optional)</span></div>
+      <div class="form-section-title">Police Info <span class="optional-badge">(Required)</span></div>
       <div class="form-group">
-        <label class="form-label">Nearest Police Station</label>
-        <input type="text" class="form-input" id="postPoliceStation" list="policeStationsList" placeholder="Type nearest police station">
-        <datalist id="policeStationsList">
-          <option value="Central Police Station">
-          <option value="Kasarani Police Station">
-          <option value="Westlands Police Station">
-        </datalist>
+        <label class="form-label">Nearest Police Station *</label>
+        <select class="form-select" id="postPoliceStation" required>
+          <option value="">-- Select Nearest Police Station --</option>
+          <optgroup label="NAIROBI COUNTY">
+            <option value="Central Police Station - Nairobi">Central Police Station - Nairobi</option>
+            <option value="Kilimani Police Station">Kilimani Police Station</option>
+            <option value="Westlands Police Station">Westlands Police Station</option>
+            <option value="Kasarani Police Station">Kasarani Police Station</option>
+            <option value="Lang'ata Police Station">Lang'ata Police Station</option>
+            <option value="Embakasi Police Station">Embakasi Police Station</option>
+            <option value="Ruaraka Police Station">Ruaraka Police Station</option>
+            <option value="Donholm Police Station">Donholm Police Station</option>
+            <option value="Kayole Police Station">Kayole Police Station</option>
+            <option value="Pumwani Police Station">Pumwani Police Station</option>
+            <option value="Kamukunji Police Station">Kamukunji Police Station</option>
+            <option value="Starehe Police Station">Starehe Police Station</option>
+            <option value="Makadara Police Station">Makadara Police Station</option>
+            <option value="Kibera Police Station">Kibera Police Station</option>
+            <option value="Parklands Police Station">Parklands Police Station</option>
+          </optgroup>
+          <optgroup label="KIAMBU COUNTY">
+            <option value="Ruiru Police Station">Ruiru Police Station</option>
+            <option value="Thika Police Station">Thika Police Station</option>
+            <option value="Kiambu Town Police Station">Kiambu Town Police Station</option>
+            <option value="Limuru Police Station">Limuru Police Station</option>
+            <option value="Juja Police Station">Juja Police Station</option>
+            <option value="Karuri Police Station">Karuri Police Station</option>
+            <option value="Kikuyu Police Station">Kikuyu Police Station</option>
+          </optgroup>
+          <optgroup label="MOMBASA COUNTY">
+            <option value="Mombasa Central Police Station">Mombasa Central Police Station</option>
+            <option value="Tudor Police Station">Tudor Police Station</option>
+            <option value="Changamwe Police Station">Changamwe Police Station</option>
+            <option value="Kisauni Police Station">Kisauni Police Station</option>
+            <option value="Likoni Police Station">Likoni Police Station</option>
+          </optgroup>
+          <optgroup label="KISUMU COUNTY">
+            <option value="Kisumu Central Police Station">Kisumu Central Police Station</option>
+            <option value="Kisumu Town Police Station">Kisumu Town Police Station</option>
+            <option value="Nyando Police Station">Nyando Police Station</option>
+            <option value="Muhoroni Police Station">Muhoroni Police Station</option>
+          </optgroup>
+          <optgroup label="NAKURU COUNTY">
+            <option value="Nakuru Central Police Station">Nakuru Central Police Station</option>
+            <option value="Nakuru Town Police Station">Nakuru Town Police Station</option>
+            <option value="Naivasha Police Station">Naivasha Police Station</option>
+            <option value="Gilgil Police Station">Gilgil Police Station</option>
+            <option value="Molo Police Station">Molo Police Station</option>
+          </optgroup>
+          <optgroup label="UASIN GISHU COUNTY">
+            <option value="Eldoret Police Station">Eldoret Police Station</option>
+            <option value="Eldoret Town Police Station">Eldoret Town Police Station</option>
+            <option value="Turbo Police Station">Turbo Police Station</option>
+          </optgroup>
+          <optgroup label="OTHER COUNTIES">
+            <option value="Meru Police Station">Meru Police Station</option>
+            <option value="Nyeri Police Station">Nyeri Police Station</option>
+            <option value="Murang'a Police Station">Murang'a Police Station</option>
+            <option value="Machakos Police Station">Machakos Police Station</option>
+            <option value="Kitui Police Station">Kitui Police Station</option>
+            <option value="Kakamega Police Station">Kakamega Police Station</option>
+            <option value="Bungoma Police Station">Bungoma Police Station</option>
+            <option value="Busia Police Station">Busia Police Station</option>
+            <option value="Kisii Police Station">Kisii Police Station</option>
+            <option value="Nyamira Police Station">Nyamira Police Station</option>
+            <option value="Homa Bay Police Station">Homa Bay Police Station</option>
+            <option value="Migori Police Station">Migori Police Station</option>
+            <option value="Siaya Police Station">Siaya Police Station</option>
+            <option value="Garissa Police Station">Garissa Police Station</option>
+            <option value="Mandera Police Station">Mandera Police Station</option>
+            <option value="Wajir Police Station">Wajir Police Station</option>
+            <option value="Isiolo Police Station">Isiolo Police Station</option>
+            <option value="Marsabit Police Station">Marsabit Police Station</option>
+            <option value="Lodwar Police Station">Lodwar Police Station</option>
+            <option value="Kitale Police Station">Kitale Police Station</option>
+            <option value="Kapenguria Police Station">Kapenguria Police Station</option>
+            <option value="Bomet Police Station">Bomet Police Station</option>
+            <option value="Narok Police Station">Narok Police Station</option>
+            <option value="Kajiado Police Station">Kajiado Police Station</option>
+            <option value="Ngong Police Station">Ngong Police Station</option>
+            <option value="Athi River Police Station">Athi River Police Station</option>
+          </optgroup>
+        </select>
       </div>
       <div class="form-actions">
         <button class="btn-cancel" onclick="resetPostForm()">Cancel</button>
@@ -611,7 +687,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </p>
       <div style="background: rgba(251, 191, 36, 0.15); border: 2px solid var(--warning); border-radius: 10px; padding: 15px; margin: 15px 0;">
         <p style="margin: 0; font-weight: 600; color: var(--warning); font-size: 15px;">
-          ️ Check your SPAM or Promotions folder!
+          ⚠️ Check your SPAM or Promotions folder!
         </p>
         <p style="margin: 8px 0 0 0; font-size: 13px; color: var(--light);">
           The verification email may not be in your inbox. Please check your Spam, Junk, or Promotions folder.
@@ -674,7 +750,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     <p>Please select a reason for deletion:</p>
     <select class="form-select" id="deleteReason" style="margin-bottom: 20px;">
       <option value="found">✅ The missing person has been found</option>
-      <option value="duplicate">📑 This is a duplicate post</option>
+      <option value="duplicate"> This is a duplicate post</option>
       <option value="wrong_info">❌ Contains wrong information</option>
       <option value="resolved"> Issue resolved</option>
       <option value="other">📝 Other reason</option>
@@ -1178,16 +1254,17 @@ async function submitMissingPerson() {
   const location = document.getElementById('postLastLocation')?.value.trim(); 
   const desc = document.getElementById('postDescription')?.value.trim();
   const dateLastSeen = document.getElementById('postDateLastSeen')?.value;
+  const policeStation = document.getElementById('postPoliceStation')?.value;
   const photo1 = document.getElementById('postPhoto1')?.files[0]; 
   const photo2 = document.getElementById('postPhoto2')?.files[0]; 
   const photo3 = document.getElementById('postPhoto3')?.files[0];
   const files = [photo1, photo2, photo3];
-  if (!name || !age || !location || !desc || !dateLastSeen || files.some(f => !f)) { showToast('Please fill all required fields & select 3 photos'); return; }
+  if (!name || !age || !location || !desc || !dateLastSeen || !policeStation || files.some(f => !f)) { showToast('Please fill all required fields & select 3 photos'); return; }
   const btn = document.getElementById('postBtn'); 
   if (btn) { btn.disabled = true; btn.textContent = 'Uploading...'; }
   try {
     const urls = await Promise.all(files.map((f, i) => uploadToBackend(f, `progress${i+1}`)));
-    const newPerson = { name, age: parseInt(age), gender: document.getElementById('postGender')?.value, description: desc, notes: document.getElementById('postNotes')?.value.trim(), residence: document.getElementById('postResidence')?.value, last_seen_location: location, date_last_seen: dateLastSeen, police_station: document.getElementById('postPoliceStation')?.value, date_missing: new Date().toISOString().split('T')[0], photo_urls: urls };
+    const newPerson = { name, age: parseInt(age), gender: document.getElementById('postGender')?.value, description: desc, notes: document.getElementById('postNotes')?.value.trim(), residence: document.getElementById('postResidence')?.value, last_seen_location: location, date_last_seen: dateLastSeen, police_station: policeStation, date_missing: new Date().toISOString().split('T')[0], photo_urls: urls };
     const token = localStorage.getItem('authToken');
     const response = await fetch(`${API_URL}/missing-persons`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(newPerson) });
     if (response.status === 401) { logout(); throw new Error('Session expired.'); }
@@ -1253,7 +1330,7 @@ async function loadMyPosts() {
   try {
     const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
     if (res.status === 401) { logout(); throw new Error('Session expired. Please log in again.'); }
-    if (!res.ok) { showToast('❌ Failed to load posts.'); return; }
+    if (!res.ok) { showToast(' Failed to load posts.'); return; }
     const posts = await res.json();
     const container = document.getElementById('my-posts-container');
     const list = document.getElementById('my-posts-list');
@@ -1336,7 +1413,7 @@ if ('serviceWorker' in navigator) {
         console.log('✅ Service Worker registered with scope:', reg.scope);
       })
       .catch((err) => {
-        console.error('❌ Service Worker registration failed:', err);
+        console.error(' Service Worker registration failed:', err);
       });
   });
 }
