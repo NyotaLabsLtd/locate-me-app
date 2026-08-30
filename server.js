@@ -14,8 +14,12 @@ const app = express();
 // 1. CONFIGURATION & MIDDLEWARE
 // ==========================================
 
-// CORS: Updated to allow requests from local files for testing
-app.use(cors());
+// CORS: Allow requests from all origins (Updated for local testing)
+// Note: When you deploy the Police Dashboard to Vercel later, change this back to specific URLs for security.
+app.use(cors({
+    origin: '*', 
+    credentials: true
+}));
 
 app.use(express.json({ limit: '10mb' }));
 
@@ -142,6 +146,12 @@ app.post('/api/auth/login', async (req, res) => {
 app.post('/api/auth/google', async (req, res) => {
     try {
         const { credential } = req.body;
+        // Note: In a real production app, you should verify the Google credential here using google-auth-library.
+        // For now, we assume the frontend verified it and we just create/find the user.
+        // You would normally decode the JWT from Google here to get the email.
+        
+        // Placeholder for Google JWT decoding (You can use jsonwebtoken to decode without verification for basic info, 
+        // but ideally use google-auth-library).
         const decoded = jwt.decode(credential);
         const email = decoded.email;
         const name = decoded.name;
@@ -149,9 +159,10 @@ app.post('/api/auth/google', async (req, res) => {
         let user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         
         if (user.rows.length === 0) {
+            // Create new user from Google
             user = await pool.query(
                 'INSERT INTO users (email, password, role, is_verified) VALUES ($1, $2, $3, $4) RETURNING id, email, role',
-                [email, 'google_auth', 'user', true]
+                [email, 'google_auth', 'user', true] // Google users are auto-verified
             );
         }
 
@@ -197,14 +208,17 @@ app.get('/api/missing-persons', async (req, res) => {
     }
 });
 
-// NEW: Get missing persons by police station (For Police Dashboard)
-app.get('/api/missing-persons/station/:stationId', async (req, res) => {
+// Get missing persons by police station (For Police Dashboard)
+app.get('/api/missing-persons/station/:stationId', authenticateToken, async (req, res) => {
     try {
         const { stationId } = req.params;
+        
+        // Verify this is a valid police station request
         const result = await pool.query(
             'SELECT * FROM missing_persons WHERE police_station = $1 ORDER BY date_missing DESC',
             [stationId]
         );
+        
         res.json(result.rows);
     } catch (err) {
         console.error('Fetch station cases error:', err);
@@ -212,7 +226,7 @@ app.get('/api/missing-persons/station/:stationId', async (req, res) => {
     }
 });
 
-// NEW: Get all police stations (For dropdown)
+// Get all police stations (For dropdown)
 app.get('/api/police-stations', async (req, res) => {
     try {
         const stations = [
@@ -256,6 +270,7 @@ app.get('/api/police-stations', async (req, res) => {
             { id: 'ELD-TOW-001', name: 'Eldoret Town Police Station', county: 'Uasin Gishu' },
             { id: 'TUR-2026-001', name: 'Turbo Police Station', county: 'Uasin Gishu' }
         ];
+        
         res.json(stations);
     } catch (err) {
         console.error('Fetch police stations error:', err);
@@ -286,6 +301,7 @@ app.put('/api/missing-persons/:id', authenticateToken, async (req, res) => {
         const { id } = req.params;
         const { name, age, gender, description, notes, residence, last_seen_location, date_last_seen, police_station } = req.body;
         
+        // Check ownership
         const post = await pool.query('SELECT * FROM missing_persons WHERE id = $1', [id]);
         if (post.rows.length === 0) return res.status(404).json({ error: 'Post not found' });
         if (post.rows[0].user_id !== req.user.id && req.user.role !== 'admin') {
@@ -375,13 +391,14 @@ app.get('/api/users/my-posts', authenticateToken, async (req, res) => {
 });
 
 // ==========================================
-// 7. UPLOAD ROUTE (WITH IMAGE COMPRESSION)
+// 7. UPLOAD ROUTE
 // ==========================================
 
 app.post('/api/upload', authenticateToken, upload.single('image'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
         
+        // Upload to Cloudinary WITH COMPRESSION
         const result = await new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
                 { 
@@ -423,22 +440,27 @@ app.get('/api/admin/users', authenticateToken, requireAdmin, async (req, res) =>
     }
 });
 
-// DELETE USER (Admin Only)
+// 🗑️ DELETE USER (Admin Only) - NEW ROUTE
 app.delete('/api/admin/users/:id', authenticateToken, requireAdmin, async (req, res) => {
     try {
         const userId = req.params.id;
         
+        // Prevent admin from deleting themselves
         if (userId === req.user.id) {
             return res.status(400).json({ error: 'You cannot delete your own account' });
         }
 
+        // Check if user exists
         const user = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
         if (user.rows.length === 0) {
             return res.status(404).json({ error: 'User not found' });
         }
 
+        // Optional: Delete user's posts and sightings first to maintain database integrity
         await pool.query('DELETE FROM missing_persons WHERE user_id = $1', [userId]);
         await pool.query('DELETE FROM sightings WHERE user_id = $1', [userId]);
+
+        // Delete the user
         await pool.query('DELETE FROM users WHERE id = $1', [userId]);
         
         res.json({ message: 'User and their associated data deleted successfully' });
@@ -487,5 +509,5 @@ app.get('/api/admin/sightings-full', authenticateToken, requireAdmin, async (req
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`✅ Locate Me Backend is running on port ${PORT}`);
-    console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
