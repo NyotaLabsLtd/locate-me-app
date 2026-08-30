@@ -96,7 +96,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark-card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 100; }
 .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 16px; cursor: pointer; border: none; background: none; color: var(--gray); }
 .nav-item.active { color: var(--warning); }
-.nav-icon { font-size: 24px; }
+.nav-icon { width: 24px; height: 24px; }
+.nav-icon svg { width: 100%; height: 100%; }
 .nav-label { font-size: 12px; font-weight: 600; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
@@ -196,7 +197,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div id="landing-page">
     <nav class="landing-nav">
         <div class="landing-logo">
-            <span class="landing-logo-icon">📍</span>
+            <span class="landing-logo-icon"></span>
             <span>Locate Me</span>
         </div>
     </nav>
@@ -237,7 +238,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="4">
                     <div class="step-header"><div class="step-badge">4</div><h3 class="step-title">Safe & Verified</h3></div>
-                    <div class="step-icon">🛡️</div>
+                    <div class="step-icon">️</div>
                     <p class="step-description"><strong>Accuracy Saves Lives</strong>Please provide truthful and accurate information. False reports can delay investigations.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Content moderation</li>
@@ -550,21 +551,40 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
     </div>
   </div>
+  
+  <!-- UPDATED BOTTOM NAVIGATION WITH SVG ICONS -->
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="home" onclick="switchTab('home', event)">
-      <span class="nav-icon"></span>
+      <span class="nav-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      </span>
       <span class="nav-label">Home</span>
     </button>
     <button class="nav-item" data-tab="post" onclick="switchTab('post', event)">
-      <span class="nav-icon">➕</span>
+      <span class="nav-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+      </span>
       <span class="nav-label">Post</span>
     </button>
     <button class="nav-item" data-tab="found" onclick="switchTab('found', event)">
-      <span class="nav-icon">🔍</span>
+      <span class="nav-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </span>
       <span class="nav-label">Found</span>
     </button>
     <button class="nav-item" data-tab="settings" onclick="switchTab('settings', event)">
-      <span class="nav-icon">⚙️</span>
+      <span class="nav-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      </span>
       <span class="nav-label">Settings</span>
     </button>
   </nav>
@@ -591,7 +611,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </p>
       <div style="background: rgba(251, 191, 36, 0.15); border: 2px solid var(--warning); border-radius: 10px; padding: 15px; margin: 15px 0;">
         <p style="margin: 0; font-weight: 600; color: var(--warning); font-size: 15px;">
-          ⚠️ Check your SPAM or Promotions folder!
+          ️ Check your SPAM or Promotions folder!
         </p>
         <p style="margin: 8px 0 0 0; font-size: 13px; color: var(--light);">
           The verification email may not be in your inbox. Please check your Spam, Junk, or Promotions folder.
@@ -656,7 +676,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <option value="found">✅ The missing person has been found</option>
       <option value="duplicate">📑 This is a duplicate post</option>
       <option value="wrong_info">❌ Contains wrong information</option>
-      <option value="resolved">🛑 Issue resolved</option>
+      <option value="resolved"> Issue resolved</option>
       <option value="other">📝 Other reason</option>
     </select>
     <button class="btn-submit" style="width:100%; background:var(--danger); color:white;" onclick="confirmDeletePost()">Yes, Delete Post</button>
@@ -928,7 +948,7 @@ async function handleLogin(e) {
     showApp(); 
     loadData();
   } catch (err) { 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
@@ -991,7 +1011,7 @@ async function checkVerificationLink() {
         document.getElementById('verifySuccessModal').classList.add('active');
         window.history.replaceState({}, document.title, window.location.pathname);
       } else {
-        showToast('❌ ' + (data.error || 'Verification failed'));
+        showToast(' ' + (data.error || 'Verification failed'));
       }
     } catch (err) {
       showToast('❌ Verification failed. Link may be expired.');
@@ -1173,7 +1193,7 @@ async function submitMissingPerson() {
     if (response.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!response.ok) throw new Error('Failed to save to database');
     showToast('✅ Report submitted successfully!'); resetPostForm(); loadData(); switchTab('home', null);
-  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
+  } catch (err) { showToast(' ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
 }
 
 function resetPostForm() {
@@ -1205,7 +1225,7 @@ async function submitSighting() {
     if (response.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!response.ok) throw new Error('Failed to save sighting');
     showToast('✅ Sighting reported!'); resetSightingForm(); switchTab('home', null);
-  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
+  } catch (err) { showToast(' ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
 }
 
 function resetSightingForm() {
@@ -1251,7 +1271,7 @@ async function loadMyPosts() {
             <button onclick="openDeleteModal(${p.id})" style="background:var(--danger); color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">Delete</button>
           </div>
         </div>
-        <div style="font-size:13px; color:var(--warning); font-weight:600; margin-bottom:4px;">⏰ Missing for ${missingTime}</div>
+        <div style="font-size:13px; color:var(--warning); font-weight:600; margin-bottom:4px;"> Missing for ${missingTime}</div>
         <div style="font-size:13px; color:var(--gray)">📍 ${escapeHTML(p.last_seen_location)} | 👤 Age: ${p.age}</div>
       </div>
     `}).join('');
