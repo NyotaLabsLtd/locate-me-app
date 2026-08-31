@@ -14,7 +14,7 @@ const app = express();
 // 1. CONFIGURATION & MIDDLEWARE
 // ==========================================
 
-// CORS: Allow requests from all origins
+// CORS: Allow requests from ALL origins (Fixes the CORS error)
 app.use(cors({
     origin: '*', 
     credentials: true
@@ -48,9 +48,9 @@ const registerLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 3, message: {
 const postLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, message: { error: 'Too many posts. Try again in 1 hour.' } });
 const generalLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100, message: { error: 'Too many requests.' } });
 
+// Apply limiters ONLY where needed (NOT on GET requests)
 app.use('/api/auth/login', loginLimiter);
 app.use('/api/auth/register', registerLimiter);
-// ❌ REMOVED: app.use('/api/missing-persons', postLimiter); - this was blocking GET requests!
 app.use(generalLimiter);
 
 // Authentication Middleware
@@ -180,7 +180,7 @@ app.get('/api/auth/verify/:token', async (req, res) => {
 // 4. MISSING PERSONS ROUTES
 // ==========================================
 
-// Get all missing persons (Public - NO rate limit on GET)
+// Get all missing persons (Public - NO rate limit, NO auth required for dashboard)
 app.get('/api/missing-persons', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM missing_persons ORDER BY date_missing DESC');
@@ -256,7 +256,7 @@ app.get('/api/police-stations', async (req, res) => {
     }
 });
 
-// Create missing person (Protected - WITH rate limit on POST only)
+// Create missing person (Protected - Rate limit applied ONLY here)
 app.post('/api/missing-persons', authenticateToken, postLimiter, async (req, res) => {
     try {
         const { name, age, gender, description, notes, residence, last_seen_location, date_last_seen, police_station, date_missing, photo_urls } = req.body;
@@ -319,6 +319,7 @@ app.delete('/api/missing-persons/:id', authenticateToken, async (req, res) => {
 // 5. SIGHTINGS ROUTES
 // ==========================================
 
+// Get all sightings (Public - NO rate limit, NO auth required for dashboard)
 app.get('/api/sightings', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM sightings ORDER BY created_at DESC');
@@ -484,5 +485,5 @@ app.get('/api/admin/sightings-full', authenticateToken, requireAdmin, async (req
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`✅ Locate Me Backend is running on port ${PORT}`);
-    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
 });
