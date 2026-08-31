@@ -14,7 +14,7 @@ const app = express();
 // 1. CONFIGURATION & MIDDLEWARE
 // ==========================================
 
-// CORS: Allow requests from all origins (Updated for local testing)
+// CORS: Allow requests from all origins
 app.use(cors({
     origin: '*', 
     credentials: true
@@ -42,7 +42,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 // 2. SECURITY MIDDLEWARE
 // ==========================================
 
-// Rate Limiters to prevent spam/brute force
+// Rate Limiters
 const loginLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 7, message: { error: 'Too many login attempts. Try again in 10 minutes.' } });
 const registerLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 3, message: { error: 'Too many signup attempts. Try again in 10 minutes.' } });
 const postLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, message: { error: 'Too many posts. Try again in 1 hour.' } });
@@ -50,26 +50,25 @@ const generalLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100, message: 
 
 app.use('/api/auth/login', loginLimiter);
 app.use('/api/auth/register', registerLimiter);
-app.use('/api/missing-persons', postLimiter);
+// ❌ REMOVED: app.use('/api/missing-persons', postLimiter); - this was blocking GET requests!
 app.use(generalLimiter);
 
 // Authentication Middleware
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) return res.status(401).json({ error: 'Access denied. No token provided.' });
 
     try {
         const verified = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = verified; // Contains { id, email, role }
+        req.user = verified;
         next();
     } catch (err) {
         res.status(403).json({ error: 'Invalid or expired token.' });
     }
 };
 
-// Admin Middleware
 const requireAdmin = (req, res, next) => {
     if (req.user.role !== 'admin') {
         return res.status(403).json({ error: 'Admin access required.' });
@@ -81,7 +80,6 @@ const requireAdmin = (req, res, next) => {
 // 3. AUTH ROUTES
 // ==========================================
 
-// Register
 app.post('/api/auth/register', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -109,7 +107,6 @@ app.post('/api/auth/register', async (req, res) => {
     }
 });
 
-// Login
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -138,13 +135,11 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-// Google Auth
 app.post('/api/auth/google', async (req, res) => {
     try {
         const { credential } = req.body;
         const decoded = jwt.decode(credential);
         const email = decoded.email;
-        const name = decoded.name;
 
         let user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         
@@ -171,7 +166,6 @@ app.post('/api/auth/google', async (req, res) => {
     }
 });
 
-// Verify Email
 app.get('/api/auth/verify/:token', async (req, res) => {
     try {
         const verified = jwt.verify(req.params.token, process.env.JWT_SECRET);
@@ -186,7 +180,7 @@ app.get('/api/auth/verify/:token', async (req, res) => {
 // 4. MISSING PERSONS ROUTES
 // ==========================================
 
-// Get all missing persons (Public)
+// Get all missing persons (Public - NO rate limit on GET)
 app.get('/api/missing-persons', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM missing_persons ORDER BY date_missing DESC');
@@ -197,7 +191,7 @@ app.get('/api/missing-persons', async (req, res) => {
     }
 });
 
-// Get missing persons by police station (For Police Dashboard)
+// Get missing persons by police station
 app.get('/api/missing-persons/station/:stationId', authenticateToken, async (req, res) => {
     try {
         const { stationId } = req.params;
@@ -212,7 +206,6 @@ app.get('/api/missing-persons/station/:stationId', authenticateToken, async (req
     }
 });
 
-// Get all police stations (For dropdown)
 app.get('/api/police-stations', async (req, res) => {
     try {
         const stations = [
@@ -263,8 +256,8 @@ app.get('/api/police-stations', async (req, res) => {
     }
 });
 
-// Create missing person (Protected)
-app.post('/api/missing-persons', authenticateToken, async (req, res) => {
+// Create missing person (Protected - WITH rate limit on POST only)
+app.post('/api/missing-persons', authenticateToken, postLimiter, async (req, res) => {
     try {
         const { name, age, gender, description, notes, residence, last_seen_location, date_last_seen, police_station, date_missing, photo_urls } = req.body;
         
@@ -280,7 +273,6 @@ app.post('/api/missing-persons', authenticateToken, async (req, res) => {
     }
 });
 
-// Update missing person (Protected - Owner only)
 app.put('/api/missing-persons/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
@@ -304,7 +296,6 @@ app.put('/api/missing-persons/:id', authenticateToken, async (req, res) => {
     }
 });
 
-// Delete missing person (Protected - Owner or Admin)
 app.delete('/api/missing-persons/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
@@ -328,7 +319,6 @@ app.delete('/api/missing-persons/:id', authenticateToken, async (req, res) => {
 // 5. SIGHTINGS ROUTES
 // ==========================================
 
-// Get all sightings (Public - For Police Dashboard)
 app.get('/api/sightings', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM sightings ORDER BY created_at DESC');
