@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Police Command Center - Locate Me</title>
+<style>
+/* ==========================================
+   1. GLOBAL STYLES & VARIABLES
+   ========================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+:root {
+    --primary: #1e3a8a; --primary-light: #3b82f6; --danger: #dc2626;
+    --success: #059669; --warning: #f59e0b; --dark: #0f172a;
+    --light: #f8fafc; --gray: #64748b; --border: #e2e8f0;
+    --sidebar-width: 260px;
+}
+body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
+
+/* ==========================================
+   2. LOGIN SCREEN
+   ========================================== */
+.login-wrapper {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%); padding: 20px;
+}
+.login-card {
+    background: white; border-radius: 24px; padding: 40px; width: 100%; max-width: 450px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+.login-header { text-align: center; margin-bottom: 30px; }
+.login-icon {
+    width: 70px; height: 70px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: 16px; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 15px; font-size: 35px; box-shadow: 0 10px 25px rgba(30, 58, 138, 0.3);
+}
+.login-header h1 { color: var(--primary); font-size: 24px; font-weight: 700; margin-bottom: 5px; }
+.login-header p { color: var(--gray); font-size: 13px; }
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; font-size: 12px; font-weight: 600; color: var(--dark); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.input-group input, .input-group select {
+    width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 10px; font-size: 14px; transition: all 0.2s;
+}
+.input-group input:focus, .input-group select:focus { outline: none; border-color: var(--primary); }
+.btn-login {
+    width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+}
+.btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(30, 58, 138, 0.2); }
+
+/* ==========================================
+   3. DASHBOARD LAYOUT
+   ========================================== */
+.dashboard-wrapper { display: none; min-height: 100vh; }
+.sidebar {
+    width: var(--sidebar-width); background: linear-gradient(180deg, var(--primary) 0%, var(--dark) 100%);
+    position: fixed; height: 100vh; overflow-y: auto; z-index: 100; padding: 25px 15px;
+}
+.sidebar-header { display: flex; align-items: center; gap: 12px; padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
+.sidebar-logo { width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.sidebar-title { color: white; font-size: 15px; font-weight: 700; line-height: 1.2; }
+.sidebar-subtitle { color: rgba(255,255,255,0.6); font-size: 11px; }
+.nav-menu { display: flex; flex-direction: column; gap: 6px; }
+.nav-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px; color: rgba(255,255,255,0.7);
+    text-decoration: none; border-radius: 10px; transition: all 0.2s; cursor: pointer;
+}
+.nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.1); color: white; }
+.nav-icon { font-size: 18px; width: 22px; text-align: center; }
+.nav-text { font-size: 13px; font-weight: 500; }
+.nav-badge { margin-left: auto; background: var(--danger); color: white; padding: 2px 7px; border-radius: 8px; font-size: 10px; font-weight: 700; }
+
+.main-wrapper { margin-left: var(--sidebar-width); padding: 25px; background: #f1f5f9; min-height: 100vh; }
+.top-bar {
+    background: white; border-radius: 14px; padding: 18px 25px; margin-bottom: 25px;
+    display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+.station-badge { display: flex; align-items: center; gap: 12px; }
+.badge-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.badge-info h3 { font-size: 15px; color: var(--dark); margin-bottom: 2px; }
+.badge-info p { font-size: 11px; color: var(--gray); }
+.status-indicator { display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #dcfce7; color: var(--success); border-radius: 15px; font-size: 12px; font-weight: 600; }
+.status-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* ==========================================
+   4. PAGE CONTENT & CARDS
+   ========================================== */
+.page-section { display: none; animation: fadeIn 0.3s ease; }
+.page-section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.page-header { margin-bottom: 25px; }
+.page-title { font-size: 24px; font-weight: 700; color: var(--dark); margin-bottom: 5px; }
+.page-subtitle { font-size: 13px; color: var(--gray); }
+
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+.stat-card {
+    background: white; border-radius: 14px; padding: 20px; display: flex; align-items: center; gap: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+.stat-icon { width: 55px; height: 55px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+.stat-icon.blue { background: #dbeafe; }
+.stat-icon.red { background: #fee2e2; }
+.stat-icon.green { background: #d1fae5; }
+.stat-icon.yellow { background: #fef3c7; }
+.stat-content h4 { font-size: 28px; color: var(--dark); margin-bottom: 3px; font-weight: 800; }
+.stat-content p { font-size: 12px; color: var(--gray); font-weight: 500; }
+
+.section-card { background: white; border-radius: 14px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); margin-bottom: 20px; }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--border); }
+.section-title { font-size: 16px; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 8px; }
+.btn-refresh { padding: 8px 16px; background: var(--light); color: var(--primary); border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.btn-refresh:hover { background: var(--primary); color: white; }
+
+/* ==========================================
+   5. LISTS & ITEMS
+   ========================================== */
+.missing-list, .sightings-list { display: flex; flex-direction: column; gap: 12px; }
+.missing-item, .sighting-item {
+    background: var(--light); border-radius: 10px; padding: 15px; display: grid; grid-template-columns: 70px 1fr auto;
+    gap: 15px; align-items: center; border: 2px solid transparent; transition: all 0.2s; cursor: pointer;
+}
+.missing-item:hover, .sighting-item:hover { border-color: var(--primary); background: white; box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08); }
+.missing-photo { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.missing-info h4, .sighting-info h4 { font-size: 15px; color: var(--dark); margin-bottom: 6px; }
+.meta-info { display: flex; gap: 15px; font-size: 12px; color: var(--gray); margin-bottom: 6px; flex-wrap: wrap; }
+.meta-info span { display: flex; align-items: center; gap: 4px; }
+.case-notes { font-size: 12px; color: var(--gray); line-height: 1.4; }
+.action-buttons { display: flex; flex-direction: column; gap: 8px; }
+.btn { padding: 8px 14px; border-radius: 8px; border: none; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-success { background: var(--success); color: white; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--gray); }
+
+.empty-state, .loading-state { text-align: center; padding: 50px 20px; color: var(--gray); }
+.spinner { border: 3px solid var(--border); border-top: 3px solid var(--primary); border-radius: 50%; width: 35px; height: 35px; animation: spin 1s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* ==========================================
+   6. MODAL
+   ========================================== */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.active { display: flex; }
+.modal-container { background: white; border-radius: 16px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; }
+.modal-header { padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.modal-header h2 { font-size: 18px; color: var(--dark); }
+.btn-close { width: 30px; height: 30px; border-radius: 8px; border: none; background: var(--light); font-size: 16px; cursor: pointer; }
+.btn-close:hover { background: var(--danger); color: white; }
+.modal-body { padding: 25px; }
+.info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+.info-box { background: var(--light); padding: 12px; border-radius: 8px; }
+.info-box label { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: block; font-weight: 600; }
+.info-box value { font-size: 13px; color: var(--dark); font-weight: 600; }
+.full-width { grid-column: span 2; }
+
+@media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .main-wrapper { margin-left: 0; }
+    .missing-item, .sighting-item { grid-template-columns: 1fr; }
+    .action-buttons { flex-direction: row; }
+    .info-grid { grid-template-columns: 1fr; }
+    .full-width { grid-column: span 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-wrapper" id="loginPage">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="login-icon">👮</div>
+            <h1>Police Command Center</h1>
+            <p>Locate Me - Station Access Portal</p>
+        </div>
+        <form onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label>Select Your Station *</label>
+                <select id="stationSelect" required>
+                    <option value="">-- Choose Station --</option>
+                    <option value="Ruiru Police Station">Ruiru Police Station</option>
+                    <option value="Kasarani Police Station">Kasarani Police Station</option>
+                    <option value="Central Police Station">Central Police Station - Nairobi</option>
+                    <option value="Kilimani Police Station">Kilimani Police Station</option>
+                    <option value="Westlands Police Station">Westlands Police Station</option>
+                    <option value="Lang'ata Police Station">Lang'ata Police Station</option>
+                    <option value="Embakasi Police Station">Embakasi Police Station</option>
+                    <option value="Parklands police station">Parklands Police Station</option>
+                    <option value="Karen Police Station.">Karen Police Station</option>
+                    <option value="KILIMANI POLICE STATION">Kilimani Police Station (Alt)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Officer ID / OB Number</label>
+                <input type="text" id="officerId" placeholder="e.g. OB-12345" required>
+            </div>
+            <button type="submit" class="btn-login">🔐 Access Dashboard</button>
+        </form>
+        <div style="margin-top: 20px; text-align: center; font-size: 11px; color: var(--gray);">
+            <p> Official Government Use Only</p>
+        </div>
+    </div>
+</div>
+
+<!-- DASHBOARD SCREEN -->
+<div class="dashboard-wrapper" id="dashboard">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">👮</div>
+            <div>
+                <div class="sidebar-title">Locate Me</div>
+                <div class="sidebar-subtitle">Police Portal</div>
+            </div>
+        </div>
+        <nav class="nav-menu">
+            <a class="nav-item active" onclick="switchPage('dashboard', event)">
+                <span class="nav-icon"></span><span class="nav-text">Dashboard</span>
+            </a>
+            <a class="nav-item" onclick="switchPage('missing', event)">
+                <span class="nav-icon"></span><span class="nav-text">Missing Persons</span>
+                <span class="nav-badge" id="missingCount">0</span>
+            </a>
+            <a class="nav-item" onclick="switchPage('sightings', event)">
+                <span class="nav-icon">🚨</span><span class="nav-text">Sightings</span>
+                <span class="nav-badge" id="sightingCount">0</span>
+            </a>
+            <a class="nav-item" onclick="switchPage('resolved', event)">
+                <span class="nav-icon">✅</span><span class="nav-text">Resolved Cases</span>
+            </a>
+            <a class="nav-item" onclick="switchPage('reports', event)">
+                <span class="nav-icon">📈</span><span class="nav-text">Reports</span>
+            </a>
+            <a class="nav-item" onclick="logout()">
+                <span class="nav-icon"></span><span class="nav-text">Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-wrapper">
+        <div class="top-bar">
+            <div class="station-badge">
+                <div class="badge-icon">🏢</div>
+                <div class="badge-info">
+                    <h3 id="currentStationName">Police Station</h3>
+                    <p id="currentStationId">Jurisdiction: ---</p>
+                </div>
+            </div>
+            <div class="status-indicator">
+                <span class="status-dot"></span><span>System Online</span>
+            </div>
+        </div>
+
+        <!-- DASHBOARD PAGE -->
+        <div id="dashboardPage" class="page-section active">
+            <div class="page-header">
+                <h1 class="page-title">📊 Command Dashboard</h1>
+                <p class="page-subtitle">Overview of all active cases and recent activity for your station</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">📋</div>
+                    <div class="stat-content">
+                        <h4 id="totalMissing">0</h4>
+                        <p>Active Missing Persons</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon red"></div>
+                    <div class="stat-content">
+                        <h4 id="criticalCount">0</h4>
+                        <p>Critical Cases</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">✅</div>
+                    <div class="stat-content">
+                        <h4 id="resolvedCount">0</h4>
+                        <p>Resolved This Month</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon yellow">👁️</div>
+                    <div class="stat-content">
+                        <h4 id="pendingSightings">0</h4>
+                        <p>Pending Sightings</p>
+                    </div>
+                </div>
+            </div>
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">📋 Recent Missing Persons</h3>
+                    <button class="btn btn-primary" onclick="switchPage('missing', event)">View All →</button>
+                </div>
+                <div class="missing-list" id="dashboardMissingList"></div>
+            </div>
+        </div>
+
+        <!-- MISSING PERSONS PAGE -->
+        <div id="missingPage" class="page-section">
+            <div class="page-header">
+                <h1 class="page-title">📋 Missing Persons</h1>
+                <p class="page-subtitle">All active missing person cases in your jurisdiction</p>
+            </div>
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title"> Active Cases</h3>
+                    <button class="btn-refresh" onclick="fetchDashboardData()">🔄 Refresh</button>
+                </div>
+                <div class="missing-list" id="missingList"></div>
+            </div>
+        </div>
+
+        <!-- SIGHTINGS PAGE -->
+        <div id="sightingsPage" class="page-section">
+            <div class="page-header">
+                <h1 class="page-title">🚨 Sighting Alerts</h1>
+                <p class="page-subtitle">Real-time citizen reports of missing person sightings in your area</p>
+            </div>
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">🚨 Pending Sightings</h3>
+                    <button class="btn btn-success" onclick="markAllRead()">✓ Mark All Read</button>
+                </div>
+                <div class="sightings-list" id="sightingList"></div>
+            </div>
+        </div>
+
+        <!-- RESOLVED CASES PAGE -->
+        <div id="resolvedPage" class="page-section">
+            <div class="page-header">
+                <h1 class="page-title">✅ Resolved Cases</h1>
+                <p class="page-subtitle">Successfully closed and resolved missing person cases</p>
+            </div>
+            <div class="section-card">
+                <div class="empty-state">
+                    <div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">✅</div>
+                    <div style="font-size: 16px; margin-bottom: 10px;">No resolved cases yet</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- REPORTS PAGE -->
+        <div id="reportsPage" class="page-section">
+            <div class="page-header">
+                <h1 class="page-title">📈 Reports & Analytics</h1>
+                <p class="page-subtitle">Generate and download official police reports for your station</p>
+            </div>
+            <div class="section-card">
+                <div class="empty-state">
+                    <div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">📈</div>
+                    <div style="font-size: 16px; margin-bottom: 10px;">Reports feature coming soon</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- DETAILS MODAL -->
+<div class="modal-overlay" id="detailsModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h2>Case Details</h2>
+            <button class="btn-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
+
+let missingPersons = [];
+let sightingAlerts = [];
+let currentUser = { stationName: null, officerId: null };
+
+// 1. LOGIN HANDLER
+function handleLogin(e) {
+    e.preventDefault();
+    const stationSelect = document.getElementById('stationSelect');
+    const officerId = document.getElementById('officerId').value;
+    const selectedStation = stationSelect.value;
+    
+    if (!selectedStation) { alert('Please select a valid police station.'); return; }
+    if (!officerId) { alert('Please enter your Officer ID.'); return; }
+
+    currentUser = { stationName: selectedStation, officerId: officerId };
+    
+    // Save session
+    localStorage.setItem('policeStation', selectedStation);
+    localStorage.setItem('officerId', officerId);
+
+    document.getElementById('currentStationName').textContent = selectedStation;
+    document.getElementById('currentStationId').textContent = `Jurisdiction: Active`;
+    
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    
+    fetchDashboardData();
+}
+
+function logout() {
+    if(confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('policeStation');
+        localStorage.removeItem('officerId');
+        location.reload();
+    }
+}
+
+function switchPage(pageName, event) {
+    if(event) {
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+    }
+    document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+    document.getElementById(pageName + 'Page').classList.add('active');
+}
+
+// 2. DATA FETCHING (The Core Logic)
+async function fetchDashboardData() {
+    const missingList = document.getElementById('missingList');
+    const dashboardList = document.getElementById('dashboardMissingList');
+    const sightingList = document.getElementById('sightingList');
+    
+    missingList.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Fetching cases for ${currentUser.stationName}...</p></div>`;
+    dashboardList.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Loading cases...</p></div>`;
+    sightingList.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Loading sightings...</p></div>`;
+
+    try {
+        console.log('🔍 Fetching data for station:', currentUser.stationName);
+        
+        // Fetch Missing Persons
+        const missingRes = await fetch(`${API_URL}/missing-persons`);
+        if (!missingRes.ok) throw new Error('Failed to fetch missing persons');
+        const allCases = await missingRes.json();
+        console.log('📦 Total cases received:', allCases.length);
+        
+        // SMART FILTERING: Case-insensitive and handles slight variations
+        const stationFilter = currentUser.stationName.toLowerCase().trim();
+        missingPersons = allCases.filter(item => {
+            const dbStation = (item.police_station || '').toLowerCase().trim();
+            // Check if they match or if one contains the other
+            return dbStation === stationFilter || 
+                   dbStation.includes(stationFilter) || 
+                   stationFilter.includes(dbStation);
+        });
+        console.log('✅ Filtered to', missingPersons.length, 'cases');
+
+        // Fetch Sightings
+        const sightingRes = await fetch(`${API_URL}/sightings`);
+        if (!sightingRes.ok) throw new Error('Failed to fetch sightings');
+        const allSightings = await sightingRes.json();
+        
+        sightingAlerts = allSightings.filter(item => {
+            const dbStation = (item.police_station || '').toLowerCase().trim();
+            return dbStation === stationFilter || 
+                   dbStation.includes(stationFilter) || 
+                   stationFilter.includes(dbStation);
+        });
+        console.log('✅ Filtered to', sightingAlerts.length, 'sightings');
+
+        // Render Data
+        renderMissingPersons(missingList, missingPersons);
+        renderMissingPersons(dashboardList, missingPersons.slice(0, 3));
+        renderSightings(sightingList, sightingAlerts);
+        updateStats();
+
+    } catch (error) {
+        console.error('❌ Error fetching data:', error);
+        const errorMsg = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">⚠️</div><div style="font-size: 16px; margin-bottom: 10px;">Unable to connect to database</div><div style="font-size: 14px; color: var(--gray); margin-bottom: 20px;">${error.message}</div><button class="btn btn-primary" onclick="fetchDashboardData()" style="margin: 0 auto;">🔄 Try Again</button></div>`;
+        missingList.innerHTML = errorMsg;
+        dashboardList.innerHTML = errorMsg;
+        sightingList.innerHTML = errorMsg;
+    }
+}
+
+function updateStats() {
+    document.getElementById('totalMissing').textContent = missingPersons.length;
+    document.getElementById('pendingSightings').textContent = sightingAlerts.length;
+    document.getElementById('missingCount').textContent = missingPersons.length;
+    document.getElementById('sightingCount').textContent = sightingAlerts.length;
+}
+
+// 3. RENDERING FUNCTIONS
+function renderMissingPersons(container, cases) {
+    if (cases.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">📋</div><div style="font-size: 16px;">No active cases for ${currentUser.stationName}</div></div>`;
+        return;
+    }
+    container.innerHTML = cases.map(p => `
+        <div class="missing-item" onclick="showDetails(${p.id}, 'missing')">
+            <img src="${p.photo_urls?.[0] || ''}" alt="${p.name}" class="missing-photo" onerror="this.src='https://via.placeholder.com/70?text=No+Photo'">
+            <div class="missing-info">
+                <h4>${p.name}</h4>
+                <div class="meta-info">
+                    <span>🎂 ${p.age} years</span>
+                    <span>♀️ ${p.gender}</span>
+                    <span>📅 ${formatDate(p.date_missing)}</span>
+                </div>
+                <div class="meta-info"><span>📍 ${p.last_seen_location}</span></div>
+                <div class="case-notes">${p.description ? p.description.substring(0, 80) + '...' : 'No additional notes'}</div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="event.stopPropagation(); showDetails(${p.id}, 'missing')">View Details</button>
+                <button class="btn btn-success" onclick="event.stopPropagation(); markAsFound(${p.id})">Mark Found</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderSightings(container, sightings) {
+    if (sightings.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">🚨</div><div style="font-size: 16px;">No pending sightings for ${currentUser.stationName}</div></div>`;
+        return;
+    }
+    container.innerHTML = sightings.map(s => `
+        <div class="sighting-item">
+            <div style="font-size: 35px; text-align: center;">🚨</div>
+            <div class="sighting-info">
+                <h4>Sighting: ${s.missing_person_name || 'Unknown Person'}</h4>
+                <div class="meta-info">
+                    <span>📍 ${s.sighting_location}</span>
+                    <span>🕐 ${s.sighting_time || 'Recently'}</span>
+                </div>
+                <div class="meta-info">
+                    <span>👤 ${s.reporter_name || 'Anonymous'}</span>
+                    <span> ${s.reporter_contact}</span>
+                </div>
+                <div class="case-notes">${s.description ? s.description.substring(0, 80) + '...' : 'No description provided'}</div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="contactReporter('${s.reporter_contact}')"> Call Reporter</button>
+                <button class="btn btn-success" onclick="markSightingResolved(${s.id})">✓ Mark Resolved</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// 4. MODAL & ACTIONS
+function showDetails(id, type) {
+    const item = type === 'missing' ? missingPersons.find(c => c.id == id) : sightingAlerts.find(s => s.id == id);
+    if (!item) return;
+    
+    const modalBody = document.getElementById('modalBody');
+    if (type === 'missing') {
+        modalBody.innerHTML = `
+            <div style="margin-bottom: 20px;"><img src="${item.photo_urls?.[0] || ''}" alt="${item.name}" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 12px;" onerror="this.src='https://via.placeholder.com/700x300?text=No+Photo'"></div>
+            <div class="info-grid">
+                <div class="info-box"><label>Full Name</label><value>${item.name}</value></div>
+                <div class="info-box"><label>Age</label><value>${item.age} years</value></div>
+                <div class="info-box"><label>Gender</label><value>${item.gender}</value></div>
+                <div class="info-box"><label>Date Missing</label><value>${formatDate(item.date_missing)}</value></div>
+                <div class="info-box full-width"><label>Last Seen Location</label><value>${item.last_seen_location}</value></div>
+                <div class="info-box full-width"><label>Description</label><value>${item.description || 'N/A'}</value></div>
+                <div class="info-box full-width"><label>Police Station</label><value style="color: var(--primary); font-weight: 700;">${item.police_station}</value></div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-success" style="flex: 1;" onclick="markAsFound(${item.id}); closeModal();">✓ Mark as Found</button>
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Close</button>
+            </div>
+        `;
+    } else {
+        modalBody.innerHTML = `
+            <div class="info-grid">
+                <div class="info-box"><label>Missing Person Name</label><value>${item.missing_person_name || 'Unknown'}</value></div>
+                <div class="info-box"><label>Sighting Location</label><value>${item.sighting_location}</value></div>
+                <div class="info-box"><label>Sighting Time</label><value>${item.sighting_time || 'Recently'}</value></div>
+                <div class="info-box"><label>Reporter Name</label><value>${item.reporter_name || 'Anonymous'}</value></div>
+                <div class="info-box full-width"><label>Reporter Contact</label><value style="color: var(--primary); font-weight: 700;">${item.reporter_contact}</value></div>
+                <div class="info-box full-width"><label>Description</label><value>${item.description || 'N/A'}</value></div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-primary" style="flex: 1;" onclick="contactReporter('${item.reporter_contact}')">📞 Call Reporter</button>
+                <button class="btn btn-success" style="flex: 1;" onclick="markSightingResolved(${item.id}); closeModal();">✓ Mark Resolved</button>
+            </div>
+        `;
+    }
+    document.getElementById('detailsModal').classList.add('active');
+}
+
+function closeModal() { document.getElementById('detailsModal').classList.remove('active'); }
+function markAsFound(id) { if(confirm('Mark this person as found?')) { alert('✅ Case marked as found.'); fetchDashboardData(); } }
+function markSightingResolved(id) { if(confirm('Mark this sighting as resolved?')) { alert('✅ Sighting marked as resolved.'); fetchDashboardData(); } }
+function contactReporter(phone) { if(confirm(`Call ${phone}?`)) { window.location.href = `tel:${phone}`; } }
+function markAllRead() { alert('✅ All sighting alerts marked as read'); }
+function formatDate(dateString) { if (!dateString) return 'Not specified'; return new Date(dateString).toLocaleDateString('en-KE', { year: 'numeric', month: 'short', day: 'numeric' }); }
+
+document.getElementById('detailsModal').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
+
+// 5. CHECK SESSION ON LOAD
+window.onload = function() {
+    const savedStation = localStorage.getItem('policeStation');
+    const savedOfficer = localStorage.getItem('officerId');
+    if (savedStation && savedOfficer) {
+        currentUser = { stationName: savedStation, officerId: savedOfficer };
+        document.getElementById('stationSelect').value = savedStation;
+        document.getElementById('officerId').value = savedOfficer;
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('currentStationName').textContent = savedStation;
+        fetchDashboardData();
+    }
+}
+</script>
+</body>
+</html>
