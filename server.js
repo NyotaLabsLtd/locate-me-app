@@ -87,18 +87,15 @@ app.post('/api/auth/register', async (req, res) => {
         const { email, password } = req.body;
         if (!email || !password) return res.status(400).json({ error: 'Email and password are required' });
 
-        // Check if user exists
         const existingUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         if (existingUser.rows.length > 0) return res.status(409).json({ error: 'Email already registered' });
 
-        // Hash password and create user
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await pool.query(
             'INSERT INTO users (email, password, role, is_verified) VALUES ($1, $2, $3, $4) RETURNING id, email, role, is_verified',
             [email, hashedPassword, 'user', false]
         );
 
-        // Generate JWT token for email verification
         const token = jwt.sign({ id: newUser.rows[0].id, email: newUser.rows[0].email }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
         res.status(201).json({ 
@@ -328,8 +325,19 @@ app.delete('/api/missing-persons/:id', authenticateToken, async (req, res) => {
 });
 
 // ==========================================
-// 5. SIGHTINGS ROUTES (UPDATED WITH POLICE STATION)
+// 5. SIGHTINGS ROUTES
 // ==========================================
+
+// Get all sightings (Public - For Police Dashboard)
+app.get('/api/sightings', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM sightings ORDER BY created_at DESC');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Fetch sightings error:', err);
+        res.status(500).json({ error: 'Failed to fetch sightings' });
+    }
+});
 
 app.post('/api/sightings', authenticateToken, async (req, res) => {
     try {
