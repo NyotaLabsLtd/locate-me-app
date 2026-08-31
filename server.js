@@ -42,7 +42,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 // 2. SECURITY MIDDLEWARE
 // ==========================================
 
-// Rate Limiters - ONLY for specific actions
+// Rate Limiters
 const loginLimiter = rateLimit({ 
     windowMs: 10 * 60 * 1000, 
     max: 7, 
@@ -203,7 +203,7 @@ app.get('/api/missing-persons', async (req, res) => {
     }
 });
 
-// Get missing persons by police station
+// Get missing persons by police station - AUTHENTICATED
 app.get('/api/missing-persons/station/:stationId', authenticateToken, async (req, res) => {
     try {
         const { stationId } = req.params;
