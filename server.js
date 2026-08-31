@@ -14,7 +14,7 @@ const app = express();
 // 1. CONFIGURATION & MIDDLEWARE
 // ==========================================
 
-// CORS: Allow requests from ALL origins (IMPORTANT for police dashboard)
+// CORS: Allow requests from ALL origins
 app.use(cors({
     origin: '*', 
     credentials: true
@@ -42,7 +42,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 // 2. SECURITY MIDDLEWARE
 // ==========================================
 
-// Rate Limiters - ONLY for specific actions (NOT on GET requests)
+// Rate Limiters - ONLY for login/register (NOT for data fetching)
 const loginLimiter = rateLimit({ 
     windowMs: 10 * 60 * 1000, 
     max: 7, 
@@ -61,9 +61,12 @@ const postLimiter = rateLimit({
     message: { error: 'Too many posts. Try again in 1 hour.' } 
 });
 
-// Apply limiters ONLY where needed
+// Apply limiters ONLY to auth endpoints
 app.use('/api/auth/login', loginLimiter);
 app.use('/api/auth/register', registerLimiter);
+
+// ❌ REMOVED: app.use('/api/missing-persons', postLimiter);
+// ❌ REMOVED: app.use('/api/sightings', postLimiter);
 
 // Authentication Middleware
 const authenticateToken = (req, res, next) => {
@@ -192,7 +195,7 @@ app.get('/api/auth/verify/:token', async (req, res) => {
 // 4. MISSING PERSONS ROUTES
 // ==========================================
 
-// Get all missing persons - NO RATE LIMIT, NO AUTH REQUIRED (PUBLIC)
+// ✅ GET all missing persons - NO RATE LIMIT, NO AUTH REQUIRED
 app.get('/api/missing-persons', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM missing_persons ORDER BY date_missing DESC');
@@ -234,7 +237,7 @@ app.get('/api/police-stations', async (req, res) => {
     }
 });
 
-// Create missing person - RATE LIMITED (only 5 per hour)
+// ✅ CREATE missing person - RATE LIMITED (only 5 per hour)
 app.post('/api/missing-persons', authenticateToken, postLimiter, async (req, res) => {
     try {
         const { name, age, gender, description, notes, residence, last_seen_location, date_last_seen, police_station, date_missing, photo_urls } = req.body;
@@ -297,7 +300,7 @@ app.delete('/api/missing-persons/:id', authenticateToken, async (req, res) => {
 // 5. SIGHTINGS ROUTES
 // ==========================================
 
-// Get all sightings - NO RATE LIMIT, NO AUTH REQUIRED (PUBLIC)
+// ✅ GET all sightings - NO RATE LIMIT, NO AUTH REQUIRED
 app.get('/api/sightings', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM sightings ORDER BY created_at DESC');
