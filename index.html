@@ -134,7 +134,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .spam-notice strong { display: block; margin-bottom: 4px; }
 .google-terms-notice { margin: 15px 0; padding: 12px; background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; font-size: 12px; color: var(--warning); }
 
-/* NEW: Google Button Overlay Styles */
 .google-btn-wrapper { position: relative; width: 100%; margin-top: 10px; }
 .google-overlay { 
     position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
@@ -197,7 +196,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div id="landing-page">
     <nav class="landing-nav">
         <div class="landing-logo">
-            <span class="landing-logo-icon"></span>
+            <span class="landing-logo-icon">📍</span>
             <span>Locate Me</span>
         </div>
     </nav>
@@ -216,7 +215,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="2">
                     <div class="step-header"><div class="step-badge">2</div><h3 class="step-title">Post Missing Person</h3></div>
-                    <div class="step-icon"></div>
+                    <div class="step-icon">📝</div>
                     <p class="step-description">Create a Missing Person Report with detailed information to help identify and locate them.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Upload multiple photos</li>
@@ -306,7 +305,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
-          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">️</button>
         </div>
       </div>
       <button type="submit" class="btn-submit" style="width:100%">Login</button>
@@ -320,7 +319,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">👁️</button>
         </div>
       </div>
       <div class="form-group">
@@ -341,7 +340,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     </form>
     <div class="auth-divider"><span>or continue with</span></div>
     
-    <!-- UPDATED: Wrapped Google button in a container with an overlay -->
     <div class="google-btn-wrapper">
         <div id="googleSignInContainer" style="width: 100%;"></div>
         <div id="googleOverlay" class="google-overlay" title="Please accept the Terms and Privacy Policy first"></div>
@@ -474,58 +472,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
             <option value="Karuri Police Station">Karuri Police Station</option>
             <option value="Kikuyu Police Station">Kikuyu Police Station</option>
           </optgroup>
-          <optgroup label="MOMBASA COUNTY">
-            <option value="Mombasa Central Police Station">Mombasa Central Police Station</option>
-            <option value="Tudor Police Station">Tudor Police Station</option>
-            <option value="Changamwe Police Station">Changamwe Police Station</option>
-            <option value="Kisauni Police Station">Kisauni Police Station</option>
-            <option value="Likoni Police Station">Likoni Police Station</option>
-          </optgroup>
-          <optgroup label="KISUMU COUNTY">
-            <option value="Kisumu Central Police Station">Kisumu Central Police Station</option>
-            <option value="Kisumu Town Police Station">Kisumu Town Police Station</option>
-            <option value="Nyando Police Station">Nyando Police Station</option>
-            <option value="Muhoroni Police Station">Muhoroni Police Station</option>
-          </optgroup>
-          <optgroup label="NAKURU COUNTY">
-            <option value="Nakuru Central Police Station">Nakuru Central Police Station</option>
-            <option value="Nakuru Town Police Station">Nakuru Town Police Station</option>
-            <option value="Naivasha Police Station">Naivasha Police Station</option>
-            <option value="Gilgil Police Station">Gilgil Police Station</option>
-            <option value="Molo Police Station">Molo Police Station</option>
-          </optgroup>
-          <optgroup label="UASIN GISHU COUNTY">
-            <option value="Eldoret Police Station">Eldoret Police Station</option>
-            <option value="Eldoret Town Police Station">Eldoret Town Police Station</option>
-            <option value="Turbo Police Station">Turbo Police Station</option>
-          </optgroup>
           <optgroup label="OTHER COUNTIES">
+            <option value="Mombasa Central Police Station">Mombasa Central Police Station</option>
+            <option value="Kisumu Central Police Station">Kisumu Central Police Station</option>
+            <option value="Nakuru Central Police Station">Nakuru Central Police Station</option>
+            <option value="Eldoret Police Station">Eldoret Police Station</option>
             <option value="Meru Police Station">Meru Police Station</option>
             <option value="Nyeri Police Station">Nyeri Police Station</option>
-            <option value="Murang'a Police Station">Murang'a Police Station</option>
             <option value="Machakos Police Station">Machakos Police Station</option>
-            <option value="Kitui Police Station">Kitui Police Station</option>
             <option value="Kakamega Police Station">Kakamega Police Station</option>
-            <option value="Bungoma Police Station">Bungoma Police Station</option>
-            <option value="Busia Police Station">Busia Police Station</option>
             <option value="Kisii Police Station">Kisii Police Station</option>
-            <option value="Nyamira Police Station">Nyamira Police Station</option>
-            <option value="Homa Bay Police Station">Homa Bay Police Station</option>
-            <option value="Migori Police Station">Migori Police Station</option>
-            <option value="Siaya Police Station">Siaya Police Station</option>
             <option value="Garissa Police Station">Garissa Police Station</option>
-            <option value="Mandera Police Station">Mandera Police Station</option>
-            <option value="Wajir Police Station">Wajir Police Station</option>
-            <option value="Isiolo Police Station">Isiolo Police Station</option>
-            <option value="Marsabit Police Station">Marsabit Police Station</option>
-            <option value="Lodwar Police Station">Lodwar Police Station</option>
-            <option value="Kitale Police Station">Kitale Police Station</option>
-            <option value="Kapenguria Police Station">Kapenguria Police Station</option>
-            <option value="Bomet Police Station">Bomet Police Station</option>
-            <option value="Narok Police Station">Narok Police Station</option>
-            <option value="Kajiado Police Station">Kajiado Police Station</option>
-            <option value="Ngong Police Station">Ngong Police Station</option>
-            <option value="Athi River Police Station">Athi River Police Station</option>
           </optgroup>
         </select>
       </div>
@@ -568,6 +525,50 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <div class="form-group">
         <label class="form-label">Phone Number * (Required)</label>
         <input type="tel" class="form-input" id="sightingContact" placeholder="e.g. 0712345678" pattern="[0-9+\-\s]{10,15}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nearest Police Station *</label>
+        <select class="form-select" id="sightingPoliceStation" required>
+          <option value="">-- Select Nearest Police Station --</option>
+          <optgroup label="NAIROBI COUNTY">
+            <option value="Central Police Station - Nairobi">Central Police Station - Nairobi</option>
+            <option value="Kilimani Police Station">Kilimani Police Station</option>
+            <option value="Westlands Police Station">Westlands Police Station</option>
+            <option value="Kasarani Police Station">Kasarani Police Station</option>
+            <option value="Lang'ata Police Station">Lang'ata Police Station</option>
+            <option value="Embakasi Police Station">Embakasi Police Station</option>
+            <option value="Ruaraka Police Station">Ruaraka Police Station</option>
+            <option value="Donholm Police Station">Donholm Police Station</option>
+            <option value="Kayole Police Station">Kayole Police Station</option>
+            <option value="Pumwani Police Station">Pumwani Police Station</option>
+            <option value="Kamukunji Police Station">Kamukunji Police Station</option>
+            <option value="Starehe Police Station">Starehe Police Station</option>
+            <option value="Makadara Police Station">Makadara Police Station</option>
+            <option value="Kibera Police Station">Kibera Police Station</option>
+            <option value="Parklands Police Station">Parklands Police Station</option>
+          </optgroup>
+          <optgroup label="KIAMBU COUNTY">
+            <option value="Ruiru Police Station">Ruiru Police Station</option>
+            <option value="Thika Police Station">Thika Police Station</option>
+            <option value="Kiambu Town Police Station">Kiambu Town Police Station</option>
+            <option value="Limuru Police Station">Limuru Police Station</option>
+            <option value="Juja Police Station">Juja Police Station</option>
+            <option value="Karuri Police Station">Karuri Police Station</option>
+            <option value="Kikuyu Police Station">Kikuyu Police Station</option>
+          </optgroup>
+          <optgroup label="OTHER COUNTIES">
+            <option value="Mombasa Central Police Station">Mombasa Central Police Station</option>
+            <option value="Kisumu Central Police Station">Kisumu Central Police Station</option>
+            <option value="Nakuru Central Police Station">Nakuru Central Police Station</option>
+            <option value="Eldoret Police Station">Eldoret Police Station</option>
+            <option value="Meru Police Station">Meru Police Station</option>
+            <option value="Nyeri Police Station">Nyeri Police Station</option>
+            <option value="Machakos Police Station">Machakos Police Station</option>
+            <option value="Kakamega Police Station">Kakamega Police Station</option>
+            <option value="Kisii Police Station">Kisii Police Station</option>
+            <option value="Garissa Police Station">Garissa Police Station</option>
+          </optgroup>
+        </select>
       </div>
       <div class="form-actions">
         <button class="btn-cancel" onclick="resetSightingForm()">Cancel</button>
@@ -628,7 +629,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     </div>
   </div>
   
-  <!-- UPDATED BOTTOM NAVIGATION WITH SVG ICONS -->
+  <!-- BOTTOM NAVIGATION -->
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="home" onclick="switchTab('home', event)">
       <span class="nav-icon">
@@ -677,7 +678,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
-<!-- Email Verification Popup Modal -->
 <div class="modal-overlay" id="emailVerificationModal">
   <div class="modal-content">
     <div class="verification-message">
@@ -741,7 +741,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <div class="modal-overlay" id="deletePostModal">
   <div class="modal-header">
-    <button class="modal-close" onclick="closeModal('deletePostModal')">✕</button>
+    <button class="modal-close" onclick="closeModal('deletePostModal')"></button>
     <div style="font-weight:700">Delete Post</div>
     <div style="width:36px"></div>
   </div>
@@ -864,8 +864,6 @@ function switchAuthTab(tab) {
   const tabEl = document.querySelector(`.auth-tab[onclick*="'${tab}'"]`);
   if (tabEl) tabEl.classList.add('active');
   document.getElementById(tab + 'Form').classList.add('active');
-  
-  // NEW: Update Google button state when switching tabs
   updateGoogleButtonState();
 }
 
@@ -924,21 +922,18 @@ function togglePassword(inputId, btn) {
   }
 }
 
-// NEW: Function to control the Google Sign-In button overlay
 function updateGoogleButtonState() {
     const termsCheckbox = document.getElementById('agreeToTerms');
     const googleOverlay = document.getElementById('googleOverlay');
     const isSignupActive = document.getElementById('signupForm').classList.contains('active');
     
     if (isSignupActive) {
-        // If on Signup tab, only allow Google sign-in if terms are checked
         if (termsCheckbox && termsCheckbox.checked) {
             googleOverlay.classList.add('hidden');
         } else {
             googleOverlay.classList.remove('hidden');
         }
     } else {
-        // If on Login tab, always allow Google sign-in
         googleOverlay.classList.add('hidden');
     }
 }
@@ -1033,11 +1028,10 @@ function initializeGoogleSignIn() {
   google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleResponse, auto_select: false });
   try { google.accounts.id.renderButton(document.getElementById("googleSignInContainer"), { theme: "outline", size: "large", width: "100%" }); } catch (err) {}
   
-  // NEW: Set up the checkbox listener for the Google button overlay
   const termsCheckbox = document.getElementById('agreeToTerms');
   if (termsCheckbox) {
       termsCheckbox.addEventListener('change', updateGoogleButtonState);
-      updateGoogleButtonState(); // Run once on load
+      updateGoogleButtonState();
   }
 }
 
@@ -1282,10 +1276,14 @@ function resetPostForm() {
 async function submitSighting() {
   const contact = document.getElementById('sightingContact')?.value.trim(); 
   const location = document.getElementById('sightingLocation')?.value.trim();
+  const policeStation = document.getElementById('sightingPoliceStation')?.value;
   const phoneRegex = /^(\+254|0)?[7]\d{8}$/;
   if (!contact || !phoneRegex.test(contact.replace(/\s/g, ''))) { showToast('Please enter a valid Kenyan phone number'); return; }
+  if (!policeStation) { showToast('Please select a police station'); return; }
+  
   const btn = document.getElementById('sightingBtn'); 
   if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
+  
   try {
     const photoFile = document.getElementById('sightingPhoto')?.files[0];
     let photoUrl = null;
@@ -1296,7 +1294,19 @@ async function submitSighting() {
       if (!res.ok) { const errorData = await res.json(); throw new Error(errorData.error || 'Photo upload failed'); }
       const data = await res.json(); photoUrl = data.secure_url;
     }
-    const sightingData = { missing_person_name: document.getElementById('sightingName')?.value, gender: document.getElementById('sightingGender')?.value, sighting_location: location, sighting_time: document.getElementById('sightingTime')?.value, description: document.getElementById('sightingDescription')?.value, reporter_name: document.getElementById('sightingYourName')?.value, reporter_contact: contact, photo_url: photoUrl };
+    
+    const sightingData = { 
+        missing_person_name: document.getElementById('sightingName')?.value, 
+        gender: document.getElementById('sightingGender')?.value, 
+        sighting_location: location, 
+        sighting_time: document.getElementById('sightingTime')?.value, 
+        description: document.getElementById('sightingDescription')?.value, 
+        reporter_name: document.getElementById('sightingYourName')?.value, 
+        reporter_contact: contact, 
+        photo_url: photoUrl,
+        police_station: policeStation
+    };
+    
     const token = localStorage.getItem('authToken');
     const response = await fetch(`${API_URL}/sightings`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(sightingData) });
     if (response.status === 401) { logout(); throw new Error('Session expired.'); }
@@ -1307,6 +1317,7 @@ async function submitSighting() {
 
 function resetSightingForm() {
   document.querySelectorAll('#foundTab input, #foundTab textarea').forEach(i => i.value = '');
+  document.getElementById('sightingPoliceStation').value = '';
   const sightingUnknown = document.getElementById('sightingUnknown'); 
   const sightingName = document.getElementById('sightingName');
   const sightingPreview = document.getElementById('sightingPreview'); 
@@ -1380,7 +1391,7 @@ async function savePostEdit() {
     if (res.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!res.ok) throw new Error('Update failed');
     showToast('✅ Post updated!'); closeModal('editPostModal'); loadMyPosts(); loadData();
-  } catch (err) { showToast('❌ ' + err.message); }
+  } catch (err) { showToast(' ' + err.message); }
 }
 
 function openDeleteModal(id) { currentDeleteId = id; document.getElementById('deletePostModal').classList.add('active'); }
