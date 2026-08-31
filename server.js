@@ -14,7 +14,7 @@ const app = express();
 // 1. CONFIGURATION & MIDDLEWARE
 // ==========================================
 
-// CORS: Allow requests from ALL origins (Fixes the CORS error)
+// CORS: Allow requests from ALL origins
 app.use(cors({
     origin: '*', 
     credentials: true
@@ -42,16 +42,28 @@ const upload = multer({ storage: multer.memoryStorage() });
 // 2. SECURITY MIDDLEWARE
 // ==========================================
 
-// Rate Limiters
-const loginLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 7, message: { error: 'Too many login attempts. Try again in 10 minutes.' } });
-const registerLimiter = rateLimit({ windowMs: 10 * 60 * 1000, max: 3, message: { error: 'Too many signup attempts. Try again in 10 minutes.' } });
-const postLimiter = rateLimit({ windowMs: 60 * 60 * 1000, max: 5, message: { error: 'Too many posts. Try again in 1 hour.' } });
-const generalLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100, message: { error: 'Too many requests.' } });
+// Rate Limiters - ONLY for specific actions
+const loginLimiter = rateLimit({ 
+    windowMs: 10 * 60 * 1000, 
+    max: 7, 
+    message: { error: 'Too many login attempts. Try again in 10 minutes.' } 
+});
 
-// Apply limiters ONLY where needed (NOT on GET requests)
+const registerLimiter = rateLimit({ 
+    windowMs: 10 * 60 * 1000, 
+    max: 3, 
+    message: { error: 'Too many signup attempts. Try again in 10 minutes.' } 
+});
+
+const postLimiter = rateLimit({ 
+    windowMs: 60 * 60 * 1000, 
+    max: 5, 
+    message: { error: 'Too many posts. Try again in 1 hour.' } 
+});
+
+// Apply limiters ONLY where needed
 app.use('/api/auth/login', loginLimiter);
 app.use('/api/auth/register', registerLimiter);
-app.use(generalLimiter);
 
 // Authentication Middleware
 const authenticateToken = (req, res, next) => {
@@ -180,7 +192,7 @@ app.get('/api/auth/verify/:token', async (req, res) => {
 // 4. MISSING PERSONS ROUTES
 // ==========================================
 
-// Get all missing persons (Public - NO rate limit, NO auth required for dashboard)
+// Get all missing persons - NO RATE LIMIT, NO AUTH REQUIRED
 app.get('/api/missing-persons', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM missing_persons ORDER BY date_missing DESC');
@@ -256,7 +268,7 @@ app.get('/api/police-stations', async (req, res) => {
     }
 });
 
-// Create missing person (Protected - Rate limit applied ONLY here)
+// Create missing person - RATE LIMITED (only 5 per hour)
 app.post('/api/missing-persons', authenticateToken, postLimiter, async (req, res) => {
     try {
         const { name, age, gender, description, notes, residence, last_seen_location, date_last_seen, police_station, date_missing, photo_urls } = req.body;
@@ -319,7 +331,7 @@ app.delete('/api/missing-persons/:id', authenticateToken, async (req, res) => {
 // 5. SIGHTINGS ROUTES
 // ==========================================
 
-// Get all sightings (Public - NO rate limit, NO auth required for dashboard)
+// Get all sightings - NO RATE LIMIT, NO AUTH REQUIRED
 app.get('/api/sightings', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM sightings ORDER BY created_at DESC');
@@ -485,5 +497,5 @@ app.get('/api/admin/sightings-full', authenticateToken, requireAdmin, async (req
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`✅ Locate Me Backend is running on port ${PORT}`);
-    console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
