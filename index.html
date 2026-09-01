@@ -47,6 +47,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .header h1 { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 .content { padding: 20px; min-height: calc(100vh - 140px); }
 .page-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
+
+/* NEW: Tab Styles */
+.tabs-container { display: flex; gap: 10px; margin-bottom: 20px; }
+.tab-btn { flex: 1; padding: 14px; background: var(--dark-card); border: 2px solid var(--border); border-radius: 10px; color: var(--gray); font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.tab-btn.active { background: var(--warning); color: var(--dark); border-color: var(--warning); }
+.tab-btn:hover:not(.active) { border-color: var(--warning); color: var(--light); }
+
 .search-bar { display: flex; gap: 10px; margin-bottom: 20px; }
 .search-input { flex: 1; padding: 12px; background: var(--dark-card); border: 1px solid var(--border); border-radius: 8px; color: var(--light); font-size: 15px; }
 .filter-btn { padding: 12px 16px; background: var(--dark-card); border: 1px solid var(--border); border-radius: 8px; color: var(--light); cursor: pointer; font-size: 16px; font-weight: 600; }
@@ -215,7 +222,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="2">
                     <div class="step-header"><div class="step-badge">2</div><h3 class="step-title">Post Missing Person</h3></div>
-                    <div class="step-icon">📝</div>
+                    <div class="step-icon"></div>
                     <p class="step-description">Create a Missing Person Report with detailed information to help identify and locate them.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Upload multiple photos</li>
@@ -359,6 +366,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <div class="content">
     <div id="homeTab" class="tab-content active">
       <h2 class="page-title">Reported Missing People</h2>
+      
+      <!-- NEW: Missing/Found Tabs -->
+      <div class="tabs-container">
+        <button class="tab-btn active" onclick="switchHomeTab('missing')">Missing</button>
+        <button class="tab-btn" onclick="switchHomeTab('found')">Found</button>
+      </div>
+      
       <div class="search-bar">
         <input type="text" class="search-input" placeholder="Search by name or location..." id="searchInput">
         <button class="filter-btn" id="filterBtn" onclick="toggleFilters()">Filter</button>
@@ -380,6 +394,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         </div>
       </div>
       <div id="missingCardsContainer"><div class="loading">Loading...</div></div>
+      <div id="foundCardsContainer" style="display: none;"><div class="loading">Loading...</div></div>
     </div>
     <div id="postTab" class="tab-content">
       <h2 class="page-title">Post Missing Person</h2>
@@ -765,7 +780,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <script>
 const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 const GOOGLE_CLIENT_ID = '384124217618-38rde3tgblslp1s9u3e1fn5tn7h971uk.apps.googleusercontent.com';
-let missingPersons = []; let currentUser = null;
+let missingPersons = []; 
+let foundPersons = [];
+let currentHomeTab = 'missing';
+let currentUser = null;
 
 function escapeHTML(str) {
     if (!str) return '';
@@ -844,7 +862,6 @@ function enterAppAsGuest() {
     document.getElementById('authScreen').classList.remove('active');
     document.getElementById('mainApp').classList.add('active');
     switchTab('home', null);
-    loadData();
 }
 
 function showAuthFromLanding(tab) {
@@ -886,7 +903,7 @@ function switchTab(tab, eventObj) {
     document.getElementById('mainApp').classList.remove('active');
     document.getElementById('authScreen').classList.add('active');
     switchAuthTab('signup');
-    showToast('🔒 Please sign up or log in to access this feature.');
+    showToast(' Please sign up or log in to access this feature.');
     return;
   }
 
@@ -902,6 +919,23 @@ function switchTab(tab, eventObj) {
     const navItem = document.querySelector(`.nav-item[data-tab="${tab}"]`); 
     if (navItem) navItem.classList.add('active'); 
   }
+}
+
+// NEW: Switch between Missing/Found tabs on homepage
+function switchHomeTab(tab) {
+    currentHomeTab = tab;
+    document.querySelectorAll('.tabs-container .tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    if (tab === 'missing') {
+        document.getElementById('missingCardsContainer').style.display = 'block';
+        document.getElementById('foundCardsContainer').style.display = 'none';
+        renderMissingCards();
+    } else {
+        document.getElementById('missingCardsContainer').style.display = 'none';
+        document.getElementById('foundCardsContainer').style.display = 'block';
+        renderFoundCards();
+    }
 }
 
 function showToast(msg) {
@@ -1103,9 +1137,20 @@ async function loadData() {
     const response = await fetch(`${API_URL}/missing-persons`);
     if (!response.ok) throw new Error('Failed to fetch');
     missingPersons = await response.json(); 
-    renderCards();
+    renderMissingCards();
   } catch (err) { 
     console.error('Load error:', err); 
+  }
+  
+  // Load found persons
+  try {
+    const response = await fetch(`${API_URL}/missing-persons/resolved-public`);
+    if (!response.ok) throw new Error('Failed to fetch found persons');
+    foundPersons = await response.json();
+    renderFoundCards();
+  } catch (err) {
+    console.error('Load found error:', err);
+    foundPersons = [];
   }
 }
 
@@ -1135,7 +1180,7 @@ function formatMissingTime(days) {
     }
 }
 
-function renderCards() {
+function renderMissingCards() {
   const container = document.getElementById('missingCardsContainer');
   const term = document.getElementById('searchInput').value.toLowerCase();
   const gender = document.getElementById('filterGender').value;
@@ -1161,7 +1206,7 @@ function renderCards() {
       const daysMissing = getDaysMissing(p.date_last_seen || p.date_missing);
       const missingTime = formatMissingTime(daysMissing);
       return `
-    <div class="missing-card" onclick="openModal(${p.id})">
+    <div class="missing-card" onclick="openModal(${p.id}, 'missing')">
       <img src="${p.photo_urls?.[0] || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
       <div class="card-content">
         <div class="card-name">${escapeHTML(p.name)}</div>
@@ -1172,36 +1217,78 @@ function renderCards() {
   `}).join('');
 }
 
-function openModal(id) {
-  const p = missingPersons.find(x => x.id === id); if (!p) return;
-  const photos = p.photo_urls || []; let photoHTML = '';
+function renderFoundCards() {
+  const container = document.getElementById('foundCardsContainer');
+  if (foundPersons.length === 0) {
+    container.innerHTML = '<div class="loading">No found persons yet.</div>';
+    return;
+  }
+  
+  container.innerHTML = foundPersons.map(p => {
+    const daysFound = getDaysMissing(p.resolved_at);
+    const foundTime = formatMissingTime(daysFound);
+    return `
+      <div class="missing-card" onclick="openModal(${p.id}, 'found')">
+        <img src="${p.photo_urls?.[0] || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
+        <div class="card-content">
+          <div class="card-name">${escapeHTML(p.name)}</div>
+          <div class="card-days-missing" style="color: var(--success);"> Found ${foundTime} ago</div>
+          <div class="card-info">Last Seen: ${escapeHTML(p.last_seen_location)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openModal(id, type) {
+  const person = type === 'missing' 
+    ? missingPersons.find(x => x.id === id)
+    : foundPersons.find(x => x.id === id);
+    
+  if (!person) return;
+  
+  const photos = person.photo_urls || []; 
+  let photoHTML = '';
   if (photos.length > 0) {
     photoHTML = '<div class="photo-gallery">';
-    photos.forEach((url, index) => { photoHTML += `<div class="photo-wrapper"><img src="${url}"><div class="photo-counter">${index + 1} / ${photos.length}</div></div>`; });
+    photos.forEach((url, index) => { 
+      photoHTML += `<div class="photo-wrapper"><img src="${url}"><div class="photo-counter">${index + 1} / ${photos.length}</div></div>`; 
+    });
     photoHTML += '</div>';
   }
+  
+  const modalTitle = type === 'missing' ? 'Missing Person Details' : 'Found Person Details';
+  const statusBadge = type === 'missing' 
+    ? '<div style="background: var(--warning); color: var(--dark); padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">MISSING</div>'
+    : '<div style="background: var(--success); color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">✅ FOUND</div>';
+  
   document.getElementById('modalContent').innerHTML = `
+    ${statusBadge}
     ${photoHTML}
     <div class="info-section">
-        <div class="info-label">NAME</div><div class="info-value">${escapeHTML(p.name)}</div>
-        <div class="info-label">AGE</div><div class="info-value">${p.age || 'N/A'} years old</div>
-        <div class="info-label">GENDER</div><div class="info-value">${escapeHTML(p.gender || 'N/A')}</div>
+        <div class="info-label">NAME</div><div class="info-value">${escapeHTML(person.name)}</div>
+        <div class="info-label">AGE</div><div class="info-value">${person.age || 'N/A'} years old</div>
+        <div class="info-label">GENDER</div><div class="info-value">${escapeHTML(person.gender || 'N/A')}</div>
     </div>
     <div class="info-section">
-        <div class="info-label">DATE LAST SEEN</div><div class="info-value">${formatDate(p.date_last_seen)}</div>
-        <div class="info-label">DATE REPORTED</div><div class="info-value">${formatDate(p.date_missing)}</div>
-        <div class="info-label">LAST SEEN LOCATION</div><div class="info-value">${escapeHTML(p.last_seen_location)}</div>
+        <div class="info-label">DATE LAST SEEN</div><div class="info-value">${formatDate(person.date_last_seen || person.date_missing)}</div>
+        ${type === 'found' && person.resolved_at ? `<div class="info-label">DATE FOUND</div><div class="info-value" style="color:var(--success)">${formatDate(person.resolved_at)}</div>` : ''}
+        <div class="info-label">LAST SEEN LOCATION</div><div class="info-value">${escapeHTML(person.last_seen_location)}</div>
     </div>
-    ${p.description ? `<div class="info-section"><div class="info-label">CLOTHING & APPEARANCE</div><div class="info-value">${escapeHTML(p.description)}</div></div>` : ''}
-    ${p.police_station ? `<div class="info-section"><div class="info-label">NEAREST POLICE STATION</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(p.police_station)}</div></div>` : ''}
+    ${person.description ? `<div class="info-section"><div class="info-label">CLOTHING & APPEARANCE</div><div class="info-value">${escapeHTML(person.description)}</div></div>` : ''}
+    ${person.police_station ? `<div class="info-section"><div class="info-label">NEAREST POLICE STATION</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
   `;
+  
   document.getElementById('profileModal').classList.add('active');
 }
+
 function closeProfileModal() { document.getElementById('profileModal').classList.remove('active'); }
 
 function toggleFilters() { 
   document.getElementById('filterPanel').classList.toggle('active'); 
   document.getElementById('filterBtn').classList.toggle('active'); 
+  if (currentHomeTab === 'missing') renderMissingCards();
+  else renderFoundCards();
 }
 
 function toggleUnknownPerson() {
@@ -1337,7 +1424,7 @@ function formatDate(dateString) {
 
 async function loadMyPosts() {
   const token = localStorage.getItem('authToken');
-  if (!token) { showToast('❌ Please log in first'); return; }
+  if (!token) { showToast(' Please log in first'); return; }
   try {
     const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
     if (res.status === 401) { logout(); throw new Error('Session expired. Please log in again.'); }
@@ -1413,9 +1500,18 @@ window.addEventListener('load', () => {
   updateCarousel();
 });
 
-document.getElementById('searchInput').addEventListener('input', renderCards);
-document.getElementById('filterGender').addEventListener('change', renderCards);
-document.getElementById('filterAge').addEventListener('change', renderCards);
+document.getElementById('searchInput').addEventListener('input', () => {
+  if (currentHomeTab === 'missing') renderMissingCards();
+  else renderFoundCards();
+});
+document.getElementById('filterGender').addEventListener('change', () => {
+  if (currentHomeTab === 'missing') renderMissingCards();
+  else renderFoundCards();
+});
+document.getElementById('filterAge').addEventListener('change', () => {
+  if (currentHomeTab === 'missing') renderMissingCards();
+  else renderFoundCards();
+});
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
