@@ -48,7 +48,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .content { padding: 20px; min-height: calc(100vh - 140px); }
 .page-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
 
-/* NEW: Tab Styles */
+/* NEW: Tab Styles for Home Page */
 .tabs-container { display: flex; gap: 10px; margin-bottom: 20px; }
 .tab-btn { flex: 1; padding: 14px; background: var(--dark-card); border: 2px solid var(--border); border-radius: 10px; color: var(--gray); font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
 .tab-btn.active { background: var(--warning); color: var(--dark); border-color: var(--warning); }
@@ -222,7 +222,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="2">
                     <div class="step-header"><div class="step-badge">2</div><h3 class="step-title">Post Missing Person</h3></div>
-                    <div class="step-icon"></div>
+                    <div class="step-icon">📝</div>
                     <p class="step-description">Create a Missing Person Report with detailed information to help identify and locate them.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Upload multiple photos</li>
@@ -234,7 +234,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="3">
                     <div class="step-header"><div class="step-badge">3</div><h3 class="step-title">Found Someone?</h3></div>
-                    <div class="step-icon"></div>
+                    <div class="step-icon">🔍</div>
                     <p class="step-description">If you find someone who may be missing, submit a Found Report with details and photos.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Upload evidence</li>
@@ -244,7 +244,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="4">
                     <div class="step-header"><div class="step-badge">4</div><h3 class="step-title">Safe & Verified</h3></div>
-                    <div class="step-icon"></div>
+                    <div class="step-icon">️</div>
                     <p class="step-description"><strong>Accuracy Saves Lives</strong>Please provide truthful and accurate information. False reports can delay investigations.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Content moderation</li>
@@ -255,7 +255,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="5">
                     <div class="step-header"><div class="step-badge">5</div><h3 class="step-title">Admin Oversight</h3></div>
-                    <div class="step-icon"></div>
+                    <div class="step-icon">👮</div>
                     <p class="step-description"><strong>Monitored For Safety</strong>Our administration team monitors reports and can review, edit, remove, or investigate inappropriate content.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Admin dashboard</li>
@@ -297,7 +297,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <!-- AUTH SCREEN -->
 <div class="auth-screen" id="authScreen">
   <div class="auth-box">
-    <div class="auth-logo">🔍</div>
+    <div class="auth-logo"></div>
     <div class="auth-title">Locate Me</div>
     <div class="auth-tabs">
       <div class="auth-tab active" onclick="switchAuthTab('login')">Login</div>
@@ -312,7 +312,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
-          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
         </div>
       </div>
       <button type="submit" class="btn-submit" style="width:100%">Login</button>
@@ -326,7 +326,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">👁️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">️</button>
         </div>
       </div>
       <div class="form-group">
@@ -696,7 +696,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div class="modal-overlay" id="emailVerificationModal">
   <div class="modal-content">
     <div class="verification-message">
-      <h2> Check Your Email!</h2>
+      <h2>📧 Check Your Email!</h2>
       <p style="font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
         <strong style="color: var(--warning);">Important:</strong> We've sent a verification link to your email.
       </p>
@@ -756,7 +756,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <div class="modal-overlay" id="deletePostModal">
   <div class="modal-header">
-    <button class="modal-close" onclick="closeModal('deletePostModal')"></button>
+    <button class="modal-close" onclick="closeModal('deletePostModal')">✕</button>
     <div style="font-weight:700">Delete Post</div>
     <div style="width:36px"></div>
   </div>
@@ -765,10 +765,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     <p>Please select a reason for deletion:</p>
     <select class="form-select" id="deleteReason" style="margin-bottom: 20px;">
       <option value="found">✅ The missing person has been found</option>
-      <option value="duplicate"> This is a duplicate post</option>
+      <option value="duplicate">🔄 This is a duplicate post</option>
       <option value="wrong_info">❌ Contains wrong information</option>
-      <option value="resolved"> Issue resolved</option>
-      <option value="other">📝 Other reason</option>
+      <option value="resolved">🔒 Issue resolved</option>
+      <option value="other"> Other reason</option>
     </select>
     <button class="btn-submit" style="width:100%; background:var(--danger); color:white;" onclick="confirmDeletePost()">Yes, Delete Post</button>
     <button class="btn-cancel" style="width:100%; margin-top:10px;" onclick="closeModal('deletePostModal')">Cancel</button>
@@ -781,7 +781,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 const GOOGLE_CLIENT_ID = '384124217618-38rde3tgblslp1s9u3e1fn5tn7h971uk.apps.googleusercontent.com';
 let missingPersons = []; 
-let foundPersons = [];
+let foundPersons = []; // This will now hold SIGHTINGS
 let currentHomeTab = 'missing';
 let currentUser = null;
 
@@ -903,7 +903,7 @@ function switchTab(tab, eventObj) {
     document.getElementById('mainApp').classList.remove('active');
     document.getElementById('authScreen').classList.add('active');
     switchAuthTab('signup');
-    showToast(' Please sign up or log in to access this feature.');
+    showToast('🔒 Please sign up or log in to access this feature.');
     return;
   }
 
@@ -1018,7 +1018,7 @@ async function handleSignup(e) {
     document.getElementById('signupForm').reset();
     document.getElementById('emailVerificationModal').classList.add('active');
   } catch (err) { 
-    showToast(' ' + (err.message || 'Signup failed')); 
+    showToast('❌ ' + (err.message || 'Signup failed')); 
   } finally {
     if (btn) {
       btn.disabled = false;
@@ -1053,7 +1053,7 @@ async function handleLogin(e) {
     showApp(); 
     loadData();
   } catch (err) { 
-    showToast(' ' + err.message); 
+    showToast('❌ ' + err.message); 
   }
 }
 
@@ -1086,7 +1086,7 @@ async function handleGoogleResponse(response) {
     showApp(); 
     loadData();
   } catch (err) { 
-    showToast(' ' + err.message); 
+    showToast('❌ ' + err.message); 
   }
 }
 
@@ -1115,7 +1115,7 @@ async function checkVerificationLink() {
         document.getElementById('verifySuccessModal').classList.add('active');
         window.history.replaceState({}, document.title, window.location.pathname);
       } else {
-        showToast(' ' + (data.error || 'Verification failed'));
+        showToast('❌ ' + (data.error || 'Verification failed'));
       }
     } catch (err) {
       showToast('❌ Verification failed. Link may be expired.');
@@ -1133,6 +1133,7 @@ function logout() {
 }
 
 async function loadData() {
+  // 1. Load Missing Persons
   try {
     const response = await fetch(`${API_URL}/missing-persons`);
     if (!response.ok) throw new Error('Failed to fetch');
@@ -1142,14 +1143,14 @@ async function loadData() {
     console.error('Load error:', err); 
   }
   
-  // Load found persons
+  // 2. Load SIGHTINGS (for the "Found" tab)
   try {
-    const response = await fetch(`${API_URL}/missing-persons/resolved-public`);
-    if (!response.ok) throw new Error('Failed to fetch found persons');
+    const response = await fetch(`${API_URL}/sightings/public`);
+    if (!response.ok) throw new Error('Failed to fetch sightings');
     foundPersons = await response.json();
     renderFoundCards();
   } catch (err) {
-    console.error('Load found error:', err);
+    console.error('Load sightings error:', err);
     foundPersons = [];
   }
 }
@@ -1211,7 +1212,7 @@ function renderMissingCards() {
       <div class="card-content">
         <div class="card-name">${escapeHTML(p.name)}</div>
         <div class="card-days-missing"> Missing for ${missingTime}</div>
-        <div class="card-info">Last Seen: ${escapeHTML(p.last_seen_location)}</div>
+        <div class="card-info">📍 Last Seen: ${escapeHTML(p.last_seen_location)}</div>
       </div>
     </div>
   `}).join('');
@@ -1220,20 +1221,20 @@ function renderMissingCards() {
 function renderFoundCards() {
   const container = document.getElementById('foundCardsContainer');
   if (foundPersons.length === 0) {
-    container.innerHTML = '<div class="loading">No found persons yet.</div>';
+    container.innerHTML = '<div class="loading">No sightings reported yet.</div>';
     return;
   }
   
   container.innerHTML = foundPersons.map(p => {
-    const daysFound = getDaysMissing(p.resolved_at);
-    const foundTime = formatMissingTime(daysFound);
+    const daysAgo = getDaysMissing(p.created_at);
+    const timeAgo = formatMissingTime(daysAgo);
     return `
       <div class="missing-card" onclick="openModal(${p.id}, 'found')">
-        <img src="${p.photo_urls?.[0] || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
+        <img src="${p.photo_url || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
         <div class="card-content">
-          <div class="card-name">${escapeHTML(p.name)}</div>
-          <div class="card-days-missing" style="color: var(--success);"> Found ${foundTime} ago</div>
-          <div class="card-info">Last Seen: ${escapeHTML(p.last_seen_location)}</div>
+          <div class="card-name">👁️ ${escapeHTML(p.missing_person_name || 'Unknown Person')}</div>
+          <div class="card-days-missing" style="color: var(--success);">📅 Reported ${timeAgo} ago</div>
+          <div class="card-info">📍 Location: ${escapeHTML(p.sighting_location)}</div>
         </div>
       </div>
     `;
@@ -1247,7 +1248,7 @@ function openModal(id, type) {
     
   if (!person) return;
   
-  const photos = person.photo_urls || []; 
+  const photos = type === 'missing' ? (person.photo_urls || []) : (person.photo_url ? [person.photo_url] : []);
   let photoHTML = '';
   if (photos.length > 0) {
     photoHTML = '<div class="photo-gallery">';
@@ -1257,26 +1258,53 @@ function openModal(id, type) {
     photoHTML += '</div>';
   }
   
-  const modalTitle = type === 'missing' ? 'Missing Person Details' : 'Found Person Details';
+  const modalTitle = type === 'missing' ? 'Missing Person Details' : 'Sighting Report Details';
   const statusBadge = type === 'missing' 
-    ? '<div style="background: var(--warning); color: var(--dark); padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">MISSING</div>'
-    : '<div style="background: var(--success); color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">✅ FOUND</div>';
+    ? '<div style="background: var(--warning); color: var(--dark); padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">⚠️ MISSING</div>'
+    : '<div style="background: var(--success); color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">👁️ SIGHTING REPORT</div>';
+  
+  let detailsHTML = '';
+  
+  if (type === 'missing') {
+      detailsHTML = `
+        <div class="info-section">
+            <div class="info-label">NAME</div><div class="info-value">${escapeHTML(person.name)}</div>
+            <div class="info-label">AGE</div><div class="info-value">${person.age || 'N/A'} years old</div>
+            <div class="info-label">GENDER</div><div class="info-value">${escapeHTML(person.gender || 'N/A')}</div>
+        </div>
+        <div class="info-section">
+            <div class="info-label">DATE LAST SEEN</div><div class="info-value">${formatDate(person.date_last_seen || person.date_missing)}</div>
+            <div class="info-label">LAST SEEN LOCATION</div><div class="info-value">${escapeHTML(person.last_seen_location)}</div>
+        </div>
+        ${person.description ? `<div class="info-section"><div class="info-label">CLOTHING & APPEARANCE</div><div class="info-value">${escapeHTML(person.description)}</div></div>` : ''}
+        ${person.police_station ? `<div class="info-section"><div class="info-label">NEAREST POLICE STATION</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
+      `;
+  } else {
+      // Sighting Details
+      detailsHTML = `
+        <div class="info-section">
+            <div class="info-label">PERSON NAME</div><div class="info-value">${escapeHTML(person.missing_person_name || 'Unknown')}</div>
+            <div class="info-label">GENDER</div><div class="info-value">${escapeHTML(person.gender || 'Not specified')}</div>
+        </div>
+        <div class="info-section">
+            <div class="info-label">SIGHTING LOCATION</div><div class="info-value">${escapeHTML(person.sighting_location)}</div>
+            <div class="info-label">TIME SEEN</div><div class="info-value">${escapeHTML(person.sighting_time || 'Not specified')}</div>
+            <div class="info-label">DATE REPORTED</div><div class="info-value">${formatDate(person.created_at)}</div>
+        </div>
+        ${person.description ? `<div class="info-section"><div class="info-label">DESCRIPTION</div><div class="info-value">${escapeHTML(person.description)}</div></div>` : ''}
+        ${person.police_station ? `<div class="info-section"><div class="info-label">REPORTED TO STATION</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
+        <div style="margin-top: 20px; padding: 15px; background: #dbeafe; border-radius: 8px; text-align: center;">
+            <div style="font-size: 13px; color: var(--primary); font-weight: 600;">
+                📞 If you have information, please contact the nearest police station.
+            </div>
+        </div>
+      `;
+  }
   
   document.getElementById('modalContent').innerHTML = `
     ${statusBadge}
     ${photoHTML}
-    <div class="info-section">
-        <div class="info-label">NAME</div><div class="info-value">${escapeHTML(person.name)}</div>
-        <div class="info-label">AGE</div><div class="info-value">${person.age || 'N/A'} years old</div>
-        <div class="info-label">GENDER</div><div class="info-value">${escapeHTML(person.gender || 'N/A')}</div>
-    </div>
-    <div class="info-section">
-        <div class="info-label">DATE LAST SEEN</div><div class="info-value">${formatDate(person.date_last_seen || person.date_missing)}</div>
-        ${type === 'found' && person.resolved_at ? `<div class="info-label">DATE FOUND</div><div class="info-value" style="color:var(--success)">${formatDate(person.resolved_at)}</div>` : ''}
-        <div class="info-label">LAST SEEN LOCATION</div><div class="info-value">${escapeHTML(person.last_seen_location)}</div>
-    </div>
-    ${person.description ? `<div class="info-section"><div class="info-label">CLOTHING & APPEARANCE</div><div class="info-value">${escapeHTML(person.description)}</div></div>` : ''}
-    ${person.police_station ? `<div class="info-section"><div class="info-label">NEAREST POLICE STATION</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
+    ${detailsHTML}
   `;
   
   document.getElementById('profileModal').classList.add('active');
@@ -1351,7 +1379,7 @@ async function submitMissingPerson() {
     if (response.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!response.ok) throw new Error('Failed to save to database');
     showToast('✅ Report submitted successfully!'); resetPostForm(); loadData(); switchTab('home', null);
-  } catch (err) { showToast(' ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
+  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
 }
 
 function resetPostForm() {
@@ -1399,7 +1427,7 @@ async function submitSighting() {
     if (response.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!response.ok) throw new Error('Failed to save sighting');
     showToast('✅ Sighting reported!'); resetSightingForm(); switchTab('home', null);
-  } catch (err) { showToast(' ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
+  } catch (err) { showToast('❌ ' + err.message); } finally { if (btn) { btn.disabled = false; btn.textContent = 'Submit'; } }
 }
 
 function resetSightingForm() {
@@ -1424,11 +1452,11 @@ function formatDate(dateString) {
 
 async function loadMyPosts() {
   const token = localStorage.getItem('authToken');
-  if (!token) { showToast(' Please log in first'); return; }
+  if (!token) { showToast('🔒 Please log in first'); return; }
   try {
     const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
     if (res.status === 401) { logout(); throw new Error('Session expired. Please log in again.'); }
-    if (!res.ok) { showToast(' Failed to load posts.'); return; }
+    if (!res.ok) { showToast('❌ Failed to load posts.'); return; }
     const posts = await res.json();
     const container = document.getElementById('my-posts-container');
     const list = document.getElementById('my-posts-list');
@@ -1446,7 +1474,7 @@ async function loadMyPosts() {
             <button onclick="openDeleteModal(${p.id})" style="background:var(--danger); color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer;">Delete</button>
           </div>
         </div>
-        <div style="font-size:13px; color:var(--warning); font-weight:600; margin-bottom:4px;"> Missing for ${missingTime}</div>
+        <div style="font-size:13px; color:var(--warning); font-weight:600; margin-bottom:4px;">⏳ Missing for ${missingTime}</div>
         <div style="font-size:13px; color:var(--gray)">📍 ${escapeHTML(p.last_seen_location)} | 👤 Age: ${p.age}</div>
       </div>
     `}).join('');
@@ -1478,7 +1506,7 @@ async function savePostEdit() {
     if (res.status === 401) { logout(); throw new Error('Session expired.'); }
     if (!res.ok) throw new Error('Update failed');
     showToast('✅ Post updated!'); closeModal('editPostModal'); loadMyPosts(); loadData();
-  } catch (err) { showToast(' ' + err.message); }
+  } catch (err) { showToast('❌ ' + err.message); }
 }
 
 function openDeleteModal(id) { currentDeleteId = id; document.getElementById('deletePostModal').classList.add('active'); }
