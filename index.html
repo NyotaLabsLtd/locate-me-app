@@ -6,19 +6,16 @@
 <meta name="theme-color" content="#0f172a">
 <title>Locate Me - Find Missing Persons in Kenya</title>
 
-<!-- SEO Meta Tags -->
 <meta name="description" content="Locate Me is a community-driven platform to report and find missing persons in Kenya. Help reunite families today.">
 <meta name="keywords" content="missing persons, find missing people, Kenya missing persons, lost family, Locate Me app, report missing person, Nairobi">
 <meta name="author" content="Nyota Labs">
 
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://locate-me-app.vercel.app/">
 <meta property="og:title" content="Locate Me - Find Missing Persons">
 <meta property="og:description" content="Help us find missing loved ones. Post reports and sightings instantly.">
 <meta property="og:image" content="https://locate-me-app.vercel.app/icon.png">
 
-<!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="/icon.png?v=3" type="image/png">
 <link rel="apple-touch-icon" href="/icon.png">
@@ -48,7 +45,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .content { padding: 20px; min-height: calc(100vh - 140px); }
 .page-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
 
-/* Tab Styles for Home Page */
 .tabs-container { display: flex; gap: 10px; margin-bottom: 20px; }
 .tab-btn { flex: 1; padding: 14px; background: var(--dark-card); border: 2px solid var(--border); border-radius: 10px; color: var(--gray); font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
 .tab-btn.active { background: var(--warning); color: var(--dark); border-color: var(--warning); }
@@ -78,7 +74,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .photo-wrapper img { width: 100%; height: 400px; object-fit: cover; border-radius: 12px; border: 2px solid var(--border); }
 .photo-counter { position: absolute; top: 15px; right: 15px; background: rgba(15, 23, 42, 0.9); color: var(--warning); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; border: 2px solid var(--warning); }
 
-/* Better spacing in info sections */
 .info-section { background: var(--dark-card); border-radius: 10px; padding: 18px; margin-bottom: 16px; cursor: pointer; transition: background 0.2s; }
 .info-section:active { background: var(--border); }
 .info-label { font-size: 11px; color: var(--warning); margin-bottom: 6px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
@@ -207,7 +202,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div id="landing-page">
     <nav class="landing-nav">
         <div class="landing-logo">
-            <span class="landing-logo-icon"></span>
+            <span class="landing-logo-icon">📍</span>
             <span>Locate Me</span>
         </div>
     </nav>
@@ -226,7 +221,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="2">
                     <div class="step-header"><div class="step-badge">2</div><h3 class="step-title">Post Missing Person</h3></div>
-                    <div class="step-icon">📝</div>
+                    <div class="step-icon"></div>
                     <p class="step-description">Create a Missing Person Report with detailed information to help identify and locate them.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Upload multiple photos</li>
@@ -330,14 +325,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">👁️</button>
         </div>
       </div>
       <div class="form-group">
         <label class="form-label">Confirm Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="signupConfirmPassword" placeholder="Re-enter password" required minlength="6">
-          <button type="button" class="password-toggle" onclick="togglePassword('signupConfirmPassword', this)">👁️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('signupConfirmPassword', this)">️</button>
         </div>
       </div>
       <div class="checkbox-wrapper" style="margin: 20px 0;">
@@ -369,10 +364,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
   <div class="content">
     <div id="homeTab" class="tab-content active">
-      <!-- Dynamic title that changes based on active tab -->
       <h2 class="page-title" id="homePageTitle">Reported Missing People</h2>
       
-      <!-- Missing/Found Tabs -->
       <div class="tabs-container">
         <button class="tab-btn active" onclick="switchHomeTab('missing')">Missing</button>
         <button class="tab-btn" onclick="switchHomeTab('found')">Found</button>
@@ -610,7 +603,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
             <div class="info-label">MY POSTS</div>
             <div class="info-value">View, edit or delete your reports</div>
           </div>
-          <span style="font-size: 20px;">️</span>
+          <span style="font-size: 20px;">➡️</span>
         </div>
       </div>
       <div id="my-posts-container" style="display:none; margin-bottom: 20px;">
@@ -649,7 +642,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     </div>
   </div>
   
-  <!-- BOTTOM NAVIGATION -->
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="home" onclick="switchTab('home', event)">
       <span class="nav-icon">
@@ -723,14 +715,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <div class="modal-overlay" id="profileModal">
   <div class="modal-header">
-    <button class="modal-close" onclick="closeProfileModal()"></button>
+    <button class="modal-close" onclick="closeProfileModal()">✕</button>
   </div>
   <div class="modal-content" id="modalContent"></div>
 </div>
 
 <div class="modal-overlay" id="editPostModal">
   <div class="modal-header">
-    <button class="modal-close" onclick="closeModal('editPostModal')">✕</button>
+    <button class="modal-close" onclick="closeModal('editPostModal')"></button>
     <div style="font-weight:700">Edit Post</div>
     <div style="width:36px"></div>
   </div>
@@ -761,7 +753,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <div class="modal-overlay" id="deletePostModal">
   <div class="modal-header">
-    <button class="modal-close" onclick="closeModal('deletePostModal')"></button>
+    <button class="modal-close" onclick="closeModal('deletePostModal')">✕</button>
     <div style="font-weight:700">Delete Post</div>
     <div style="width:36px"></div>
   </div>
@@ -772,8 +764,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <option value="found">✅ The missing person has been found</option>
       <option value="duplicate">🔄 This is a duplicate post</option>
       <option value="wrong_info">❌ Contains wrong information</option>
-      <option value="resolved"> Issue resolved</option>
-      <option value="other"> Other reason</option>
+      <option value="resolved">🔒 Issue resolved</option>
+      <option value="other">📝 Other reason</option>
     </select>
     <button class="btn-submit" style="width:100%; background:var(--danger); color:white;" onclick="confirmDeletePost()">Yes, Delete Post</button>
     <button class="btn-cancel" style="width:100%; margin-top:10px;" onclick="closeModal('deletePostModal')">Cancel</button>
@@ -786,7 +778,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 const GOOGLE_CLIENT_ID = '384124217618-38rde3tgblslp1s9u3e1fn5tn7h971uk.apps.googleusercontent.com';
 let missingPersons = []; 
-let foundPersons = []; // This will now hold SIGHTINGS
+let foundPersons = [];
 let currentHomeTab = 'missing';
 let currentUser = null;
 
@@ -908,7 +900,7 @@ function switchTab(tab, eventObj) {
     document.getElementById('mainApp').classList.remove('active');
     document.getElementById('authScreen').classList.add('active');
     switchAuthTab('signup');
-    showToast(' Please sign up or log in to access this feature.');
+    showToast('🔒 Please sign up or log in to access this feature.');
     return;
   }
 
@@ -926,13 +918,11 @@ function switchTab(tab, eventObj) {
   }
 }
 
-// Switch between Missing/Found tabs with dynamic title
 function switchHomeTab(tab) {
     currentHomeTab = tab;
     document.querySelectorAll('.tabs-container .tab-btn').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
     
-    // Update page title based on active tab
     const titleEl = document.getElementById('homePageTitle');
     
     if (tab === 'missing') {
@@ -959,7 +949,7 @@ function togglePassword(inputId, btn) {
   const input = document.getElementById(inputId);
   if (input.type === 'password') {
     input.type = 'text';
-    btn.textContent = '';
+    btn.textContent = '🙈';
   } else {
     input.type = 'password';
     btn.textContent = '👁️';
@@ -1096,7 +1086,7 @@ async function handleGoogleResponse(response) {
     showApp(); 
     loadData();
   } catch (err) { 
-    showToast(' ' + err.message); 
+    showToast('❌ ' + err.message); 
   }
 }
 
@@ -1143,7 +1133,6 @@ function logout() {
 }
 
 async function loadData() {
-  // 1. Load Missing Persons
   try {
     const response = await fetch(`${API_URL}/missing-persons`);
     if (!response.ok) throw new Error('Failed to fetch');
@@ -1153,7 +1142,6 @@ async function loadData() {
     console.error('Load error:', err); 
   }
   
-  // 2. Load SIGHTINGS (for the "Found" tab)
   try {
     const response = await fetch(`${API_URL}/sightings/public`);
     if (!response.ok) throw new Error('Failed to fetch sightings');
@@ -1176,7 +1164,6 @@ function getDaysMissing(dateString) {
     return diffDays;
 }
 
-// Better formatting with "today" and "yesterday" support
 function formatMissingTime(days) {
     if (!days || days <= 0) return 'less than a day';
     if (days === 1) return '1 day';
@@ -1193,7 +1180,6 @@ function formatMissingTime(days) {
     }
 }
 
-// Time ago formatter for sightings (shows "today", "yesterday", etc.)
 function formatTimeAgo(days) {
     if (!days || days <= 0) return 'today';
     if (days === 1) return 'yesterday';
@@ -1256,14 +1242,13 @@ function renderFoundCards() {
   
   container.innerHTML = foundPersons.map(p => {
     const daysAgo = getDaysMissing(p.created_at);
-    // Use formatTimeAgo which shows "today" instead of "0 days ago"
     const timeAgo = formatTimeAgo(daysAgo);
     return `
       <div class="missing-card" onclick="openModal(${p.id}, 'found')">
         <img src="${p.photo_url || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
         <div class="card-content">
-          <div class="card-name">️ ${escapeHTML(p.missing_person_name || 'Unknown Person')}</div>
-          <div class="card-days-missing" style="color: var(--success);">📅 Reported ${timeAgo}</div>
+          <div class="card-name">👁️ ${escapeHTML(p.missing_person_name || 'Unknown Person')}</div>
+          <div class="card-days-missing" style="color: var(--success);"> Reported ${timeAgo}</div>
           <div class="card-info">📍 Location: ${escapeHTML(p.sighting_location)}</div>
         </div>
       </div>
@@ -1314,7 +1299,6 @@ function openModal(id, type) {
         ${person.police_station ? `<div class="info-section"><div class="info-label">Nearest Police Station</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
       `;
   } else {
-      // Sighting Details
       detailsHTML = `
         <div class="info-section">
             <div class="info-label">Person Name</div>
@@ -1492,7 +1476,7 @@ function formatDate(dateString) {
 // UPDATED: Fetch both missing persons AND sightings for user
 async function loadMyPosts() {
   const token = localStorage.getItem('authToken');
-  if (!token) { showToast(' Please log in first'); return; }
+  if (!token) { showToast('🔒 Please log in first'); return; }
   
   try {
     const res = await fetch(`${API_URL}/users/my-posts`, { 
@@ -1505,7 +1489,7 @@ async function loadMyPosts() {
     }
     
     if (!res.ok) { 
-      showToast('❌ Failed to load posts.'); 
+      showToast(' Failed to load posts.'); 
       return; 
     }
     
@@ -1516,7 +1500,7 @@ async function loadMyPosts() {
     container.style.display = 'block';
     
     if (posts.length === 0) { 
-      list.innerHTML = '<p style="color:var(--gray); padding: 10px; text-align: center;">You have no posts yet.</p>'; 
+      list.innerHTML = '<p style="color:var(--gray); padding: 20px; text-align: center;">You have no posts yet.</p>'; 
       return; 
     }
     
@@ -1541,7 +1525,7 @@ async function loadMyPosts() {
             </div>
           </div>
           <div style="font-size:13px; color:var(--warning); font-weight:600; margin-bottom:4px;">⏳ Missing for ${missingTime}</div>
-          <div style="font-size:13px; color:var(--gray)">📍 ${escapeHTML(post.last_seen_location)} | 👤 Age: ${post.age}</div>
+          <div style="font-size:13px; color:var(--gray)"> ${escapeHTML(post.last_seen_location)} |  Age: ${post.age}</div>
         </div>
         `;
       } else {
@@ -1561,7 +1545,7 @@ async function loadMyPosts() {
                 style="background:var(--danger); color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer; font-size: 12px;">Delete</button>
             </div>
           </div>
-          <div style="font-size:13px; color:var(--success); font-weight:600; margin-bottom:4px;"> Reported ${timeAgo}</div>
+          <div style="font-size:13px; color:var(--success); font-weight:600; margin-bottom:4px;">📅 Reported ${timeAgo}</div>
           <div style="font-size:13px; color:var(--gray)">📍 ${escapeHTML(post.sighting_location)} | 👤 ${escapeHTML(post.gender || 'Not specified')}</div>
         </div>
         `;
@@ -1570,7 +1554,7 @@ async function loadMyPosts() {
     
   } catch (err) { 
     console.error(err); 
-    showToast(' ' + err.message); 
+    showToast('❌ ' + err.message); 
   }
 }
 
@@ -1666,7 +1650,7 @@ if ('serviceWorker' in navigator) {
         console.log('✅ Service Worker registered with scope:', reg.scope);
       })
       .catch((err) => {
-        console.error(' Service Worker registration failed:', err);
+        console.error('❌ Service Worker registration failed:', err);
       });
   });
 }
