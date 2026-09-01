@@ -92,7 +92,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     gap: 15px; align-items: center; border: 2px solid transparent; transition: all 0.2s; cursor: pointer;
 }
 .missing-item:hover, .sighting-item:hover, .resolved-item:hover { border-color: var(--primary); background: white; box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08); }
-.missing-photo { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.missing-photo, .sighting-photo { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
 .missing-info h4, .sighting-info h4, .resolved-info h4 { font-size: 15px; color: var(--dark); margin-bottom: 6px; }
 .meta-info { display: flex; gap: 15px; font-size: 12px; color: var(--gray); margin-bottom: 6px; flex-wrap: wrap; }
 .meta-info span { display: flex; align-items: center; gap: 4px; }
@@ -125,7 +125,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 .info-box value { font-size: 13px; color: var(--dark); font-weight: 600; }
 .full-width { grid-column: span 2; }
 
-/* NEW: Full Screen Image Viewer */
+/* Full Screen Image Viewer */
 .image-viewer-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; }
 .image-viewer-overlay.active { display: flex; }
 .image-viewer-content { max-width: 95%; max-height: 95%; object-fit: contain; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
@@ -170,7 +170,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 
 <div class="sidebar">
     <div class="sidebar-header">
-        <div class="sidebar-logo"></div>
+        <div class="sidebar-logo">👮</div>
         <div>
             <div class="sidebar-title">Locate Me</div>
             <div class="sidebar-subtitle">Police Portal</div>
@@ -185,17 +185,17 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
             <span class="nav-badge" id="missingCount">0</span>
         </a>
         <a class="nav-item" onclick="switchPage('sightings', event)">
-            <span class="nav-icon">️</span><span class="nav-text">Sightings</span>
+            <span class="nav-icon">👁️</span><span class="nav-text">Sightings</span>
             <span class="nav-badge" id="sightingCount">0</span>
         </a>
         <a class="nav-item" onclick="switchPage('resolved', event)">
             <span class="nav-icon">✅</span><span class="nav-text">Resolved Cases</span>
         </a>
         <a class="nav-item" onclick="switchPage('reports', event)">
-            <span class="nav-icon">📊</span><span class="nav-text">Reports</span>
+            <span class="nav-icon">📈</span><span class="nav-text">Reports</span>
         </a>
         <a class="nav-item" onclick="logout()">
-            <span class="nav-icon"></span><span class="nav-text">Logout</span>
+            <span class="nav-icon">🚪</span><span class="nav-text">Logout</span>
         </a>
     </nav>
 </div>
@@ -203,7 +203,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 <div class="main-wrapper">
     <div class="top-bar">
         <div class="station-badge">
-            <div class="badge-icon"></div>
+            <div class="badge-icon">🏢</div>
             <div class="badge-info">
                 <h3 id="currentStationName">Loading...</h3>
                 <p id="currentStationId">Jurisdiction: Active</p>
@@ -222,14 +222,14 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
         </div>
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon blue"></div>
+                <div class="stat-icon blue">📋</div>
                 <div class="stat-content">
                     <h4 id="totalMissing">0</h4>
                     <p>Active Missing Persons</p>
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon red"></div>
+                <div class="stat-icon red">🚨</div>
                 <div class="stat-content">
                     <h4 id="criticalCount">0</h4>
                     <p>Critical Cases</p>
@@ -267,7 +267,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
         </div>
         <div class="section-card">
             <div class="section-header">
-                <h3 class="section-title"> Active Cases</h3>
+                <h3 class="section-title">📋 Active Cases</h3>
                 <button class="btn-refresh" onclick="fetchDashboardData()">🔄 Refresh</button>
             </div>
             <div class="missing-list" id="missingList"></div>
@@ -282,7 +282,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
         </div>
         <div class="section-card">
             <div class="section-header">
-                <h3 class="section-title">️ Pending Sightings</h3>
+                <h3 class="section-title">👁️ Pending Sightings</h3>
                 <button class="btn btn-success" onclick="markAllRead()">✓ Mark All Read</button>
             </div>
             <div class="sightings-list" id="sightingList"></div>
@@ -315,7 +315,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 <div class="report-icon blue">📊</div>
                 <h3>Monthly Missing Persons Report</h3>
                 <p>Comprehensive report of all missing persons cases for the current month</p>
-                <div class="report-date"> March 2026</div>
+                <div class="report-date">📅 March 2026</div>
                 <button class="btn-download" onclick="downloadReport('monthly-missing')">📥 Download PDF</button>
             </div>
             <div class="report-card">
@@ -323,24 +323,24 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 <h3>Sighting Analysis Report</h3>
                 <p>Analysis of all citizen sighting reports and response times</p>
                 <div class="report-date">📅 March 2026</div>
-                <button class="btn-download" onclick="downloadReport('sighting-analysis')"> Download PDF</button>
+                <button class="btn-download" onclick="downloadReport('sighting-analysis')">📥 Download PDF</button>
             </div>
             <div class="report-card">
                 <div class="report-icon green">✅</div>
                 <h3>Resolved Cases Summary</h3>
                 <p>Summary of all successfully resolved cases this month</p>
-                <div class="report-date">📅 March 2026</div>
+                <div class="report-date"> March 2026</div>
                 <button class="btn-download" onclick="downloadReport('resolved-summary')">📥 Download PDF</button>
             </div>
             <div class="report-card">
                 <div class="report-icon red"></div>
                 <h3>Critical Cases Report</h3>
                 <p>Detailed report on all critical priority missing person cases</p>
-                <div class="report-date"> March 2026</div>
+                <div class="report-date">📅 March 2026</div>
                 <button class="btn-download" onclick="downloadReport('critical-cases')">📥 Download PDF</button>
             </div>
             <div class="report-card">
-                <div class="report-icon blue">📋</div>
+                <div class="report-icon blue"></div>
                 <h3>Station Performance Report</h3>
                 <p>Performance metrics and response time analysis</p>
                 <div class="report-date">📅 March 2026</div>
@@ -350,7 +350,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 <div class="report-icon blue">📅</div>
                 <h3>Weekly Activity Report</h3>
                 <p>Weekly summary of all station activities and cases</p>
-                <div class="report-date"> Week 12, 2026</div>
+                <div class="report-date">📅 Week 12, 2026</div>
                 <button class="btn-download" onclick="downloadReport('weekly')">📥 Download PDF</button>
             </div>
         </div>
@@ -368,7 +368,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     </div>
 </div>
 
-<!-- NEW: FULL SCREEN IMAGE VIEWER -->
+<!-- FULL SCREEN IMAGE VIEWER -->
 <div class="image-viewer-overlay" id="imageViewer" onclick="closeImageViewer()">
     <button class="image-viewer-close" onclick="closeImageViewer()">✕</button>
     <img class="image-viewer-content" id="viewerImage" src="" alt="Full size image">
@@ -455,7 +455,7 @@ async function fetchDashboardData() {
         updateStats(data.criticalCases, data.resolvedThisMonth);
 
     } catch (error) {
-        console.error('❌ Error fetching data:', error);
+        console.error(' Error fetching data:', error);
         const errorMsg = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">⚠️</div><div style="font-size: 16px; margin-bottom: 10px;">Unable to connect to database</div><div style="font-size: 14px; color: var(--gray); margin-bottom: 20px;">${error.message}</div><button class="btn btn-primary" onclick="fetchDashboardData()" style="margin: 0 auto;">🔄 Try Again</button></div>`;
         missingList.innerHTML = errorMsg;
         dashboardList.innerHTML = errorMsg;
@@ -493,11 +493,11 @@ async function fetchResolvedCases() {
                 <div class="resolved-info">
                     <h4>${c.name}</h4>
                     <div class="meta-info">
-                        <span> ${c.age} years</span>
-                        <span>♀️ ${c.gender}</span>
+                        <span>🎂 ${c.age} years</span>
+                        <span>️ ${c.gender}</span>
                         <span>📅 Resolved: ${formatDate(c.resolved_at)}</span>
                     </div>
-                    <div class="meta-info"><span>📍 ${c.last_seen_location}</span></div>
+                    <div class="meta-info"><span> ${c.last_seen_location}</span></div>
                     <div class="case-notes">${c.resolution_notes || 'Case resolved successfully'}</div>
                 </div>
                 <div class="action-buttons">
@@ -543,10 +543,10 @@ function renderMissingPersons(container, cases) {
                 <h4>${p.name} ${criticalBadge}</h4>
                 <div class="meta-info">
                     <span> ${p.age} years</span>
-                    <span>♀️ ${p.gender}</span>
-                    <span> ${formatDate(p.date_missing)}</span>
+                    <span>♂️ ${p.gender}</span>
+                    <span>📅 ${formatDate(p.date_missing)}</span>
                 </div>
-                <div class="meta-info"><span> ${p.last_seen_location}</span></div>
+                <div class="meta-info"><span>📍 ${p.last_seen_location}</span></div>
                 <div class="case-notes">${p.description ? p.description.substring(0, 80) + '...' : 'No additional notes'}</div>
             </div>
             <div class="action-buttons">
@@ -562,17 +562,21 @@ function renderSightings(container, sightings) {
         container.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">👁️</div><div style="font-size: 16px;">No pending sightings</div></div>`;
         return;
     }
-    container.innerHTML = sightings.map(s => `
+    container.innerHTML = sightings.map(s => {
+        // Use the sighting photo if available, otherwise use a placeholder
+        const photoSrc = s.photo_url || 'https://via.placeholder.com/70?text=No+Photo';
+        
+        return `
         <div class="sighting-item" onclick="showDetails(${s.id}, 'sighting')">
-            <div style="font-size: 35px; text-align: center;">👁️</div>
+            <img src="${photoSrc}" alt="Sighting" class="sighting-photo" onerror="this.src='https://via.placeholder.com/70?text=No+Photo'">
             <div class="sighting-info">
                 <h4>Sighting: ${s.missing_person_name || 'Unknown Person'}</h4>
                 <div class="meta-info">
                     <span>📍 ${s.sighting_location}</span>
-                    <span>🕐 ${s.sighting_time || 'Recently'}</span>
+                    <span> ${s.sighting_time || 'Recently'}</span>
                 </div>
                 <div class="meta-info">
-                    <span> ${s.reporter_name || 'Anonymous'}</span>
+                    <span>👤 ${s.reporter_name || 'Anonymous'}</span>
                     <span>📞 ${s.reporter_contact}</span>
                 </div>
                 <div class="case-notes">${s.description ? s.description.substring(0, 80) + '...' : 'No description provided'}</div>
@@ -582,7 +586,7 @@ function renderSightings(container, sightings) {
                 <button class="btn btn-success" onclick="event.stopPropagation(); markSightingResolved(${s.id})">✓ Mark Resolved</button>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function showDetails(id, type) {
@@ -642,7 +646,6 @@ function showDetails(id, type) {
             </div>
         `;
     } else if (type === 'sighting') {
-        // Sighting details
         let imageHtml = '<div style="margin-bottom: 20px; background: var(--light); padding: 40px; text-align: center; border-radius: 12px;"><div style="font-size: 48px; opacity: 0.3;">📷</div><div style="color: var(--gray); margin-top: 10px;">No photo available</div></div>';
         
         if (item.photo_url) {
@@ -697,7 +700,7 @@ function showDetails(id, type) {
     document.getElementById('detailsModal').classList.add('active');
 }
 
-// NEW: Image Viewer Functions
+// Image Viewer Functions
 function openImageViewer(url) {
     if(!url) return;
     document.getElementById('viewerImage').src = url;
@@ -744,7 +747,6 @@ function formatDate(dateString) { if (!dateString) return 'Not specified'; retur
 
 function downloadReport(type) {
     alert(`📥 Downloading ${type} report... (PDF generation feature coming soon)`);
-    // TODO: Implement actual PDF generation
 }
 
 document.getElementById('detailsModal').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
