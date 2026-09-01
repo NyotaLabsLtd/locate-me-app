@@ -131,9 +131,14 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
 .modal-overlay.active { display: flex; }
 .modal-container { background: white; border-radius: 16px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; }
-.modal-header { padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+/* FIX: Sticky header for light modal so X button stays visible */
+.modal-header { 
+    padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; 
+    position: sticky; top: 0; background: white; z-index: 10; border-radius: 16px 16px 0 0; 
+}
 .modal-header h2 { font-size: 18px; color: var(--dark); }
-.btn-close { width: 30px; height: 30px; border-radius: 8px; border: none; background: var(--light); font-size: 16px; cursor: pointer; }
+/* FIX: High z-index for close button */
+.btn-close { width: 30px; height: 30px; border-radius: 8px; border: none; background: var(--light); font-size: 16px; cursor: pointer; position: relative; z-index: 20; }
 .btn-close:hover { background: var(--danger); color: white; }
 .modal-body { padding: 25px; }
 .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
@@ -146,7 +151,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 .image-viewer-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; }
 .image-viewer-overlay.active { display: flex; }
 .image-viewer-content { max-width: 95%; max-height: 95%; object-fit: contain; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-.image-viewer-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; background: none; border: none; transition: transform 0.2s; }
+.image-viewer-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; background: none; border: none; transition: transform 0.2s; z-index: 2010; }
 .image-viewer-close:hover { transform: scale(1.1); color: var(--danger); }
 
 /* Reports Grid */
@@ -182,9 +187,14 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
    7. POST MODALS (Missing Person & Sighting)
    ========================================== */
 .post-modal-content { background: var(--dark); color: white; border-radius: 16px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
-.post-modal-header { padding: 20px 25px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+/* FIX: Sticky header for dark modal so X button stays visible */
+.post-modal-header { 
+    padding: 20px 25px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; 
+    position: sticky; top: 0; background: var(--dark); z-index: 10; border-radius: 16px 16px 0 0; 
+}
 .post-modal-header h2 { font-size: 20px; font-weight: 700; }
-.post-modal-header .btn-close { background: rgba(255,255,255,0.1); color: white; }
+/* FIX: High z-index for close button in dark modal */
+.post-modal-header .btn-close { background: rgba(255,255,255,0.1); color: white; position: relative; z-index: 20; }
 .post-modal-header .btn-close:hover { background: var(--danger); }
 .post-modal-body { padding: 25px; }
 .form-section { margin-bottom: 25px; }
@@ -491,7 +501,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
                 <h3>Weekly Activity Report</h3>
                 <p>Weekly summary of all station activities and cases</p>
-                <div class="report-date">📅 Last 7 Days</div>
+                <div class="report-date"> Last 7 Days</div>
                 <button class="btn-download" onclick="downloadReport('weekly')">📥 Download PDF</button>
             </div>
         </div>
@@ -503,7 +513,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     <div class="modal-container">
         <div class="modal-header">
             <h2>Case Details</h2>
-            <button class="btn-close" onclick="closeModal()"></button>
+            <button class="btn-close" onclick="closeModal()">✕</button>
         </div>
         <div class="modal-body" id="modalBody"></div>
     </div>
@@ -590,12 +600,12 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     </div>
 </div>
 
-<!-- POST SIGHTING MODAL (UPDATED WITH PHOTO) -->
+<!-- POST SIGHTING MODAL -->
 <div class="modal-overlay" id="sightingModal">
     <div class="post-modal-content">
         <div class="post-modal-header">
-            <h2>👁️ Report Sighting</h2>
-            <button class="btn-close" onclick="closeSightingModal()"></button>
+            <h2>️ Report Sighting</h2>
+            <button class="btn-close" onclick="closeSightingModal()">✕</button>
         </div>
         <div class="post-modal-body">
             <form id="postSightingForm" onsubmit="handlePostSighting(event)">
@@ -793,7 +803,7 @@ async function fetchResolvedCases() {
                         <span>♂️ ${c.gender}</span>
                         <span>📅 Resolved: ${formatDate(c.resolved_at)}</span>
                     </div>
-                    <div class="meta-info"><span>📍 ${c.last_seen_location}</span></div>
+                    <div class="meta-info"><span> ${c.last_seen_location}</span></div>
                     <div class="case-notes">${c.resolution_notes || 'Case resolved successfully'}</div>
                 </div>
                 <div class="action-buttons">
@@ -839,7 +849,7 @@ function renderMissingPersons(container, cases) {
                 <h4>${p.name} ${criticalBadge}</h4>
                 <div class="meta-info">
                     <span> ${p.age} years</span>
-                    <span>♂️ ${p.gender}</span>
+                    <span>️ ${p.gender}</span>
                     <span>📅 ${formatDate(p.date_missing)}</span>
                 </div>
                 <div class="meta-info"><span> ${p.last_seen_location}</span></div>
@@ -872,7 +882,7 @@ function renderSightings(container, sightings) {
                 </div>
                 <div class="meta-info">
                     <span>👤 ${s.reporter_name || 'Anonymous'}</span>
-                    <span>📞 ${s.reporter_contact}</span>
+                    <span> ${s.reporter_contact}</span>
                 </div>
                 <div class="case-notes">${s.description ? s.description.substring(0, 80) + '...' : 'No description provided'}</div>
             </div>
@@ -1163,7 +1173,7 @@ async function handlePostMissing(event) {
 }
 
 // ==========================================
-// POST SIGHTING FUNCTIONS (UPDATED WITH PHOTO)
+// POST SIGHTING FUNCTIONS
 // ==========================================
 
 function openSightingModal() {
