@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Police Dashboard - Locate Me</title>
+<!-- jsPDF Library for PDF Generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 /* ==========================================
    1. GLOBAL STYLES & VARIABLES
@@ -191,7 +193,6 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 <div class="sidebar">
     <div class="sidebar-header">
         <div class="sidebar-logo">
-            <!-- REPLACED SVG WITH YOUR ACTUAL LOGO -->
             <img src="icon.png" alt="Locate Me Logo">
         </div>
         <div>
@@ -202,51 +203,39 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     <nav class="nav-menu">
         <a class="nav-item active" onclick="switchPage('dashboard', event)">
             <span class="nav-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
             </span>
             <span class="nav-text">Dashboard</span>
         </a>
         <a class="nav-item" onclick="switchPage('missing', event)">
             <span class="nav-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
             </span>
             <span class="nav-text">Missing Persons</span>
             <span class="nav-badge" id="missingCount">0</span>
         </a>
         <a class="nav-item" onclick="switchPage('sightings', event)">
             <span class="nav-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
             </span>
             <span class="nav-text">Sightings</span>
             <span class="nav-badge" id="sightingCount">0</span>
         </a>
         <a class="nav-item" onclick="switchPage('resolved', event)">
             <span class="nav-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
             </span>
             <span class="nav-text">Resolved Cases</span>
         </a>
         <a class="nav-item" onclick="switchPage('reports', event)">
             <span class="nav-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
             </span>
             <span class="nav-text">Reports</span>
         </a>
         <a class="nav-item" onclick="logout()">
             <span class="nav-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
             </span>
             <span class="nav-text">Logout</span>
         </a>
@@ -257,9 +246,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     <div class="top-bar">
         <div class="station-badge">
             <div class="badge-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/></svg>
             </div>
             <div class="badge-info">
                 <h3 id="currentStationName">Loading...</h3>
@@ -275,9 +262,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     <div id="dashboardPage" class="page-section active">
         <div class="page-header">
             <h1 class="page-title">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
                 Command Dashboard
             </h1>
             <p class="page-subtitle">Overview of all active cases and recent activity for your station</p>
@@ -285,9 +270,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon blue">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                 </div>
                 <div class="stat-content">
                     <h4 id="totalMissing">0</h4>
@@ -296,9 +279,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
             </div>
             <div class="stat-card">
                 <div class="stat-icon red">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
                 </div>
                 <div class="stat-content">
                     <h4 id="criticalCount">0</h4>
@@ -307,9 +288,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
             </div>
             <div class="stat-card">
                 <div class="stat-icon green">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                 </div>
                 <div class="stat-content">
                     <h4 id="resolvedCount">0</h4>
@@ -318,9 +297,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
             </div>
             <div class="stat-card">
                 <div class="stat-icon yellow">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                 </div>
                 <div class="stat-content">
                     <h4 id="pendingSightings">0</h4>
@@ -331,9 +308,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
         <div class="section-card">
             <div class="section-header">
                 <h3 class="section-title">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                     Recent Missing Persons
                 </h3>
                 <button class="btn btn-primary" onclick="switchPage('missing', event)">View All →</button>
@@ -346,9 +321,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     <div id="missingPage" class="page-section">
         <div class="page-header">
             <h1 class="page-title">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                 Missing Persons
             </h1>
             <p class="page-subtitle">All active missing person cases in your jurisdiction</p>
@@ -356,15 +329,11 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
         <div class="section-card">
             <div class="section-header">
                 <h3 class="section-title">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                     Active Cases
                 </h3>
                 <button class="btn-refresh" onclick="fetchDashboardData()">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
                     Refresh
                 </button>
             </div>
@@ -376,9 +345,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     <div id="sightingsPage" class="page-section">
         <div class="page-header">
             <h1 class="page-title">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                 Sighting Alerts
             </h1>
             <p class="page-subtitle">Real-time citizen reports of missing person sightings in your area</p>
@@ -386,9 +353,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
         <div class="section-card">
             <div class="section-header">
                 <h3 class="section-title">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                     Pending Sightings
                 </h3>
                 <button class="btn btn-success" onclick="markAllRead()">✓ Mark All Read</button>
@@ -401,9 +366,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     <div id="resolvedPage" class="page-section">
         <div class="page-header">
             <h1 class="page-title">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                 Resolved Cases
             </h1>
             <p class="page-subtitle">Successfully closed and resolved missing person cases</p>
@@ -411,15 +374,11 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
         <div class="section-card">
             <div class="section-header">
                 <h3 class="section-title">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                     Resolved Cases
                 </h3>
                 <button class="btn-refresh" onclick="fetchResolvedCases()">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
                     Refresh
                 </button>
             </div>
@@ -431,9 +390,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     <div id="reportsPage" class="page-section">
         <div class="page-header">
             <h1 class="page-title">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                </svg>
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
                 Reports & Analytics
             </h1>
             <p class="page-subtitle">Generate and download official police reports</p>
@@ -441,68 +398,56 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
         <div class="reports-grid">
             <div class="report-card">
                 <div class="report-icon blue">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
                 </div>
                 <h3>Monthly Missing Persons Report</h3>
                 <p>Comprehensive report of all missing persons cases for the current month</p>
-                <div class="report-date"> March 2026</div>
+                <div class="report-date">📅 Current Month</div>
                 <button class="btn-download" onclick="downloadReport('monthly-missing')">📥 Download PDF</button>
             </div>
             <div class="report-card">
                 <div class="report-icon blue">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
                 </div>
                 <h3>Sighting Analysis Report</h3>
                 <p>Analysis of all citizen sighting reports and response times</p>
-                <div class="report-date">📅 March 2026</div>
+                <div class="report-date">📅 Current Month</div>
                 <button class="btn-download" onclick="downloadReport('sighting-analysis')">📥 Download PDF</button>
             </div>
             <div class="report-card">
                 <div class="report-icon green">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                 </div>
                 <h3>Resolved Cases Summary</h3>
                 <p>Summary of all successfully resolved cases this month</p>
-                <div class="report-date">📅 March 2026</div>
+                <div class="report-date">📅 Current Month</div>
                 <button class="btn-download" onclick="downloadReport('resolved-summary')">📥 Download PDF</button>
             </div>
             <div class="report-card">
                 <div class="report-icon red">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
                 </div>
                 <h3>Critical Cases Report</h3>
                 <p>Detailed report on all critical priority missing person cases</p>
-                <div class="report-date">📅 March 2026</div>
+                <div class="report-date">📅 Current Month</div>
                 <button class="btn-download" onclick="downloadReport('critical-cases')">📥 Download PDF</button>
             </div>
             <div class="report-card">
                 <div class="report-icon blue">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
                 </div>
                 <h3>Station Performance Report</h3>
                 <p>Performance metrics and response time analysis</p>
-                <div class="report-date">📅 March 2026</div>
+                <div class="report-date">📅 Current Month</div>
                 <button class="btn-download" onclick="downloadReport('performance')">📥 Download PDF</button>
             </div>
             <div class="report-card">
                 <div class="report-icon blue">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
                 </div>
                 <h3>Weekly Activity Report</h3>
                 <p>Weekly summary of all station activities and cases</p>
-                <div class="report-date">📅 Week 12, 2026</div>
+                <div class="report-date">📅 Last 7 Days</div>
                 <button class="btn-download" onclick="downloadReport('weekly')">📥 Download PDF</button>
             </div>
         </div>
@@ -893,8 +838,206 @@ function contactReporter(phone) { if(confirm(`Call ${phone}?`)) { window.locatio
 function markAllRead() { alert('✅ All sighting alerts marked as read'); }
 function formatDate(dateString) { if (!dateString) return 'Not specified'; return new Date(dateString).toLocaleDateString('en-KE', { year: 'numeric', month: 'short', day: 'numeric' }); }
 
-function downloadReport(type) {
-    alert(`📥 Downloading ${type} report... (PDF generation feature coming soon)`);
+// ==========================================
+// REPORT GENERATION FUNCTIONS
+// ==========================================
+
+async function downloadReport(type) {
+    const token = localStorage.getItem('authToken');
+    try {
+        let reportData, reportTitle;
+        switch(type) {
+            case 'monthly-missing':
+                reportTitle = 'Monthly Missing Persons Report';
+                reportData = await (await fetch(`${API_URL}/reports/monthly-missing`, { headers: { 'Authorization': `Bearer ${token}` } })).json();
+                generateMonthlyReportPDF(reportData, reportTitle);
+                break;
+            case 'sighting-analysis':
+                reportTitle = 'Sighting Analysis Report';
+                reportData = await (await fetch(`${API_URL}/reports/sighting-analysis`, { headers: { 'Authorization': `Bearer ${token}` } })).json();
+                generateSightingReportPDF(reportData, reportTitle);
+                break;
+            case 'resolved-summary':
+                reportTitle = 'Resolved Cases Summary';
+                reportData = await (await fetch(`${API_URL}/reports/resolved-summary`, { headers: { 'Authorization': `Bearer ${token}` } })).json();
+                generateResolvedReportPDF(reportData, reportTitle);
+                break;
+            case 'critical-cases':
+                reportTitle = 'Critical Cases Report';
+                reportData = await (await fetch(`${API_URL}/reports/critical-cases`, { headers: { 'Authorization': `Bearer ${token}` } })).json();
+                generateCriticalReportPDF(reportData, reportTitle);
+                break;
+            case 'performance':
+                reportTitle = 'Station Performance Report';
+                reportData = await (await fetch(`${API_URL}/reports/station-performance`, { headers: { 'Authorization': `Bearer ${token}` } })).json();
+                generatePerformanceReportPDF(reportData, reportTitle);
+                break;
+            case 'weekly':
+                reportTitle = 'Weekly Activity Report';
+                reportData = await (await fetch(`${API_URL}/reports/weekly-activity`, { headers: { 'Authorization': `Bearer ${token}` } })).json();
+                generateWeeklyReportPDF(reportData, reportTitle);
+                break;
+        }
+    } catch (error) {
+        console.error('Error generating report:', error);
+        alert('Failed to generate report. Please try again.');
+    }
+}
+
+function generateMonthlyReportPDF(data, title) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(20); doc.setTextColor(30, 58, 138); doc.text(title, 20, 20);
+    doc.setFontSize(12); doc.setTextColor(100, 116, 139); doc.text(`${data.stationName}`, 20, 30);
+    doc.text(`Report Period: ${getMonthName(data.month)} ${data.year}`, 20, 38);
+    doc.setFontSize(14); doc.setTextColor(30, 58, 138); doc.text('Summary Statistics', 20, 55);
+    doc.setFontSize(11); doc.setTextColor(0, 0, 0);
+    doc.text(`Total Cases: ${data.totalCases}`, 20, 65);
+    doc.text(`Critical Cases: ${data.criticalCases}`, 20, 72);
+    doc.text(`Resolved Cases: ${data.resolvedCases}`, 20, 79);
+    doc.setFontSize(14); doc.setTextColor(30, 58, 138); doc.text('Case Details', 20, 95);
+    doc.setFontSize(10); doc.setTextColor(0, 0, 0);
+    let y = 105;
+    data.cases.forEach((c, i) => {
+        if (y > 270) { doc.addPage(); y = 20; }
+        doc.text(`${i + 1}. ${c.name} (${c.age} yrs, ${c.gender})`, 20, y);
+        doc.text(`Date Missing: ${formatDate(c.date_missing)}`, 20, y + 5);
+        doc.text(`Location: ${c.last_seen_location}`, 20, y + 10);
+        doc.text(`Status: ${c.status}`, 20, y + 15);
+        y += 25;
+    });
+    doc.setFontSize(10); doc.setTextColor(100, 116, 139); doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 280);
+    doc.save(`Monthly_Missing_Persons_${data.month}_${data.year}.pdf`);
+}
+
+function generateSightingReportPDF(data, title) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(20); doc.setTextColor(30, 58, 138); doc.text(title, 20, 20);
+    doc.setFontSize(12); doc.setTextColor(100, 116, 139); doc.text(`${data.stationName}`, 20, 30);
+    doc.text(`Report Period: ${getMonthName(data.month)} ${data.year}`, 20, 38);
+    doc.setFontSize(14); doc.setTextColor(30, 58, 138); doc.text('Summary Statistics', 20, 55);
+    doc.setFontSize(11); doc.setTextColor(0, 0, 0);
+    doc.text(`Total Sightings: ${data.totalSightings}`, 20, 65);
+    doc.text(`Resolved Sightings: ${data.resolvedSightings}`, 20, 72);
+    doc.text(`Pending Sightings: ${data.pendingSightings}`, 20, 79);
+    doc.setFontSize(14); doc.setTextColor(30, 58, 138); doc.text('Sighting Details', 20, 95);
+    doc.setFontSize(10); doc.setTextColor(0, 0, 0);
+    let y = 105;
+    data.sightings.forEach((s, i) => {
+        if (y > 270) { doc.addPage(); y = 20; }
+        doc.text(`${i + 1}. ${s.missing_person_name || 'Unknown'}`, 20, y);
+        doc.text(`Location: ${s.sighting_location}`, 20, y + 5);
+        doc.text(`Time: ${s.sighting_time || 'Not specified'}`, 20, y + 10);
+        doc.text(`Reporter: ${s.reporter_name || 'Anonymous'}`, 20, y + 15);
+        y += 25;
+    });
+    doc.setFontSize(10); doc.setTextColor(100, 116, 139); doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 280);
+    doc.save(`Sighting_Analysis_${data.month}_${data.year}.pdf`);
+}
+
+function generateResolvedReportPDF(data, title) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(20); doc.setTextColor(30, 58, 138); doc.text(title, 20, 20);
+    doc.setFontSize(12); doc.setTextColor(100, 116, 139); doc.text(`${data.stationName}`, 20, 30);
+    doc.text(`Report Period: ${getMonthName(data.month)} ${data.year}`, 20, 38);
+    doc.setFontSize(14); doc.setTextColor(30, 58, 138); doc.text('Summary Statistics', 20, 55);
+    doc.setFontSize(11); doc.setTextColor(0, 0, 0);
+    doc.text(`Total Resolved: ${data.totalResolved}`, 20, 65);
+    doc.text(`Avg Resolution Time: ${data.avgResolutionTime} days`, 20, 72);
+    doc.setFontSize(14); doc.setTextColor(30, 58, 138); doc.text('Resolved Cases', 20, 95);
+    doc.setFontSize(10); doc.setTextColor(0, 0, 0);
+    let y = 105;
+    data.cases.forEach((c, i) => {
+        if (y > 270) { doc.addPage(); y = 20; }
+        doc.text(`${i + 1}. ${c.name}`, 20, y);
+        doc.text(`Missing: ${formatDate(c.date_missing)}`, 20, y + 5);
+        doc.text(`Resolved: ${formatDate(c.resolved_at)}`, 20, y + 10);
+        doc.text(`Notes: ${c.resolution_notes || 'N/A'}`, 20, y + 15);
+        y += 25;
+    });
+    doc.setFontSize(10); doc.setTextColor(100, 116, 139); doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 280);
+    doc.save(`Resolved_Cases_${data.month}_${data.year}.pdf`);
+}
+
+function generateCriticalReportPDF(data, title) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(20); doc.setTextColor(220, 38, 38); doc.text(title, 20, 20);
+    doc.setFontSize(12); doc.setTextColor(100, 116, 139); doc.text(`${data.stationName}`, 20, 30);
+    doc.text(`Report Period: ${getMonthName(data.month)} ${data.year}`, 20, 38);
+    doc.setFontSize(14); doc.setTextColor(220, 38, 38); doc.text('Critical Case Breakdown', 20, 55);
+    doc.setFontSize(11); doc.setTextColor(0, 0, 0);
+    doc.text(`Total Critical Cases: ${data.totalCritical}`, 20, 65);
+    doc.text(`Minors (Under 18): ${data.minors}`, 20, 72);
+    doc.text(`Kidnapping Cases: ${data.kidnappings}`, 20, 79);
+    doc.setFontSize(14); doc.setTextColor(220, 38, 38); doc.text('Critical Case Details', 20, 95);
+    doc.setFontSize(10); doc.setTextColor(0, 0, 0);
+    let y = 105;
+    data.cases.forEach((c, i) => {
+        if (y > 270) { doc.addPage(); y = 20; }
+        const type = parseInt(c.age) <= 18 ? 'MINOR' : 'KIDNAPPING';
+        doc.setTextColor(220, 38, 38); doc.setFont(undefined, 'bold');
+        doc.text(`${i + 1}. ${c.name} [${type}]`, 20, y);
+        doc.setFont(undefined, 'normal'); doc.setTextColor(0, 0, 0);
+        doc.text(`Age: ${c.age}, Gender: ${c.gender}`, 20, y + 5);
+        doc.text(`Date Missing: ${formatDate(c.date_missing)}`, 20, y + 10);
+        doc.text(`Location: ${c.last_seen_location}`, 20, y + 15);
+        y += 25;
+    });
+    doc.setFontSize(10); doc.setTextColor(100, 116, 139); doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 280);
+    doc.save(`Critical_Cases_${data.month}_${data.year}.pdf`);
+}
+
+function generatePerformanceReportPDF(data, title) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(20); doc.setTextColor(30, 58, 138); doc.text(title, 20, 20);
+    doc.setFontSize(12); doc.setTextColor(100, 116, 139); doc.text(`${data.stationName}`, 20, 30);
+    doc.text(`Report Period: ${getMonthName(data.month)} ${data.year}`, 20, 38);
+    doc.setFontSize(14); doc.setTextColor(30, 58, 138); doc.text('Performance Metrics', 20, 55);
+    doc.setFontSize(11); doc.setTextColor(0, 0, 0);
+    doc.text(`Total Missing Cases: ${data.totalCases}`, 20, 65);
+    doc.text(`Resolved Cases: ${data.resolvedCases}`, 20, 72);
+    doc.text(`Active Cases: ${data.activeCases}`, 20, 79);
+    doc.text(`Resolution Rate: ${data.resolutionRate}%`, 20, 86);
+    doc.text(`Total Sightings: ${data.totalSightings}`, 20, 93);
+    doc.text(`Resolved Sightings: ${data.resolvedSightings}`, 20, 100);
+    doc.setFillColor(30, 58, 138);
+    doc.rect(20, 110, (data.resolutionRate * 2), 10, 'F');
+    doc.setFontSize(10); doc.setTextColor(255, 255, 255);
+    doc.text(`${data.resolutionRate}%`, 22 + (data.resolutionRate * 2), 117);
+    doc.setFontSize(10); doc.setTextColor(100, 116, 139); doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 280);
+    doc.save(`Station_Performance_${data.month}_${data.year}.pdf`);
+}
+
+function generateWeeklyReportPDF(data, title) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(20); doc.setTextColor(30, 58, 138); doc.text(title, 20, 20);
+    doc.setFontSize(12); doc.setTextColor(100, 116, 139); doc.text(`${data.stationName}`, 20, 30);
+    doc.text(`Week of: ${data.weekStart} to ${data.weekEnd}`, 20, 38);
+    doc.setFontSize(14); doc.setTextColor(30, 58, 138); doc.text('Weekly Activity Summary', 20, 55);
+    doc.setFontSize(11); doc.setTextColor(0, 0, 0);
+    doc.text(`New Missing Cases: ${data.newCases}`, 20, 65);
+    doc.text(`New Sightings: ${data.newSightings}`, 20, 72);
+    doc.text(`Cases Resolved: ${data.resolvedCases}`, 20, 79);
+    doc.setFontSize(14); doc.setTextColor(30, 58, 138); doc.text('Recent Cases', 20, 95);
+    doc.setFontSize(10); doc.setTextColor(0, 0, 0);
+    let y = 105;
+    data.missingCases.slice(0, 5).forEach((c, i) => {
+        if (y > 270) { doc.addPage(); y = 20; }
+        doc.text(`${i + 1}. ${c.name} - ${formatDate(c.date_missing)}`, 20, y);
+        y += 8;
+    });
+    doc.setFontSize(10); doc.setTextColor(100, 116, 139); doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 280);
+    doc.save(`Weekly_Activity_${data.weekStart}.pdf`);
+}
+
+function getMonthName(monthNumber) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return months[monthNumber - 1];
 }
 
 document.getElementById('detailsModal').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
