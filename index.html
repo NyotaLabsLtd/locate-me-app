@@ -6,19 +6,16 @@
 <meta name="theme-color" content="#0f172a">
 <title>Locate Me - Find Missing Persons in Kenya</title>
 
-<!-- SEO Meta Tags -->
 <meta name="description" content="Locate Me is a community-driven platform to report and find missing persons in Kenya. Help reunite families today.">
 <meta name="keywords" content="missing persons, find missing people, Kenya missing persons, lost family, Locate Me app, report missing person, Nairobi">
 <meta name="author" content="Nyota Labs">
 
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://locate-me-app.vercel.app/">
 <meta property="og:title" content="Locate Me - Find Missing Persons">
 <meta property="og:description" content="Help us find missing loved ones. Post reports and sightings instantly.">
 <meta property="og:image" content="https://locate-me-app.vercel.app/icon.png">
 
-<!-- PWA Manifest -->
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="/icon.png?v=3" type="image/png">
 <link rel="apple-touch-icon" href="/icon.png">
@@ -48,7 +45,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .content { padding: 20px; min-height: calc(100vh - 140px); }
 .page-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
 
-/* Tab Styles for Home Page */
 .tabs-container { display: flex; gap: 10px; margin-bottom: 20px; }
 .tab-btn { flex: 1; padding: 14px; background: var(--dark-card); border: 2px solid var(--border); border-radius: 10px; color: var(--gray); font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
 .tab-btn.active { background: var(--warning); color: var(--dark); border-color: var(--warning); }
@@ -62,6 +58,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .filter-panel.active { display: block; }
 .filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .filter-select { padding: 12px; background: var(--dark); border: 1px solid var(--border); border-radius: 8px; color: var(--light); }
+
 .missing-card { background: var(--dark-card); border-radius: 12px; overflow: hidden; margin-bottom: 20px; cursor: pointer; display: block; width: 100%; transition: transform 0.2s; }
 .missing-card:hover { transform: translateY(-2px); }
 .card-image { width: 100%; height: 300px; object-fit: cover; display: block; }
@@ -104,14 +101,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     font-weight: 700; 
     text-transform: uppercase;
 }
-.post-badge.missing { 
-    background: var(--warning); 
-    color: var(--dark); 
-}
-.post-badge.sighting { 
-    background: var(--success); 
-    color: white; 
-}
+.post-badge.missing { background: var(--warning); color: var(--dark); }
+.post-badge.sighting { background: var(--success); color: white; }
 .my-post-meta { 
     font-size: 13px; 
     color: var(--gray); 
@@ -119,11 +110,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     gap: 15px; 
     flex-wrap: wrap;
 }
-.my-post-meta span { 
-    display: flex; 
-    align-items: center; 
-    gap: 5px; 
-}
+.my-post-meta span { display: flex; align-items: center; gap: 5px; }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: none; overflow-y: auto; }
 .modal-overlay.active { display: block; }
@@ -135,7 +122,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .photo-wrapper img { width: 100%; height: 400px; object-fit: cover; border-radius: 12px; border: 2px solid var(--border); }
 .photo-counter { position: absolute; top: 15px; right: 15px; background: rgba(15, 23, 42, 0.9); color: var(--warning); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; border: 2px solid var(--warning); }
 
-/* Better spacing in info sections */
 .info-section { background: var(--dark-card); border-radius: 10px; padding: 18px; margin-bottom: 16px; cursor: pointer; transition: background 0.2s; }
 .info-section:active { background: var(--border); }
 .info-label { font-size: 11px; color: var(--warning); margin-bottom: 6px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
@@ -295,7 +281,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="3">
                     <div class="step-header"><div class="step-badge">3</div><h3 class="step-title">Found Someone?</h3></div>
-                    <div class="step-icon">🔍</div>
+                    <div class="step-icon"></div>
                     <p class="step-description">If you find someone who may be missing, submit a Found Report with details and photos.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Upload evidence</li>
@@ -426,10 +412,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
   <div class="content">
     <div id="homeTab" class="tab-content active">
-      <!-- Dynamic title that changes based on active tab -->
       <h2 class="page-title" id="homePageTitle">Reported Missing People</h2>
       
-      <!-- Missing/Found Tabs -->
       <div class="tabs-container">
         <button class="tab-btn active" onclick="switchHomeTab('missing')">Missing</button>
         <button class="tab-btn" onclick="switchHomeTab('found')">Found</button>
@@ -706,7 +690,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     </div>
   </div>
   
-  <!-- BOTTOM NAVIGATION -->
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="home" onclick="switchTab('home', event)">
       <span class="nav-icon">
@@ -1026,7 +1009,7 @@ function togglePassword(inputId, btn) {
     btn.textContent = '🙈';
   } else {
     input.type = 'password';
-    btn.textContent = '👁️';
+    btn.textContent = '️';
   }
 }
 
@@ -1051,7 +1034,7 @@ async function handleSignup(e) {
   const btn = document.getElementById('signupBtn');
   const agreeToTerms = document.getElementById('agreeToTerms');
   if (!agreeToTerms.checked) {
-    showToast('❌ You must agree to Privacy Policy and Terms of Service');
+    showToast(' You must agree to Privacy Policy and Terms of Service');
     return;
   }
   if (btn) {
@@ -1127,7 +1110,7 @@ async function handleLogin(e) {
     showApp(); 
     loadData();
   } catch (err) { 
-    showToast(' ' + err.message); 
+    showToast('❌ ' + err.message); 
   }
 }
 
@@ -1295,13 +1278,17 @@ function renderMissingCards() {
   container.innerHTML = filtered.map(p => {
       const daysMissing = getDaysMissing(p.date_last_seen || p.date_missing);
       const missingTime = formatMissingTime(daysMissing);
+      const photoSrc = p.photo_urls?.[0] || '';
+      const imgTag = photoSrc 
+        ? `<img src="${photoSrc}" class="card-image" onerror="this.style.display='none'">`
+        : `<div class="card-image" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 18px;">No Photo</div>`;
       return `
     <div class="missing-card" onclick="openModal(${p.id}, 'missing')">
-      <img src="${p.photo_urls?.[0] || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
+      ${imgTag}
       <div class="card-content">
         <div class="card-name">${escapeHTML(p.name)}</div>
         <div class="card-days-missing">⏳ Missing for ${missingTime}</div>
-        <div class="card-info"> Last Seen: ${escapeHTML(p.last_seen_location)}</div>
+        <div class="card-info">📍 Last Seen: ${escapeHTML(p.last_seen_location)}</div>
       </div>
     </div>
   `}).join('');
@@ -1317,9 +1304,13 @@ function renderFoundCards() {
   container.innerHTML = foundPersons.map(p => {
     const daysAgo = getDaysMissing(p.created_at);
     const timeAgo = formatTimeAgo(daysAgo);
+    const photoSrc = p.photo_url || '';
+    const imgTag = photoSrc 
+      ? `<img src="${photoSrc}" class="card-image" onerror="this.style.display='none'">`
+      : `<div class="card-image" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 18px;">No Photo</div>`;
     return `
       <div class="missing-card" onclick="openModal(${p.id}, 'found')">
-        <img src="${p.photo_url || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
+        ${imgTag}
         <div class="card-content">
           <div class="card-name">👁️ ${escapeHTML(p.missing_person_name || 'Unknown Person')}</div>
           <div class="card-days-missing" style="color: var(--success);">📅 Reported ${timeAgo}</div>
@@ -1547,10 +1538,9 @@ function formatDate(dateString) {
   return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// UPDATED: Fetch both missing persons AND sightings for user
 async function loadMyPosts() {
   const token = localStorage.getItem('authToken');
-  if (!token) { showToast(' Please log in first'); return; }
+  if (!token) { showToast('🔒 Please log in first'); return; }
   
   try {
     const res = await fetch(`${API_URL}/users/my-posts`, { 
@@ -1563,7 +1553,7 @@ async function loadMyPosts() {
     }
     
     if (!res.ok) { 
-      showToast(' Failed to load posts.'); 
+      showToast('❌ Failed to load posts.'); 
       return; 
     }
     
@@ -1580,7 +1570,6 @@ async function loadMyPosts() {
     
     list.innerHTML = posts.map(post => {
       if (post.post_type === 'missing') {
-        // Missing Person Post - CLICKABLE
         const daysMissing = getDaysMissing(post.date_last_seen || post.date_missing);
         const missingTime = formatMissingTime(daysMissing);
         
@@ -1596,13 +1585,12 @@ async function loadMyPosts() {
           </div>
           <div class="my-post-meta">
             <span>⏳ Missing for ${missingTime}</span>
-            <span>📍 ${escapeHTML(post.last_seen_location)}</span>
-            <span> Age: ${post.age}</span>
+            <span> ${escapeHTML(post.last_seen_location)}</span>
+            <span>👤 Age: ${post.age}</span>
           </div>
         </div>
         `;
       } else {
-        // Sighting Post - CLICKABLE
         const daysAgo = getDaysMissing(post.created_at);
         const timeAgo = formatTimeAgo(daysAgo);
         
@@ -1617,7 +1605,7 @@ async function loadMyPosts() {
               style="background:var(--danger); color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer; font-size: 12px;">Delete</button>
           </div>
           <div class="my-post-meta">
-            <span> Reported ${timeAgo}</span>
+            <span>📅 Reported ${timeAgo}</span>
             <span>📍 ${escapeHTML(post.sighting_location)}</span>
             <span>👤 ${escapeHTML(post.gender || 'Not specified')}</span>
           </div>
@@ -1628,13 +1616,11 @@ async function loadMyPosts() {
     
   } catch (err) { 
     console.error(err); 
-    showToast(' ' + err.message); 
+    showToast('❌ ' + err.message); 
   }
 }
 
-// NEW: View post details function
 function viewMyPost(id, type) {
-    // Fetch the post details from the appropriate array
     const post = type === 'missing' 
         ? missingPersons.find(p => p.id === id)
         : foundPersons.find(p => p.id === id);
@@ -1646,7 +1632,6 @@ function viewMyPost(id, type) {
     
     currentViewPost = { id, type, data: post };
     
-    // Build the view content
     let content = '';
     
     if (type === 'missing') {
@@ -1716,7 +1701,6 @@ function viewMyPost(id, type) {
     document.getElementById('viewPostModal').classList.add('active');
 }
 
-// NEW: Function to delete sightings
 async function deleteSighting(id) {
   if (!confirm('Are you sure you want to delete this sighting report?')) return;
   
@@ -1736,9 +1720,9 @@ async function deleteSighting(id) {
     
     showToast('✅ Sighting deleted.');
     closeModal('viewPostModal');
-    loadMyPosts(); // Refresh the list
+    loadMyPosts();
   } catch (err) { 
-    showToast(' ' + err.message); 
+    showToast('❌ ' + err.message); 
   }
 }
 
@@ -1786,7 +1770,7 @@ async function savePostEdit() {
     loadMyPosts(); 
     loadData();
   } catch (err) { 
-    showToast(' ' + err.message); 
+    showToast('❌ ' + err.message); 
   }
 }
 
@@ -1815,7 +1799,7 @@ async function confirmDeletePost() {
     loadMyPosts(); 
     loadData();
   } catch (err) { 
-    showToast(' ' + err.message); 
+    showToast('❌ ' + err.message); 
   }
 }
 
@@ -1846,7 +1830,7 @@ if ('serviceWorker' in navigator) {
         console.log('✅ Service Worker registered with scope:', reg.scope);
       })
       .catch((err) => {
-        console.error(' Service Worker registration failed:', err);
+        console.error('❌ Service Worker registration failed:', err);
       });
   });
 }
