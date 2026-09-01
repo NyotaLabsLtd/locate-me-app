@@ -48,7 +48,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .content { padding: 20px; min-height: calc(100vh - 140px); }
 .page-title { font-size: 28px; font-weight: 700; margin-bottom: 20px; }
 
-/* NEW: Tab Styles for Home Page */
+/* Tab Styles for Home Page */
 .tabs-container { display: flex; gap: 10px; margin-bottom: 20px; }
 .tab-btn { flex: 1; padding: 14px; background: var(--dark-card); border: 2px solid var(--border); border-radius: 10px; color: var(--gray); font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
 .tab-btn.active { background: var(--warning); color: var(--dark); border-color: var(--warning); }
@@ -77,10 +77,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .photo-wrapper { position: relative; width: 100%; }
 .photo-wrapper img { width: 100%; height: 400px; object-fit: cover; border-radius: 12px; border: 2px solid var(--border); }
 .photo-counter { position: absolute; top: 15px; right: 15px; background: rgba(15, 23, 42, 0.9); color: var(--warning); padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; border: 2px solid var(--warning); }
-.info-section { background: var(--dark-card); border-radius: 10px; padding: 16px; margin-bottom: 16px; cursor: pointer; transition: background 0.2s; }
+
+/* FIXED: Better spacing in info sections */
+.info-section { background: var(--dark-card); border-radius: 10px; padding: 18px; margin-bottom: 16px; cursor: pointer; transition: background 0.2s; }
 .info-section:active { background: var(--border); }
-.info-label { font-size: 11px; color: var(--warning); margin-bottom: 4px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
-.info-value { font-size: 15px; line-height: 1.5; color: var(--light); }
+.info-label { font-size: 11px; color: var(--warning); margin-bottom: 6px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+.info-value { font-size: 15px; line-height: 1.6; color: var(--light); margin-bottom: 14px; }
+.info-value:last-child { margin-bottom: 0; }
+
 .form-section-title { font-size: 13px; color: var(--gray); text-transform: uppercase; margin: 24px 0 12px; font-weight: 600; }
 .form-group { margin-bottom: 20px; position: relative; }
 .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
@@ -244,7 +248,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="4">
                     <div class="step-header"><div class="step-badge">4</div><h3 class="step-title">Safe & Verified</h3></div>
-                    <div class="step-icon">️</div>
+                    <div class="step-icon"></div>
                     <p class="step-description"><strong>Accuracy Saves Lives</strong>Please provide truthful and accurate information. False reports can delay investigations.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Content moderation</li>
@@ -255,7 +259,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="5">
                     <div class="step-header"><div class="step-badge">5</div><h3 class="step-title">Admin Oversight</h3></div>
-                    <div class="step-icon">👮</div>
+                    <div class="step-icon"></div>
                     <p class="step-description"><strong>Monitored For Safety</strong>Our administration team monitors reports and can review, edit, remove, or investigate inappropriate content.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Admin dashboard</li>
@@ -326,7 +330,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">👁️</button>
         </div>
       </div>
       <div class="form-group">
@@ -365,9 +369,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
   <div class="content">
     <div id="homeTab" class="tab-content active">
-      <h2 class="page-title">Reported Missing People</h2>
+      <!-- FIXED: Dynamic title that changes based on active tab -->
+      <h2 class="page-title" id="homePageTitle">Reported Missing People</h2>
       
-      <!-- NEW: Missing/Found Tabs -->
+      <!-- Missing/Found Tabs -->
       <div class="tabs-container">
         <button class="tab-btn active" onclick="switchHomeTab('missing')">Missing</button>
         <button class="tab-btn" onclick="switchHomeTab('found')">Found</button>
@@ -605,7 +610,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
             <div class="info-label">MY POSTS</div>
             <div class="info-value">View, edit or delete your reports</div>
           </div>
-          <span style="font-size: 20px;">➡️</span>
+          <span style="font-size: 20px;">️</span>
         </div>
       </div>
       <div id="my-posts-container" style="display:none; margin-bottom: 20px;">
@@ -756,7 +761,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <div class="modal-overlay" id="deletePostModal">
   <div class="modal-header">
-    <button class="modal-close" onclick="closeModal('deletePostModal')">✕</button>
+    <button class="modal-close" onclick="closeModal('deletePostModal')"></button>
     <div style="font-weight:700">Delete Post</div>
     <div style="width:36px"></div>
   </div>
@@ -903,7 +908,7 @@ function switchTab(tab, eventObj) {
     document.getElementById('mainApp').classList.remove('active');
     document.getElementById('authScreen').classList.add('active');
     switchAuthTab('signup');
-    showToast('🔒 Please sign up or log in to access this feature.');
+    showToast(' Please sign up or log in to access this feature.');
     return;
   }
 
@@ -921,17 +926,22 @@ function switchTab(tab, eventObj) {
   }
 }
 
-// NEW: Switch between Missing/Found tabs on homepage
+// FIXED: Switch between Missing/Found tabs with dynamic title
 function switchHomeTab(tab) {
     currentHomeTab = tab;
     document.querySelectorAll('.tabs-container .tab-btn').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
     
+    // FIXED: Update page title based on active tab
+    const titleEl = document.getElementById('homePageTitle');
+    
     if (tab === 'missing') {
+        titleEl.textContent = 'Reported Missing People';
         document.getElementById('missingCardsContainer').style.display = 'block';
         document.getElementById('foundCardsContainer').style.display = 'none';
         renderMissingCards();
     } else {
+        titleEl.textContent = 'Found Persons Awaiting Family Claim';
         document.getElementById('missingCardsContainer').style.display = 'none';
         document.getElementById('foundCardsContainer').style.display = 'block';
         renderFoundCards();
@@ -949,7 +959,7 @@ function togglePassword(inputId, btn) {
   const input = document.getElementById(inputId);
   if (input.type === 'password') {
     input.type = 'text';
-    btn.textContent = '🙈';
+    btn.textContent = '';
   } else {
     input.type = 'password';
     btn.textContent = '👁️';
@@ -1086,7 +1096,7 @@ async function handleGoogleResponse(response) {
     showApp(); 
     loadData();
   } catch (err) { 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
@@ -1166,9 +1176,11 @@ function getDaysMissing(dateString) {
     return diffDays;
 }
 
+// FIXED: Better formatting with "today" and "yesterday" support
 function formatMissingTime(days) {
-    if (!days || days <= 0) return '0 days';
-    if (days < 14) return `${days} day${days !== 1 ? 's' : ''}`;
+    if (!days || days <= 0) return 'less than a day';
+    if (days === 1) return '1 day';
+    if (days < 14) return `${days} days`;
     else if (days < 60) {
         const weeks = Math.round(days / 7);
         return `${weeks} week${weeks !== 1 ? 's' : ''}`;
@@ -1178,6 +1190,23 @@ function formatMissingTime(days) {
     } else {
         const years = Math.round(days / 365);
         return `${years} year${years !== 1 ? 's' : ''}`;
+    }
+}
+
+// NEW: Time ago formatter for sightings (shows "today", "yesterday", etc.)
+function formatTimeAgo(days) {
+    if (!days || days <= 0) return 'today';
+    if (days === 1) return 'yesterday';
+    if (days < 14) return `${days} days ago`;
+    else if (days < 60) {
+        const weeks = Math.round(days / 7);
+        return `${weeks} week${weeks !== 1 ? 's' : ''} ago`;
+    } else if (days < 365) {
+        const months = Math.round(days / 30);
+        return `${months} month${months !== 1 ? 's' : ''} ago`;
+    } else {
+        const years = Math.round(days / 365);
+        return `${years} year${years !== 1 ? 's' : ''} ago`;
     }
 }
 
@@ -1211,7 +1240,7 @@ function renderMissingCards() {
       <img src="${p.photo_urls?.[0] || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
       <div class="card-content">
         <div class="card-name">${escapeHTML(p.name)}</div>
-        <div class="card-days-missing"> Missing for ${missingTime}</div>
+        <div class="card-days-missing">⏳ Missing for ${missingTime}</div>
         <div class="card-info">📍 Last Seen: ${escapeHTML(p.last_seen_location)}</div>
       </div>
     </div>
@@ -1227,13 +1256,14 @@ function renderFoundCards() {
   
   container.innerHTML = foundPersons.map(p => {
     const daysAgo = getDaysMissing(p.created_at);
-    const timeAgo = formatMissingTime(daysAgo);
+    // FIXED: Use formatTimeAgo which shows "today" instead of "0 days ago"
+    const timeAgo = formatTimeAgo(daysAgo);
     return `
       <div class="missing-card" onclick="openModal(${p.id}, 'found')">
         <img src="${p.photo_url || ''}" class="card-image" onerror="this.src='https://via.placeholder.com/400x300?text=No+Photo'">
         <div class="card-content">
-          <div class="card-name">👁️ ${escapeHTML(p.missing_person_name || 'Unknown Person')}</div>
-          <div class="card-days-missing" style="color: var(--success);">📅 Reported ${timeAgo} ago</div>
+          <div class="card-name">️ ${escapeHTML(p.missing_person_name || 'Unknown Person')}</div>
+          <div class="card-days-missing" style="color: var(--success);">📅 Reported ${timeAgo}</div>
           <div class="card-info">📍 Location: ${escapeHTML(p.sighting_location)}</div>
         </div>
       </div>
@@ -1258,43 +1288,52 @@ function openModal(id, type) {
     photoHTML += '</div>';
   }
   
-  const modalTitle = type === 'missing' ? 'Missing Person Details' : 'Sighting Report Details';
   const statusBadge = type === 'missing' 
-    ? '<div style="background: var(--warning); color: var(--dark); padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">⚠️ MISSING</div>'
-    : '<div style="background: var(--success); color: white; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">👁️ SIGHTING REPORT</div>';
+    ? '<div style="background: var(--warning); color: var(--dark); padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">⚠️ MISSING PERSON</div>'
+    : '<div style="background: var(--success); color: white; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">👁️ SIGHTING REPORT</div>';
   
   let detailsHTML = '';
   
   if (type === 'missing') {
       detailsHTML = `
         <div class="info-section">
-            <div class="info-label">NAME</div><div class="info-value">${escapeHTML(person.name)}</div>
-            <div class="info-label">AGE</div><div class="info-value">${person.age || 'N/A'} years old</div>
-            <div class="info-label">GENDER</div><div class="info-value">${escapeHTML(person.gender || 'N/A')}</div>
+            <div class="info-label">Name</div>
+            <div class="info-value">${escapeHTML(person.name)}</div>
+            <div class="info-label">Age</div>
+            <div class="info-value">${person.age || 'N/A'} years old</div>
+            <div class="info-label">Gender</div>
+            <div class="info-value">${escapeHTML(person.gender || 'N/A')}</div>
         </div>
         <div class="info-section">
-            <div class="info-label">DATE LAST SEEN</div><div class="info-value">${formatDate(person.date_last_seen || person.date_missing)}</div>
-            <div class="info-label">LAST SEEN LOCATION</div><div class="info-value">${escapeHTML(person.last_seen_location)}</div>
+            <div class="info-label">Date Last Seen</div>
+            <div class="info-value">${formatDate(person.date_last_seen || person.date_missing)}</div>
+            <div class="info-label">Last Seen Location</div>
+            <div class="info-value">${escapeHTML(person.last_seen_location)}</div>
         </div>
-        ${person.description ? `<div class="info-section"><div class="info-label">CLOTHING & APPEARANCE</div><div class="info-value">${escapeHTML(person.description)}</div></div>` : ''}
-        ${person.police_station ? `<div class="info-section"><div class="info-label">NEAREST POLICE STATION</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
+        ${person.description ? `<div class="info-section"><div class="info-label">Clothing & Appearance</div><div class="info-value">${escapeHTML(person.description)}</div></div>` : ''}
+        ${person.police_station ? `<div class="info-section"><div class="info-label">Nearest Police Station</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
       `;
   } else {
       // Sighting Details
       detailsHTML = `
         <div class="info-section">
-            <div class="info-label">PERSON NAME</div><div class="info-value">${escapeHTML(person.missing_person_name || 'Unknown')}</div>
-            <div class="info-label">GENDER</div><div class="info-value">${escapeHTML(person.gender || 'Not specified')}</div>
+            <div class="info-label">Person Name</div>
+            <div class="info-value">${escapeHTML(person.missing_person_name || 'Unknown')}</div>
+            <div class="info-label">Gender</div>
+            <div class="info-value">${escapeHTML(person.gender || 'Not specified')}</div>
         </div>
         <div class="info-section">
-            <div class="info-label">SIGHTING LOCATION</div><div class="info-value">${escapeHTML(person.sighting_location)}</div>
-            <div class="info-label">TIME SEEN</div><div class="info-value">${escapeHTML(person.sighting_time || 'Not specified')}</div>
-            <div class="info-label">DATE REPORTED</div><div class="info-value">${formatDate(person.created_at)}</div>
+            <div class="info-label">Sighting Location</div>
+            <div class="info-value">${escapeHTML(person.sighting_location)}</div>
+            <div class="info-label">Time Seen</div>
+            <div class="info-value">${escapeHTML(person.sighting_time || 'Not specified')}</div>
+            <div class="info-label">Date Reported</div>
+            <div class="info-value">${formatDate(person.created_at)}</div>
         </div>
-        ${person.description ? `<div class="info-section"><div class="info-label">DESCRIPTION</div><div class="info-value">${escapeHTML(person.description)}</div></div>` : ''}
-        ${person.police_station ? `<div class="info-section"><div class="info-label">REPORTED TO STATION</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
-        <div style="margin-top: 20px; padding: 15px; background: #dbeafe; border-radius: 8px; text-align: center;">
-            <div style="font-size: 13px; color: var(--primary); font-weight: 600;">
+        ${person.description ? `<div class="info-section"><div class="info-label">Description</div><div class="info-value">${escapeHTML(person.description)}</div></div>` : ''}
+        ${person.police_station ? `<div class="info-section"><div class="info-label">Reported To Station</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
+        <div style="margin-top: 20px; padding: 15px; background: #1e3a8a; border-radius: 8px; text-align: center;">
+            <div style="font-size: 13px; color: var(--light); font-weight: 600;">
                 📞 If you have information, please contact the nearest police station.
             </div>
         </div>
@@ -1452,11 +1491,11 @@ function formatDate(dateString) {
 
 async function loadMyPosts() {
   const token = localStorage.getItem('authToken');
-  if (!token) { showToast('🔒 Please log in first'); return; }
+  if (!token) { showToast(' Please log in first'); return; }
   try {
     const res = await fetch(`${API_URL}/users/my-posts`, { headers: { 'Authorization': `Bearer ${token}` } });
     if (res.status === 401) { logout(); throw new Error('Session expired. Please log in again.'); }
-    if (!res.ok) { showToast('❌ Failed to load posts.'); return; }
+    if (!res.ok) { showToast(' Failed to load posts.'); return; }
     const posts = await res.json();
     const container = document.getElementById('my-posts-container');
     const list = document.getElementById('my-posts-list');
