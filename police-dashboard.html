@@ -66,7 +66,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 .page-section.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .page-header { margin-bottom: 25px; }
-.page-title { font-size: 24px; font-weight: 700; color: var(--dark); margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+.page-title { font-size: 24px; font-weight: 700; color: var(--dark); margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between; }
 .page-title svg { width: 28px; height: 28px; fill: var(--dark); }
 .page-subtitle { font-size: 13px; color: var(--gray); }
 
@@ -178,6 +178,37 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     font-size: 11px; font-weight: 700; display: inline-block; margin-left: 10px;
 }
 
+/* ==========================================
+   7. POST MISSING PERSON MODAL (NEW)
+   ========================================== */
+.post-modal-content { background: var(--dark); color: white; border-radius: 16px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
+.post-modal-header { padding: 20px 25px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+.post-modal-header h2 { font-size: 20px; font-weight: 700; }
+.post-modal-header .btn-close { background: rgba(255,255,255,0.1); color: white; }
+.post-modal-header .btn-close:hover { background: var(--danger); }
+.post-modal-body { padding: 25px; }
+.form-section { margin-bottom: 25px; }
+.form-section-title { font-size: 12px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px; font-weight: 600; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: white; }
+.form-group label span { color: var(--danger); }
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; color: white; font-size: 14px; transition: all 0.2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--primary-light); background: rgba(255,255,255,0.1);
+}
+.form-group input[type="file"] { padding: 10px; }
+.form-group textarea { min-height: 100px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.form-actions { display: flex; gap: 12px; justify-content: flex-end; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+.btn-cancel { padding: 12px 24px; background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+.btn-cancel:hover { background: rgba(255,255,255,0.2); }
+.btn-submit { padding: 12px 24px; background: var(--warning); color: var(--dark); border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.btn-submit:hover { background: #fbbf24; }
+.btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
 @media (max-width: 768px) {
     .sidebar { transform: translateX(-100%); }
     .main-wrapper { margin-left: 0; }
@@ -185,6 +216,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     .action-buttons { flex-direction: row; }
     .info-grid { grid-template-columns: 1fr; }
     .full-width { grid-column: span 1; }
+    .form-row { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -332,10 +364,13 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
                     Active Cases
                 </h3>
-                <button class="btn-refresh" onclick="fetchDashboardData()">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-                    Refresh
-                </button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-success" onclick="openPostModal()">+ Report Missing Person</button>
+                    <button class="btn-refresh" onclick="fetchDashboardData()">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                        Refresh
+                    </button>
+                </div>
             </div>
             <div class="missing-list" id="missingList"></div>
         </div>
@@ -402,7 +437,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
                 <h3>Monthly Missing Persons Report</h3>
                 <p>Comprehensive report of all missing persons cases for the current month</p>
-                <div class="report-date">📅 Current Month</div>
+                <div class="report-date"> Current Month</div>
                 <button class="btn-download" onclick="downloadReport('monthly-missing')">📥 Download PDF</button>
             </div>
             <div class="report-card">
@@ -429,7 +464,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
                 <h3>Critical Cases Report</h3>
                 <p>Detailed report on all critical priority missing person cases</p>
-                <div class="report-date">📅 Current Month</div>
+                <div class="report-date"> Current Month</div>
                 <button class="btn-download" onclick="downloadReport('critical-cases')">📥 Download PDF</button>
             </div>
             <div class="report-card">
@@ -465,6 +500,87 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     </div>
 </div>
 
+<!-- POST MISSING PERSON MODAL -->
+<div class="modal-overlay" id="postModal">
+    <div class="post-modal-content">
+        <div class="post-modal-header">
+            <h2>📍 Post Missing Person</h2>
+            <button class="btn-close" onclick="closePostModal()">✕</button>
+        </div>
+        <div class="post-modal-body">
+            <form id="postMissingForm" onsubmit="handlePostMissing(event)">
+                <div class="form-section">
+                    <div class="form-section-title">Basic Information</div>
+                    <div class="form-group">
+                        <label>Full Name <span>*</span></label>
+                        <input type="text" id="postName" placeholder="Enter full name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Age <span>*</span></label>
+                            <input type="number" id="postAge" placeholder="Enter age" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select id="postGender">
+                                <option value="">Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Date Last Seen <span>*</span></label>
+                        <input type="date" id="postDateSeen" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Photos <span>*</span></div>
+                    <div class="form-group">
+                        <label>Photo 1</label>
+                        <input type="file" id="postPhoto1" accept="image/*" onchange="previewImage(this, 'preview1')">
+                    </div>
+                    <div class="form-group">
+                        <label>Photo 2</label>
+                        <input type="file" id="postPhoto2" accept="image/*" onchange="previewImage(this, 'preview2')">
+                    </div>
+                    <div class="form-group">
+                        <label>Photo 3</label>
+                        <input type="file" id="postPhoto3" accept="image/*" onchange="previewImage(this, 'preview3')">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Description & Details <span>*</span></div>
+                    <div class="form-group">
+                        <label>Clothing & Appearance</label>
+                        <textarea id="postDescription" placeholder="e.g., Blue jeans, white t-shirt, black hair" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Additional Notes</label>
+                        <textarea id="postNotes" placeholder="Any other relevant information..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Known Location <span>*</span></label>
+                        <input type="text" id="postLocation" placeholder="Where last seen?" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Residence</label>
+                        <input type="text" id="postResidence" placeholder="Where do they live?">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closePostModal()">Cancel</button>
+                    <button type="submit" class="btn-submit" id="submitBtn">Submit Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- FULL SCREEN IMAGE VIEWER -->
 <div class="image-viewer-overlay" id="imageViewer" onclick="closeImageViewer()">
     <button class="image-viewer-close" onclick="closeImageViewer()">✕</button>
@@ -478,6 +594,7 @@ let missingPersons = [];
 let sightingAlerts = [];
 let resolvedCases = [];
 let currentUser = { stationName: null, officerId: null, stationId: null };
+let uploadedPhotos = [];
 
 // 1. SECURITY CHECK (Redirect if not logged in)
 window.onload = function() {
@@ -590,7 +707,7 @@ async function fetchResolvedCases() {
                 <div class="resolved-info">
                     <h4>${c.name}</h4>
                     <div class="meta-info">
-                        <span>🎂 ${c.age} years</span>
+                        <span> ${c.age} years</span>
                         <span>♂️ ${c.gender}</span>
                         <span>📅 Resolved: ${formatDate(c.resolved_at)}</span>
                     </div>
@@ -640,7 +757,7 @@ function renderMissingPersons(container, cases) {
                 <h4>${p.name} ${criticalBadge}</h4>
                 <div class="meta-info">
                     <span>🎂 ${p.age} years</span>
-                    <span>♂️ ${p.gender}</span>
+                    <span>️ ${p.gender}</span>
                     <span>📅 ${formatDate(p.date_missing)}</span>
                 </div>
                 <div class="meta-info"><span>📍 ${p.last_seen_location}</span></div>
@@ -669,7 +786,7 @@ function renderSightings(container, sightings) {
                 <h4>Sighting: ${s.missing_person_name || 'Unknown Person'}</h4>
                 <div class="meta-info">
                     <span>📍 ${s.sighting_location}</span>
-                    <span>🕐 ${s.sighting_time || 'Recently'}</span>
+                    <span> ${s.sighting_time || 'Recently'}</span>
                 </div>
                 <div class="meta-info">
                     <span>👤 ${s.reporter_name || 'Anonymous'}</span>
@@ -837,6 +954,120 @@ function markSightingResolved(id) { if(confirm('Mark this sighting as resolved?'
 function contactReporter(phone) { if(confirm(`Call ${phone}?`)) { window.location.href = `tel:${phone}`; } }
 function markAllRead() { alert('✅ All sighting alerts marked as read'); }
 function formatDate(dateString) { if (!dateString) return 'Not specified'; return new Date(dateString).toLocaleDateString('en-KE', { year: 'numeric', month: 'short', day: 'numeric' }); }
+
+// ==========================================
+// POST MISSING PERSON FUNCTIONS (NEW)
+// ==========================================
+
+function openPostModal() {
+    document.getElementById('postModal').classList.add('active');
+    uploadedPhotos = [];
+}
+
+function closePostModal() {
+    document.getElementById('postModal').classList.remove('active');
+    document.getElementById('postMissingForm').reset();
+    uploadedPhotos = [];
+}
+
+function previewImage(input, previewId) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // Could add image preview here if needed
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+async function handlePostMissing(event) {
+    event.preventDefault();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+    
+    try {
+        const token = localStorage.getItem('authToken');
+        const photoFiles = [
+            document.getElementById('postPhoto1').files[0],
+            document.getElementById('postPhoto2').files[0],
+            document.getElementById('postPhoto3').files[0]
+        ].filter(f => f);
+        
+        // Upload photos to Cloudinary
+        const photoUrls = [];
+        for (const file of photoFiles) {
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            const uploadRes = await fetch(`${API_URL}/upload`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
+            });
+            
+            if (uploadRes.ok) {
+                const uploadData = await uploadRes.json();
+                photoUrls.push(uploadData.secure_url);
+            }
+        }
+        
+        // Get station name from current user
+        const stationMap = {
+            'RUI-2026-001': 'Ruiru Police Station',
+            'KAS-2026-001': 'Kasarani Police Station',
+            'NRB-2026-001': 'Central Police Station',
+            'KIL-2026-001': 'Kilimani Police Station',
+            'WES-2026-001': 'Westlands Police Station',
+            'LAN-2026-001': "Lang'ata Police Station",
+            'EMB-2026-001': 'Embakasi Police Station',
+            'PAR-2026-001': 'Parklands police station',
+            'KAR-2026-001': 'Karen Police Station.'
+        };
+        
+        const policeStation = stationMap[currentUser.station_id] || currentUser.station_id;
+        
+        // Submit missing person report
+        const reportData = {
+            name: document.getElementById('postName').value,
+            age: parseInt(document.getElementById('postAge').value),
+            gender: document.getElementById('postGender').value,
+            description: document.getElementById('postDescription').value,
+            notes: document.getElementById('postNotes').value,
+            residence: document.getElementById('postResidence').value,
+            last_seen_location: document.getElementById('postLocation').value,
+            date_last_seen: document.getElementById('postDateSeen').value,
+            date_missing: document.getElementById('postDateSeen').value,
+            police_station: policeStation,
+            photo_urls: photoUrls
+        };
+        
+        const res = await fetch(`${API_URL}/missing-persons`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reportData)
+        });
+        
+        if (!res.ok) {
+            throw new Error('Failed to submit report');
+        }
+        
+        alert('✅ Missing person report submitted successfully!');
+        closePostModal();
+        fetchDashboardData();
+        
+    } catch (error) {
+        console.error('Error submitting report:', error);
+        alert('❌ Failed to submit report: ' + error.message);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Report';
+    }
+}
 
 // ==========================================
 // REPORT GENERATION FUNCTIONS
