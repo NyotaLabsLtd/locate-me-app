@@ -108,7 +108,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 /* ==========================================
-   6. MODAL
+   6. MODALS (Details & Image Viewer)
    ========================================== */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
 .modal-overlay.active { display: flex; }
@@ -123,6 +123,13 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 .info-box label { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: block; font-weight: 600; }
 .info-box value { font-size: 13px; color: var(--dark); font-weight: 600; }
 .full-width { grid-column: span 2; }
+
+/* NEW: Full Screen Image Viewer */
+.image-viewer-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; }
+.image-viewer-overlay.active { display: flex; }
+.image-viewer-content { max-width: 95%; max-height: 95%; object-fit: contain; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+.image-viewer-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; background: none; border: none; transition: transform 0.2s; }
+.image-viewer-close:hover { transform: scale(1.1); color: var(--danger); }
 
 @media (max-width: 768px) {
     .sidebar { transform: translateX(-100%); }
@@ -208,7 +215,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon yellow">👁️</div>
+                <div class="stat-icon yellow">️</div>
                 <div class="stat-content">
                     <h4 id="pendingSightings">0</h4>
                     <p>Pending Sightings</p>
@@ -274,10 +281,16 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     <div class="modal-container">
         <div class="modal-header">
             <h2>Case Details</h2>
-            <button class="btn-close" onclick="closeModal()"></button>
+            <button class="btn-close" onclick="closeModal()">✕</button>
         </div>
         <div class="modal-body" id="modalBody"></div>
     </div>
+</div>
+
+<!-- NEW: FULL SCREEN IMAGE VIEWER -->
+<div class="image-viewer-overlay" id="imageViewer" onclick="closeImageViewer()">
+    <button class="image-viewer-close" onclick="closeImageViewer()">✕</button>
+    <img class="image-viewer-content" id="viewerImage" src="" alt="Full size image">
 </div>
 
 <script>
@@ -298,7 +311,7 @@ window.onload = function() {
     }
     
     currentUser = user;
-    document.getElementById('currentStationName').textContent = user.station_id; // Displaying ID for now, will map to name later
+    document.getElementById('currentStationName').textContent = user.station_id;
     fetchDashboardData();
 };
 
@@ -332,14 +345,12 @@ async function fetchDashboardData() {
     try {
         const token = localStorage.getItem('authToken');
         
-        // Fetch data from the SECURE police endpoint
         const res = await fetch(`${API_URL}/police/cases`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
         if (!res.ok) {
             if (res.status === 401 || res.status === 403) {
-                // Token expired or invalid
                 logout();
                 return;
             }
@@ -347,24 +358,18 @@ async function fetchDashboardData() {
         }
 
         const data = await res.json();
-        
-        // Update Station Name Display
         document.getElementById('currentStationName').textContent = data.stationName;
 
-        // Store data
         missingPersons = data.missingPersons;
         sightingAlerts = data.sightings;
 
-        console.log('✅ Received', missingPersons.length, 'missing persons and', sightingAlerts.length, 'sightings');
-
-        // Render Data
         renderMissingPersons(missingList, missingPersons);
         renderMissingPersons(dashboardList, missingPersons.slice(0, 3));
         renderSightings(sightingList, sightingAlerts);
         updateStats();
 
     } catch (error) {
-        console.error(' Error fetching data:', error);
+        console.error('❌ Error fetching data:', error);
         const errorMsg = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">⚠️</div><div style="font-size: 16px; margin-bottom: 10px;">Unable to connect to database</div><div style="font-size: 14px; color: var(--gray); margin-bottom: 20px;">${error.message}</div><button class="btn btn-primary" onclick="fetchDashboardData()" style="margin: 0 auto;">🔄 Try Again</button></div>`;
         missingList.innerHTML = errorMsg;
         dashboardList.innerHTML = errorMsg;
@@ -390,9 +395,9 @@ function renderMissingPersons(container, cases) {
             <div class="missing-info">
                 <h4>${p.name}</h4>
                 <div class="meta-info">
-                    <span>🎂 ${p.age} years</span>
+                    <span> ${p.age} years</span>
                     <span>♀️ ${p.gender}</span>
-                    <span> ${formatDate(p.date_missing)}</span>
+                    <span>📅 ${formatDate(p.date_missing)}</span>
                 </div>
                 <div class="meta-info"><span>📍 ${p.last_seen_location}</span></div>
                 <div class="case-notes">${p.description ? p.description.substring(0, 80) + '...' : 'No additional notes'}</div>
@@ -407,12 +412,12 @@ function renderMissingPersons(container, cases) {
 
 function renderSightings(container, sightings) {
     if (sightings.length === 0) {
-        container.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></div><div style="font-size: 16px;">No pending sightings</div></div>`;
+        container.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">🚨</div><div style="font-size: 16px;">No pending sightings</div></div>`;
         return;
     }
     container.innerHTML = sightings.map(s => `
         <div class="sighting-item">
-            <div style="font-size: 35px; text-align: center;"></div>
+            <div style="font-size: 35px; text-align: center;">🚨</div>
             <div class="sighting-info">
                 <h4>Sighting: ${s.missing_person_name || 'Unknown Person'}</h4>
                 <div class="meta-info">
@@ -440,19 +445,19 @@ function showDetails(id, type) {
     const modalBody = document.getElementById('modalBody');
     
     if (type === 'missing') {
-        // Build image gallery - show ALL photos
         let imageGallery = '';
         if (item.photo_urls && item.photo_urls.length > 0) {
             imageGallery = '<div style="margin-bottom: 20px;">';
-            imageGallery += '<h3 style="margin-bottom: 10px; font-size: 14px; color: var(--gray); text-transform: uppercase;">Evidence Photos</h3>';
+            imageGallery += '<h3 style="margin-bottom: 10px; font-size: 14px; color: var(--gray); text-transform: uppercase;">Evidence Photos (Click to enlarge)</h3>';
             imageGallery += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">';
             
             item.photo_urls.forEach((photoUrl, index) => {
+                // CHANGED: Now uses openImageViewer instead of window.open
                 imageGallery += `
-                    <div style="position: relative; border-radius: 8px; overflow: hidden; border: 2px solid var(--border);">
-                        <img src="${photoUrl}" alt="Photo ${index + 1}" style="width: 100%; height: 150px; object-fit: cover; cursor: pointer;" onclick="window.open('${photoUrl}', '_blank')">
+                    <div style="position: relative; border-radius: 8px; overflow: hidden; border: 2px solid var(--border); cursor: pointer;" onclick="openImageViewer('${photoUrl}')">
+                        <img src="${photoUrl}" alt="Photo ${index + 1}" style="width: 100%; height: 150px; object-fit: cover;">
                         <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; padding: 4px; font-size: 11px; text-align: center;">
-                            Photo ${index + 1}
+                            Photo ${index + 1} 
                         </div>
                     </div>
                 `;
@@ -460,7 +465,7 @@ function showDetails(id, type) {
             
             imageGallery += '</div></div>';
         } else {
-            imageGallery = '<div style="margin-bottom: 20px; background: var(--light); padding: 40px; text-align: center; border-radius: 12px;"><div style="font-size: 48px; opacity: 0.3;">📷</div><div style="color: var(--gray); margin-top: 10px;">No photos available</div></div>';
+            imageGallery = '<div style="margin-bottom: 20px; background: var(--light); padding: 40px; text-align: center; border-radius: 12px;"><div style="font-size: 48px; opacity: 0.3;"></div><div style="color: var(--gray); margin-top: 10px;">No photos available</div></div>';
         }
 
         modalBody.innerHTML = `
@@ -485,9 +490,8 @@ function showDetails(id, type) {
             </div>
         `;
     } else {
-        // Sighting details
         modalBody.innerHTML = `
-            <div style="margin-bottom: 20px;">
+            <div style="margin-bottom: 20px; cursor: pointer;" onclick="openImageViewer('${item.photo_url || ''}')">
                 <img src="${item.photo_url || ''}" alt="Sighting" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 12px;" onerror="this.src='https://via.placeholder.com/700x300?text=No+Photo'">
             </div>
             <div class="info-grid">
@@ -508,6 +512,18 @@ function showDetails(id, type) {
         `;
     }
     document.getElementById('detailsModal').classList.add('active');
+}
+
+// NEW: Image Viewer Functions
+function openImageViewer(url) {
+    if(!url) return;
+    document.getElementById('viewerImage').src = url;
+    document.getElementById('imageViewer').classList.add('active');
+}
+
+function closeImageViewer() {
+    document.getElementById('imageViewer').classList.remove('active');
+    document.getElementById('viewerImage').src = '';
 }
 
 function closeModal() { document.getElementById('detailsModal').classList.remove('active'); }
