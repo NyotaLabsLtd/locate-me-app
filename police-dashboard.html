@@ -25,8 +25,11 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     position: fixed; height: 100vh; overflow-y: auto; z-index: 100; padding: 25px 15px;
 }
 .sidebar-header { display: flex; align-items: center; gap: 12px; padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
-.sidebar-logo { width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-.sidebar-logo svg { width: 28px; height: 28px; }
+.sidebar-logo { 
+    width: 45px; height: 45px; background: rgba(255,255,255,0.1); border-radius: 10px; 
+    display: flex; align-items: center; justify-content: center; padding: 5px; 
+}
+.sidebar-logo img { width: 100%; height: 100%; object-fit: contain; }
 .sidebar-title { color: white; font-size: 15px; font-weight: 700; line-height: 1.2; }
 .sidebar-subtitle { color: rgba(255,255,255,0.6); font-size: 11px; }
 .nav-menu { display: flex; flex-direction: column; gap: 6px; }
@@ -188,9 +191,8 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 <div class="sidebar">
     <div class="sidebar-header">
         <div class="sidebar-logo">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L3 7v2c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5zm0 2.18l7 3.82v1c0 4.52-3.13 8.69-7 9.93-3.87-1.24-7-5.41-7-9.93V8l7-3.82zM11 7v6h2V7h-2zm0 8v2h2v-2h-2z"/>
-            </svg>
+            <!-- REPLACED SVG WITH YOUR ACTUAL LOGO -->
+            <img src="icon.png" alt="Locate Me Logo">
         </div>
         <div>
             <div class="sidebar-title">Locate Me</div>
@@ -445,7 +447,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
                 <h3>Monthly Missing Persons Report</h3>
                 <p>Comprehensive report of all missing persons cases for the current month</p>
-                <div class="report-date">📅 March 2026</div>
+                <div class="report-date"> March 2026</div>
                 <button class="btn-download" onclick="downloadReport('monthly-missing')">📥 Download PDF</button>
             </div>
             <div class="report-card">
@@ -456,7 +458,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
                 <h3>Sighting Analysis Report</h3>
                 <p>Analysis of all citizen sighting reports and response times</p>
-                <div class="report-date"> March 2026</div>
+                <div class="report-date">📅 March 2026</div>
                 <button class="btn-download" onclick="downloadReport('sighting-analysis')">📥 Download PDF</button>
             </div>
             <div class="report-card">
@@ -490,7 +492,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 <h3>Station Performance Report</h3>
                 <p>Performance metrics and response time analysis</p>
                 <div class="report-date">📅 March 2026</div>
-                <button class="btn-download" onclick="downloadReport('performance')"> Download PDF</button>
+                <button class="btn-download" onclick="downloadReport('performance')">📥 Download PDF</button>
             </div>
             <div class="report-card">
                 <div class="report-icon blue">
@@ -892,7 +894,7 @@ function markAllRead() { alert('✅ All sighting alerts marked as read'); }
 function formatDate(dateString) { if (!dateString) return 'Not specified'; return new Date(dateString).toLocaleDateString('en-KE', { year: 'numeric', month: 'short', day: 'numeric' }); }
 
 function downloadReport(type) {
-    alert(` Downloading ${type} report... (PDF generation feature coming soon)`);
+    alert(`📥 Downloading ${type} report... (PDF generation feature coming soon)`);
 }
 
 document.getElementById('detailsModal').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
