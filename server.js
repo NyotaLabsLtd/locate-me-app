@@ -42,7 +42,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 // 2. SECURITY MIDDLEWARE
 // ==========================================
 
-// Rate Limiters - ONLY for login/register (NOT for data fetching)
+// Rate Limiters - ONLY for specific actions (NOT for data fetching)
 const loginLimiter = rateLimit({ 
     windowMs: 10 * 60 * 1000, 
     max: 7, 
@@ -61,12 +61,9 @@ const postLimiter = rateLimit({
     message: { error: 'Too many posts. Try again in 1 hour.' } 
 });
 
-// Apply limiters ONLY to auth endpoints
+// Apply limiters ONLY where needed (Auth and Creating Posts)
 app.use('/api/auth/login', loginLimiter);
 app.use('/api/auth/register', registerLimiter);
-
-// ❌ REMOVED: app.use('/api/missing-persons', postLimiter);
-// ❌ REMOVED: app.use('/api/sightings', postLimiter);
 
 // Authentication Middleware
 const authenticateToken = (req, res, next) => {
@@ -134,15 +131,26 @@ app.post('/api/auth/login', async (req, res) => {
 
         if (!user.rows[0].is_verified) return res.status(403).json({ error: 'Please verify your email first', unverified: true });
 
+        // UPDATED: Include station_id in the token payload
         const token = jwt.sign(
-            { id: user.rows[0].id, email: user.rows[0].email, role: user.rows[0].role }, 
+            { 
+                id: user.rows[0].id, 
+                email: user.rows[0].email, 
+                role: user.rows[0].role,
+                station_id: user.rows[0].station_id || 'UNASSIGNED' 
+            }, 
             process.env.JWT_SECRET, 
             { expiresIn: '30d' }
         );
 
         res.json({ 
             token, 
-            user: { id: user.rows[0].id, email: user.rows[0].email, role: user.rows[0].role } 
+            user: { 
+                id: user.rows[0].id, 
+                email: user.rows[0].email, 
+                role: user.rows[0].role,
+                station_id: user.rows[0].station_id 
+            } 
         });
     } catch (err) {
         console.error('Login error:', err);
@@ -195,7 +203,7 @@ app.get('/api/auth/verify/:token', async (req, res) => {
 // 4. MISSING PERSONS ROUTES
 // ==========================================
 
-// ✅ GET all missing persons - NO RATE LIMIT, NO AUTH REQUIRED
+// Get all missing persons - NO RATE LIMIT, NO AUTH REQUIRED
 app.get('/api/missing-persons', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM missing_persons ORDER BY date_missing DESC');
@@ -228,7 +236,41 @@ app.get('/api/police-stations', async (req, res) => {
             { id: 'KAS-2026-001', name: 'Kasarani Police Station', county: 'Nairobi' },
             { id: 'NRB-2026-001', name: 'Central Police Station - Nairobi', county: 'Nairobi' },
             { id: 'KIL-2026-001', name: 'Kilimani Police Station', county: 'Nairobi' },
-            { id: 'WES-2026-001', name: 'Westlands Police Station', county: 'Nairobi' }
+            { id: 'WES-2026-001', name: 'Westlands Police Station', county: 'Nairobi' },
+            { id: 'LAN-2026-001', name: "Lang'ata Police Station", county: 'Nairobi' },
+            { id: 'EMB-2026-001', name: 'Embakasi Police Station', county: 'Nairobi' },
+            { id: 'RUA-2026-001', name: 'Ruaraka Police Station', county: 'Nairobi' },
+            { id: 'DON-2026-001', name: 'Donholm Police Station', county: 'Nairobi' },
+            { id: 'KAY-2026-001', name: 'Kayole Police Station', county: 'Nairobi' },
+            { id: 'PUM-2026-001', name: 'Pumwani Police Station', county: 'Nairobi' },
+            { id: 'KAM-2026-001', name: 'Kamukunji Police Station', county: 'Nairobi' },
+            { id: 'STA-2026-001', name: 'Starehe Police Station', county: 'Nairobi' },
+            { id: 'MAK-2026-001', name: 'Makadara Police Station', county: 'Nairobi' },
+            { id: 'KIB-2026-001', name: 'Kibera Police Station', county: 'Nairobi' },
+            { id: 'PAR-2026-001', name: 'Parklands Police Station', county: 'Nairobi' },
+            { id: 'THI-2026-001', name: 'Thika Police Station', county: 'Kiambu' },
+            { id: 'KIA-2026-001', name: 'Kiambu Town Police Station', county: 'Kiambu' },
+            { id: 'LIM-2026-001', name: 'Limuru Police Station', county: 'Kiambu' },
+            { id: 'JUJ-2026-001', name: 'Juja Police Station', county: 'Kiambu' },
+            { id: 'KAR-2026-001', name: 'Karuri Police Station', county: 'Kiambu' },
+            { id: 'KIK-2026-001', name: 'Kikuyu Police Station', county: 'Kiambu' },
+            { id: 'MOM-2026-001', name: 'Mombasa Central Police Station', county: 'Mombasa' },
+            { id: 'TUD-2026-001', name: 'Tudor Police Station', county: 'Mombasa' },
+            { id: 'CHA-2026-001', name: 'Changamwe Police Station', county: 'Mombasa' },
+            { id: 'KIS-2026-001', name: 'Kisauni Police Station', county: 'Mombasa' },
+            { id: 'LIK-2026-001', name: 'Likoni Police Station', county: 'Mombasa' },
+            { id: 'KIS-CEN-001', name: 'Kisumu Central Police Station', county: 'Kisumu' },
+            { id: 'KIS-TOW-001', name: 'Kisumu Town Police Station', county: 'Kisumu' },
+            { id: 'NYA-2026-001', name: 'Nyando Police Station', county: 'Kisumu' },
+            { id: 'MUH-2026-001', name: 'Muhoroni Police Station', county: 'Kisumu' },
+            { id: 'NAK-CEN-001', name: 'Nakuru Central Police Station', county: 'Nakuru' },
+            { id: 'NAK-TOW-001', name: 'Nakuru Town Police Station', county: 'Nakuru' },
+            { id: 'NAI-2026-001', name: 'Naivasha Police Station', county: 'Nakuru' },
+            { id: 'GIL-2026-001', name: 'Gilgil Police Station', county: 'Nakuru' },
+            { id: 'MOL-2026-001', name: 'Molo Police Station', county: 'Nakuru' },
+            { id: 'ELD-2026-001', name: 'Eldoret Police Station', county: 'Uasin Gishu' },
+            { id: 'ELD-TOW-001', name: 'Eldoret Town Police Station', county: 'Uasin Gishu' },
+            { id: 'TUR-2026-001', name: 'Turbo Police Station', county: 'Uasin Gishu' }
         ];
         res.json(stations);
     } catch (err) {
@@ -237,7 +279,7 @@ app.get('/api/police-stations', async (req, res) => {
     }
 });
 
-// ✅ CREATE missing person - RATE LIMITED (only 5 per hour)
+// Create missing person - RATE LIMITED (only 5 per hour)
 app.post('/api/missing-persons', authenticateToken, postLimiter, async (req, res) => {
     try {
         const { name, age, gender, description, notes, residence, last_seen_location, date_last_seen, police_station, date_missing, photo_urls } = req.body;
@@ -300,7 +342,7 @@ app.delete('/api/missing-persons/:id', authenticateToken, async (req, res) => {
 // 5. SIGHTINGS ROUTES
 // ==========================================
 
-// ✅ GET all sightings - NO RATE LIMIT, NO AUTH REQUIRED
+// Get all sightings - NO RATE LIMIT, NO AUTH REQUIRED
 app.get('/api/sightings', async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM sightings ORDER BY created_at DESC');
@@ -460,7 +502,66 @@ app.get('/api/admin/sightings-full', authenticateToken, requireAdmin, async (req
 });
 
 // ==========================================
-// 9. SERVER START
+// 9. POLICE DASHBOARD ROUTES (SECURE)
+// ==========================================
+
+app.get('/api/police/cases', authenticateToken, async (req, res) => {
+    try {
+        // 1. Get the station ID from the logged-in user's token
+        const userStationId = req.user.station_id;
+        
+        if (!userStationId || userStationId === 'UNASSIGNED' || userStationId === 'ADMIN') {
+            return res.status(403).json({ error: 'User is not assigned to a police station.' });
+        }
+
+        // 2. Map the Station ID to the exact name used in the database
+        const stationMap = {
+            'RUI-2026-001': 'Ruiru Police Station',
+            'KAS-2026-001': 'Kasarani Police Station',
+            'NRB-2026-001': 'Central Police Station',
+            'KIL-2026-001': 'Kilimani Police Station',
+            'WES-2026-001': 'Westlands Police Station',
+            'LAN-2026-001': "Lang'ata Police Station",
+            'EMB-2026-001': 'Embakasi Police Station',
+            'PAR-2026-001': 'Parklands police station',
+            'KAR-2026-001': 'Karen Police Station.'
+        };
+
+        const exactStationName = stationMap[userStationId];
+
+        if (!exactStationName) {
+            return res.status(400).json({ error: 'Unknown station ID.' });
+        }
+
+        console.log(`Fetching data for station: ${exactStationName}`);
+
+        // 3. Fetch Missing Persons for this specific station
+        const missingResult = await pool.query(
+            'SELECT * FROM missing_persons WHERE police_station = $1 ORDER BY date_missing DESC', 
+            [exactStationName]
+        );
+
+        // 4. Fetch Sightings for this specific station
+        const sightingsResult = await pool.query(
+            'SELECT * FROM sightings WHERE police_station = $1 ORDER BY created_at DESC', 
+            [exactStationName]
+        );
+
+        // 5. Send the filtered data back
+        res.json({
+            missingPersons: missingResult.rows,
+            sightings: sightingsResult.rows,
+            stationName: exactStationName
+        });
+
+    } catch (err) {
+        console.error('Police dashboard fetch error:', err);
+        res.status(500).json({ error: 'Failed to fetch police dashboard data' });
+    }
+});
+
+// ==========================================
+// 10. SERVER START
 // ==========================================
 
 const PORT = process.env.PORT || 3000;
