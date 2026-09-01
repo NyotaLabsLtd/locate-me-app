@@ -86,14 +86,14 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 /* ==========================================
    5. LISTS
    ========================================== */
-.missing-list, .sightings-list { display: flex; flex-direction: column; gap: 12px; }
-.missing-item, .sighting-item {
+.missing-list, .sightings-list, .resolved-list { display: flex; flex-direction: column; gap: 12px; }
+.missing-item, .sighting-item, .resolved-item {
     background: var(--light); border-radius: 10px; padding: 15px; display: grid; grid-template-columns: 70px 1fr auto;
     gap: 15px; align-items: center; border: 2px solid transparent; transition: all 0.2s; cursor: pointer;
 }
-.missing-item:hover, .sighting-item:hover { border-color: var(--primary); background: white; box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08); }
+.missing-item:hover, .sighting-item:hover, .resolved-item:hover { border-color: var(--primary); background: white; box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08); }
 .missing-photo { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-.missing-info h4, .sighting-info h4 { font-size: 15px; color: var(--dark); margin-bottom: 6px; }
+.missing-info h4, .sighting-info h4, .resolved-info h4 { font-size: 15px; color: var(--dark); margin-bottom: 6px; }
 .meta-info { display: flex; gap: 15px; font-size: 12px; color: var(--gray); margin-bottom: 6px; flex-wrap: wrap; }
 .meta-info span { display: flex; align-items: center; gap: 4px; }
 .case-notes { font-size: 12px; color: var(--gray); line-height: 1.4; }
@@ -102,6 +102,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 .btn-primary { background: var(--primary); color: white; }
 .btn-success { background: var(--success); color: white; }
 .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--gray); }
+.btn-danger { background: var(--danger); color: white; }
 
 .empty-state, .loading-state { text-align: center; padding: 50px 20px; color: var(--gray); }
 .spinner { border: 3px solid var(--border); border-top: 3px solid var(--primary); border-radius: 50%; width: 35px; height: 35px; animation: spin 1s linear infinite; margin: 0 auto 12px; }
@@ -131,10 +132,34 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 .image-viewer-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; background: none; border: none; transition: transform 0.2s; }
 .image-viewer-close:hover { transform: scale(1.1); color: var(--danger); }
 
+/* Reports Grid */
+.reports-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.report-card {
+    background: white; border-radius: 14px; padding: 25px; border: 2px solid var(--border);
+    transition: all 0.2s; cursor: pointer;
+}
+.report-card:hover { border-color: var(--primary); box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1); transform: translateY(-2px); }
+.report-icon { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 15px; }
+.report-icon.blue { background: #dbeafe; }
+.report-icon.green { background: #d1fae5; }
+.report-icon.red { background: #fee2e2; }
+.report-icon.yellow { background: #fef3c7; }
+.report-card h3 { font-size: 16px; color: var(--dark); margin-bottom: 8px; }
+.report-card p { font-size: 13px; color: var(--gray); margin-bottom: 15px; line-height: 1.5; }
+.report-date { font-size: 12px; color: var(--gray); margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
+.btn-download { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-download:hover { background: var(--primary-light); }
+
+/* Critical Badge */
+.critical-badge {
+    background: var(--danger); color: white; padding: 4px 10px; border-radius: 12px;
+    font-size: 11px; font-weight: 700; display: inline-block; margin-left: 10px;
+}
+
 @media (max-width: 768px) {
     .sidebar { transform: translateX(-100%); }
     .main-wrapper { margin-left: 0; }
-    .missing-item, .sighting-item { grid-template-columns: 1fr; }
+    .missing-item, .sighting-item, .resolved-item { grid-template-columns: 1fr; }
     .action-buttons { flex-direction: row; }
     .info-grid { grid-template-columns: 1fr; }
     .full-width { grid-column: span 1; }
@@ -160,11 +185,14 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
             <span class="nav-badge" id="missingCount">0</span>
         </a>
         <a class="nav-item" onclick="switchPage('sightings', event)">
-            <span class="nav-icon">🚨</span><span class="nav-text">Sightings</span>
+            <span class="nav-icon">️</span><span class="nav-text">Sightings</span>
             <span class="nav-badge" id="sightingCount">0</span>
         </a>
         <a class="nav-item" onclick="switchPage('resolved', event)">
             <span class="nav-icon">✅</span><span class="nav-text">Resolved Cases</span>
+        </a>
+        <a class="nav-item" onclick="switchPage('reports', event)">
+            <span class="nav-icon">📊</span><span class="nav-text">Reports</span>
         </a>
         <a class="nav-item" onclick="logout()">
             <span class="nav-icon"></span><span class="nav-text">Logout</span>
@@ -175,7 +203,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 <div class="main-wrapper">
     <div class="top-bar">
         <div class="station-badge">
-            <div class="badge-icon">🏢</div>
+            <div class="badge-icon"></div>
             <div class="badge-info">
                 <h3 id="currentStationName">Loading...</h3>
                 <p id="currentStationId">Jurisdiction: Active</p>
@@ -194,7 +222,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
         </div>
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon blue">📋</div>
+                <div class="stat-icon blue"></div>
                 <div class="stat-content">
                     <h4 id="totalMissing">0</h4>
                     <p>Active Missing Persons</p>
@@ -215,7 +243,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon yellow">️</div>
+                <div class="stat-icon yellow">👁️</div>
                 <div class="stat-content">
                     <h4 id="pendingSightings">0</h4>
                     <p>Pending Sightings</p>
@@ -249,12 +277,12 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     <!-- SIGHTINGS PAGE -->
     <div id="sightingsPage" class="page-section">
         <div class="page-header">
-            <h1 class="page-title">🚨 Sighting Alerts</h1>
+            <h1 class="page-title">👁️ Sighting Alerts</h1>
             <p class="page-subtitle">Real-time citizen reports of missing person sightings in your area</p>
         </div>
         <div class="section-card">
             <div class="section-header">
-                <h3 class="section-title">🚨 Pending Sightings</h3>
+                <h3 class="section-title">️ Pending Sightings</h3>
                 <button class="btn btn-success" onclick="markAllRead()">✓ Mark All Read</button>
             </div>
             <div class="sightings-list" id="sightingList"></div>
@@ -268,9 +296,62 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
             <p class="page-subtitle">Successfully closed and resolved missing person cases</p>
         </div>
         <div class="section-card">
-            <div class="empty-state">
-                <div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">✅</div>
-                <div style="font-size: 16px; margin-bottom: 10px;">No resolved cases yet</div>
+            <div class="section-header">
+                <h3 class="section-title">✅ Resolved Cases</h3>
+                <button class="btn-refresh" onclick="fetchResolvedCases()">🔄 Refresh</button>
+            </div>
+            <div class="resolved-list" id="resolvedList"></div>
+        </div>
+    </div>
+
+    <!-- REPORTS PAGE -->
+    <div id="reportsPage" class="page-section">
+        <div class="page-header">
+            <h1 class="page-title">📊 Reports & Analytics</h1>
+            <p class="page-subtitle">Generate and download official police reports</p>
+        </div>
+        <div class="reports-grid">
+            <div class="report-card">
+                <div class="report-icon blue">📊</div>
+                <h3>Monthly Missing Persons Report</h3>
+                <p>Comprehensive report of all missing persons cases for the current month</p>
+                <div class="report-date"> March 2026</div>
+                <button class="btn-download" onclick="downloadReport('monthly-missing')">📥 Download PDF</button>
+            </div>
+            <div class="report-card">
+                <div class="report-icon blue">📈</div>
+                <h3>Sighting Analysis Report</h3>
+                <p>Analysis of all citizen sighting reports and response times</p>
+                <div class="report-date">📅 March 2026</div>
+                <button class="btn-download" onclick="downloadReport('sighting-analysis')"> Download PDF</button>
+            </div>
+            <div class="report-card">
+                <div class="report-icon green">✅</div>
+                <h3>Resolved Cases Summary</h3>
+                <p>Summary of all successfully resolved cases this month</p>
+                <div class="report-date">📅 March 2026</div>
+                <button class="btn-download" onclick="downloadReport('resolved-summary')">📥 Download PDF</button>
+            </div>
+            <div class="report-card">
+                <div class="report-icon red"></div>
+                <h3>Critical Cases Report</h3>
+                <p>Detailed report on all critical priority missing person cases</p>
+                <div class="report-date"> March 2026</div>
+                <button class="btn-download" onclick="downloadReport('critical-cases')">📥 Download PDF</button>
+            </div>
+            <div class="report-card">
+                <div class="report-icon blue">📋</div>
+                <h3>Station Performance Report</h3>
+                <p>Performance metrics and response time analysis</p>
+                <div class="report-date">📅 March 2026</div>
+                <button class="btn-download" onclick="downloadReport('performance')">📥 Download PDF</button>
+            </div>
+            <div class="report-card">
+                <div class="report-icon blue">📅</div>
+                <h3>Weekly Activity Report</h3>
+                <p>Weekly summary of all station activities and cases</p>
+                <div class="report-date"> Week 12, 2026</div>
+                <button class="btn-download" onclick="downloadReport('weekly')">📥 Download PDF</button>
             </div>
         </div>
     </div>
@@ -298,6 +379,7 @@ const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 
 let missingPersons = [];
 let sightingAlerts = [];
+let resolvedCases = [];
 let currentUser = { stationName: null, officerId: null, stationId: null };
 
 // 1. SECURITY CHECK (Redirect if not logged in)
@@ -330,6 +412,10 @@ function switchPage(pageName, event) {
     }
     document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
     document.getElementById(pageName + 'Page').classList.add('active');
+    
+    if (pageName === 'resolved') {
+        fetchResolvedCases();
+    }
 }
 
 // 2. FETCH DATA FROM BACKEND
@@ -366,7 +452,7 @@ async function fetchDashboardData() {
         renderMissingPersons(missingList, missingPersons);
         renderMissingPersons(dashboardList, missingPersons.slice(0, 3));
         renderSightings(sightingList, sightingAlerts);
-        updateStats();
+        updateStats(data.criticalCases, data.resolvedThisMonth);
 
     } catch (error) {
         console.error('❌ Error fetching data:', error);
@@ -377,11 +463,68 @@ async function fetchDashboardData() {
     }
 }
 
-function updateStats() {
+// Fetch Resolved Cases
+async function fetchResolvedCases() {
+    const resolvedList = document.getElementById('resolvedList');
+    resolvedList.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Loading resolved cases...</p></div>`;
+
+    try {
+        const token = localStorage.getItem('authToken');
+        
+        const res = await fetch(`${API_URL}/missing-persons/resolved`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!res.ok) {
+            throw new Error('Failed to fetch resolved cases');
+        }
+
+        const cases = await res.json();
+        resolvedCases = cases;
+
+        if (cases.length === 0) {
+            resolvedList.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">✅</div><div style="font-size: 16px; margin-bottom: 10px;">No resolved cases yet</div></div>`;
+            return;
+        }
+
+        resolvedList.innerHTML = cases.map(c => `
+            <div class="resolved-item" onclick="showDetails(${c.id}, 'resolved')">
+                <img src="${c.photo_urls?.[0] || ''}" alt="${c.name}" class="missing-photo" onerror="this.src='https://via.placeholder.com/70?text=No+Photo'">
+                <div class="resolved-info">
+                    <h4>${c.name}</h4>
+                    <div class="meta-info">
+                        <span> ${c.age} years</span>
+                        <span>♀️ ${c.gender}</span>
+                        <span>📅 Resolved: ${formatDate(c.resolved_at)}</span>
+                    </div>
+                    <div class="meta-info"><span>📍 ${c.last_seen_location}</span></div>
+                    <div class="case-notes">${c.resolution_notes || 'Case resolved successfully'}</div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); showDetails(${c.id}, 'resolved')">View Details</button>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (error) {
+        console.error('❌ Error fetching resolved cases:', error);
+        resolvedList.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">⚠️</div><div style="font-size: 16px; margin-bottom: 10px;">Unable to load resolved cases</div></div>`;
+    }
+}
+
+function updateStats(criticalCount, resolvedCount) {
     document.getElementById('totalMissing').textContent = missingPersons.length;
     document.getElementById('pendingSightings').textContent = sightingAlerts.length;
     document.getElementById('missingCount').textContent = missingPersons.length;
     document.getElementById('sightingCount').textContent = sightingAlerts.length;
+    document.getElementById('criticalCount').textContent = criticalCount || 0;
+    document.getElementById('resolvedCount').textContent = resolvedCount || 0;
+}
+
+function isCriticalCase(person) {
+    const age = parseInt(person.age);
+    const description = (person.description || '').toLowerCase();
+    return age <= 18 || description.includes('kidnapped');
 }
 
 function renderMissingPersons(container, cases) {
@@ -389,17 +532,21 @@ function renderMissingPersons(container, cases) {
         container.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">📋</div><div style="font-size: 16px;">No active cases for this station</div></div>`;
         return;
     }
-    container.innerHTML = cases.map(p => `
+    container.innerHTML = cases.map(p => {
+        const critical = isCriticalCase(p);
+        const criticalBadge = critical ? '<span class="critical-badge">CRITICAL</span>' : '';
+        
+        return `
         <div class="missing-item" onclick="showDetails(${p.id}, 'missing')">
             <img src="${p.photo_urls?.[0] || ''}" alt="${p.name}" class="missing-photo" onerror="this.src='https://via.placeholder.com/70?text=No+Photo'">
             <div class="missing-info">
-                <h4>${p.name}</h4>
+                <h4>${p.name} ${criticalBadge}</h4>
                 <div class="meta-info">
                     <span> ${p.age} years</span>
                     <span>♀️ ${p.gender}</span>
                     <span> ${formatDate(p.date_missing)}</span>
                 </div>
-                <div class="meta-info"><span>📍 ${p.last_seen_location}</span></div>
+                <div class="meta-info"><span> ${p.last_seen_location}</span></div>
                 <div class="case-notes">${p.description ? p.description.substring(0, 80) + '...' : 'No additional notes'}</div>
             </div>
             <div class="action-buttons">
@@ -407,17 +554,17 @@ function renderMissingPersons(container, cases) {
                 <button class="btn btn-success" onclick="event.stopPropagation(); markAsFound(${p.id})">Mark Found</button>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 function renderSightings(container, sightings) {
     if (sightings.length === 0) {
-        container.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">🚨</div><div style="font-size: 16px;">No pending sightings</div></div>`;
+        container.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">👁️</div><div style="font-size: 16px;">No pending sightings</div></div>`;
         return;
     }
     container.innerHTML = sightings.map(s => `
         <div class="sighting-item" onclick="showDetails(${s.id}, 'sighting')">
-            <div style="font-size: 35px; text-align: center;">🚨</div>
+            <div style="font-size: 35px; text-align: center;">👁️</div>
             <div class="sighting-info">
                 <h4>Sighting: ${s.missing_person_name || 'Unknown Person'}</h4>
                 <div class="meta-info">
@@ -425,7 +572,7 @@ function renderSightings(container, sightings) {
                     <span>🕐 ${s.sighting_time || 'Recently'}</span>
                 </div>
                 <div class="meta-info">
-                    <span>👤 ${s.reporter_name || 'Anonymous'}</span>
+                    <span> ${s.reporter_name || 'Anonymous'}</span>
                     <span>📞 ${s.reporter_contact}</span>
                 </div>
                 <div class="case-notes">${s.description ? s.description.substring(0, 80) + '...' : 'No description provided'}</div>
@@ -439,7 +586,9 @@ function renderSightings(container, sightings) {
 }
 
 function showDetails(id, type) {
-    const item = type === 'missing' ? missingPersons.find(c => c.id == id) : sightingAlerts.find(s => s.id == id);
+    const item = type === 'missing' ? missingPersons.find(c => c.id == id) : 
+                 type === 'sighting' ? sightingAlerts.find(s => s.id == id) : 
+                 resolvedCases.find(c => c.id == id);
     if (!item) return;
     
     const modalBody = document.getElementById('modalBody');
@@ -464,11 +613,15 @@ function showDetails(id, type) {
             
             imageGallery += '</div></div>';
         } else {
-            imageGallery = '<div style="margin-bottom: 20px; background: var(--light); padding: 40px; text-align: center; border-radius: 12px;"><div style="font-size: 48px; opacity: 0.3;"></div><div style="color: var(--gray); margin-top: 10px;">No photos available</div></div>';
+            imageGallery = '<div style="margin-bottom: 20px; background: var(--light); padding: 40px; text-align: center; border-radius: 12px;"><div style="font-size: 48px; opacity: 0.3;">📷</div><div style="color: var(--gray); margin-top: 10px;">No photos available</div></div>';
         }
+
+        const critical = isCriticalCase(item);
+        const criticalNote = critical ? '<div style="background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-weight: 600;">⚠️ CRITICAL CASE: ' + (item.age <= 18 ? 'Minor (under 18)' : 'Kidnapping reported') + '</div>' : '';
 
         modalBody.innerHTML = `
             ${imageGallery}
+            ${criticalNote}
             <div class="info-grid">
                 <div class="info-box"><label>Full Name</label><value>${item.name}</value></div>
                 <div class="info-box"><label>Age</label><value>${item.age} years</value></div>
@@ -488,8 +641,8 @@ function showDetails(id, type) {
                 <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Close</button>
             </div>
         `;
-    } else {
-        // Sighting details - UPDATED TO SHOW EVERYTHING
+    } else if (type === 'sighting') {
+        // Sighting details
         let imageHtml = '<div style="margin-bottom: 20px; background: var(--light); padding: 40px; text-align: center; border-radius: 12px;"><div style="font-size: 48px; opacity: 0.3;">📷</div><div style="color: var(--gray); margin-top: 10px;">No photo available</div></div>';
         
         if (item.photo_url) {
@@ -522,6 +675,24 @@ function showDetails(id, type) {
                 <button class="btn btn-success" style="flex: 1;" onclick="markSightingResolved(${item.id}); closeModal();">✓ Mark Resolved</button>
             </div>
         `;
+    } else {
+        // Resolved case details
+        modalBody.innerHTML = `
+            <div style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">✅ CASE RESOLVED</div>
+            <div class="info-grid">
+                <div class="info-box"><label>Full Name</label><value>${item.name}</value></div>
+                <div class="info-box"><label>Age</label><value>${item.age} years</value></div>
+                <div class="info-box"><label>Gender</label><value>${item.gender}</value></div>
+                <div class="info-box"><label>Date Missing</label><value>${formatDate(item.date_missing)}</value></div>
+                <div class="info-box"><label>Date Resolved</label><value>${formatDate(item.resolved_at)}</value></div>
+                <div class="info-box full-width"><label>Last Seen Location</label><value>${item.last_seen_location}</value></div>
+                <div class="info-box full-width"><label>Resolution Notes</label><value>${item.resolution_notes || 'Case resolved successfully'}</value></div>
+                <div class="info-box full-width"><label>Police Station</label><value style="color: var(--primary); font-weight: 700;">${item.police_station}</value></div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Close</button>
+            </div>
+        `;
     }
     document.getElementById('detailsModal').classList.add('active');
 }
@@ -539,11 +710,42 @@ function closeImageViewer() {
 }
 
 function closeModal() { document.getElementById('detailsModal').classList.remove('active'); }
-function markAsFound(id) { if(confirm('Mark this person as found?')) { alert('✅ Case marked as found.'); fetchDashboardData(); } }
+
+// Mark as Found - moves case to resolved
+async function markAsFound(id) {
+    const resolutionNotes = prompt('Enter resolution notes (optional):', 'Found safe and returned to family');
+    if (resolutionNotes === null) return; // User cancelled
+    
+    try {
+        const token = localStorage.getItem('authToken');
+        const res = await fetch(`${API_URL}/missing-persons/${id}/mark-found`, {
+            method: 'PUT',
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ resolution_notes: resolutionNotes })
+        });
+        
+        if (!res.ok) throw new Error('Failed to mark as found');
+        
+        alert('✅ Case marked as resolved and moved to Resolved Cases');
+        fetchDashboardData();
+    } catch (error) {
+        console.error('Error marking as found:', error);
+        alert('❌ Failed to mark case as found');
+    }
+}
+
 function markSightingResolved(id) { if(confirm('Mark this sighting as resolved?')) { alert('✅ Sighting marked as resolved.'); fetchDashboardData(); } }
 function contactReporter(phone) { if(confirm(`Call ${phone}?`)) { window.location.href = `tel:${phone}`; } }
 function markAllRead() { alert('✅ All sighting alerts marked as read'); }
 function formatDate(dateString) { if (!dateString) return 'Not specified'; return new Date(dateString).toLocaleDateString('en-KE', { year: 'numeric', month: 'short', day: 'numeric' }); }
+
+function downloadReport(type) {
+    alert(`📥 Downloading ${type} report... (PDF generation feature coming soon)`);
+    // TODO: Implement actual PDF generation
+}
 
 document.getElementById('detailsModal').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
 </script>
