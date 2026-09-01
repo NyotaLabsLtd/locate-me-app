@@ -153,10 +153,10 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     </div>
     <nav class="nav-menu">
         <a class="nav-item active" onclick="switchPage('dashboard', event)">
-            <span class="nav-icon">📊</span><span class="nav-text">Dashboard</span>
+            <span class="nav-icon"></span><span class="nav-text">Dashboard</span>
         </a>
         <a class="nav-item" onclick="switchPage('missing', event)">
-            <span class="nav-icon">📋</span><span class="nav-text">Missing Persons</span>
+            <span class="nav-icon"></span><span class="nav-text">Missing Persons</span>
             <span class="nav-badge" id="missingCount">0</span>
         </a>
         <a class="nav-item" onclick="switchPage('sightings', event)">
@@ -167,7 +167,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
             <span class="nav-icon">✅</span><span class="nav-text">Resolved Cases</span>
         </a>
         <a class="nav-item" onclick="logout()">
-            <span class="nav-icon">🚪</span><span class="nav-text">Logout</span>
+            <span class="nav-icon"></span><span class="nav-text">Logout</span>
         </a>
     </nav>
 </div>
@@ -201,7 +201,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon red">🚨</div>
+                <div class="stat-icon red"></div>
                 <div class="stat-content">
                     <h4 id="criticalCount">0</h4>
                     <p>Critical Cases</p>
@@ -239,7 +239,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
         </div>
         <div class="section-card">
             <div class="section-header">
-                <h3 class="section-title">📋 Active Cases</h3>
+                <h3 class="section-title"> Active Cases</h3>
                 <button class="btn-refresh" onclick="fetchDashboardData()">🔄 Refresh</button>
             </div>
             <div class="missing-list" id="missingList"></div>
@@ -397,7 +397,7 @@ function renderMissingPersons(container, cases) {
                 <div class="meta-info">
                     <span> ${p.age} years</span>
                     <span>♀️ ${p.gender}</span>
-                    <span>📅 ${formatDate(p.date_missing)}</span>
+                    <span> ${formatDate(p.date_missing)}</span>
                 </div>
                 <div class="meta-info"><span>📍 ${p.last_seen_location}</span></div>
                 <div class="case-notes">${p.description ? p.description.substring(0, 80) + '...' : 'No additional notes'}</div>
@@ -416,7 +416,7 @@ function renderSightings(container, sightings) {
         return;
     }
     container.innerHTML = sightings.map(s => `
-        <div class="sighting-item">
+        <div class="sighting-item" onclick="showDetails(${s.id}, 'sighting')">
             <div style="font-size: 35px; text-align: center;">🚨</div>
             <div class="sighting-info">
                 <h4>Sighting: ${s.missing_person_name || 'Unknown Person'}</h4>
@@ -425,14 +425,14 @@ function renderSightings(container, sightings) {
                     <span>🕐 ${s.sighting_time || 'Recently'}</span>
                 </div>
                 <div class="meta-info">
-                    <span> ${s.reporter_name || 'Anonymous'}</span>
+                    <span>👤 ${s.reporter_name || 'Anonymous'}</span>
                     <span>📞 ${s.reporter_contact}</span>
                 </div>
                 <div class="case-notes">${s.description ? s.description.substring(0, 80) + '...' : 'No description provided'}</div>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" onclick="contactReporter('${s.reporter_contact}')">📞 Call Reporter</button>
-                <button class="btn btn-success" onclick="markSightingResolved(${s.id})">✓ Mark Resolved</button>
+                <button class="btn btn-primary" onclick="event.stopPropagation(); showDetails(${s.id}, 'sighting')">View Details</button>
+                <button class="btn btn-success" onclick="event.stopPropagation(); markSightingResolved(${s.id})">✓ Mark Resolved</button>
             </div>
         </div>
     `).join('');
@@ -452,7 +452,6 @@ function showDetails(id, type) {
             imageGallery += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">';
             
             item.photo_urls.forEach((photoUrl, index) => {
-                // CHANGED: Now uses openImageViewer instead of window.open
                 imageGallery += `
                     <div style="position: relative; border-radius: 8px; overflow: hidden; border: 2px solid var(--border); cursor: pointer;" onclick="openImageViewer('${photoUrl}')">
                         <img src="${photoUrl}" alt="Photo ${index + 1}" style="width: 100%; height: 150px; object-fit: cover;">
@@ -490,23 +489,36 @@ function showDetails(id, type) {
             </div>
         `;
     } else {
+        // Sighting details - UPDATED TO SHOW EVERYTHING
+        let imageHtml = '<div style="margin-bottom: 20px; background: var(--light); padding: 40px; text-align: center; border-radius: 12px;"><div style="font-size: 48px; opacity: 0.3;">📷</div><div style="color: var(--gray); margin-top: 10px;">No photo available</div></div>';
+        
+        if (item.photo_url) {
+            imageHtml = `
+                <div style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 10px; font-size: 14px; color: var(--gray); text-transform: uppercase;">Sighting Photo (Click to enlarge)</h3>
+                    <div style="border-radius: 8px; overflow: hidden; border: 2px solid var(--border); cursor: pointer;" onclick="openImageViewer('${item.photo_url}')">
+                        <img src="${item.photo_url}" alt="Sighting Photo" style="width: 100%; max-height: 300px; object-fit: cover;">
+                    </div>
+                </div>
+            `;
+        }
+
         modalBody.innerHTML = `
-            <div style="margin-bottom: 20px; cursor: pointer;" onclick="openImageViewer('${item.photo_url || ''}')">
-                <img src="${item.photo_url || ''}" alt="Sighting" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 12px;" onerror="this.src='https://via.placeholder.com/700x300?text=No+Photo'">
-            </div>
+            ${imageHtml}
             <div class="info-grid">
                 <div class="info-box"><label>Missing Person Name</label><value>${item.missing_person_name || 'Unknown'}</value></div>
                 <div class="info-box"><label>Gender</label><value>${item.gender || 'Not specified'}</value></div>
-                <div class="info-box"><label>Sighting Location</label><value>${item.sighting_location}</value></div>
-                <div class="info-box"><label>Sighting Time</label><value>${item.sighting_time || 'Recently'}</value></div>
+                <div class="info-box full-width"><label>Sighting Location</label><value>${item.sighting_location || 'Not specified'}</value></div>
+                <div class="info-box"><label>Sighting Time</label><value>${item.sighting_time || 'Not specified'}</value></div>
+                <div class="info-box"><label>Reported At</label><value>${formatDate(item.created_at)}</value></div>
                 <div class="info-box full-width"><label>Description</label><value>${item.description || 'No description provided'}</value></div>
                 <div class="info-box"><label>Reporter Name</label><value>${item.reporter_name || 'Anonymous'}</value></div>
-                <div class="info-box full-width"><label>Reporter Contact</label><value style="color: var(--primary); font-weight: 700;">${item.reporter_contact}</value></div>
-                <div class="info-box full-width"><label>Police Station</label><value>${item.police_station}</value></div>
-                <div class="info-box"><label>Reported At</label><value>${formatDate(item.created_at)}</value></div>
+                <div class="info-box full-width"><label>Reporter Contact</label><value style="color: var(--primary); font-weight: 700;">${item.reporter_contact || 'N/A'}</value></div>
+                <div class="info-box full-width"><label>Police Station</label><value style="color: var(--primary); font-weight: 700;">${item.police_station}</value></div>
+                ${item.poster_email ? `<div class="info-box full-width"><label>Posted By</label><value style="color: var(--success);">${item.poster_email}</value></div>` : ''}
             </div>
             <div style="display: flex; gap: 10px;">
-                <button class="btn btn-primary" style="flex: 1;" onclick="contactReporter('${item.reporter_contact}')">📞 Call Reporter</button>
+                ${item.reporter_contact ? `<button class="btn btn-primary" style="flex: 1;" onclick="contactReporter('${item.reporter_contact}')">📞 Call Reporter</button>` : ''}
                 <button class="btn btn-success" style="flex: 1;" onclick="markSightingResolved(${item.id}); closeModal();">✓ Mark Resolved</button>
             </div>
         `;
