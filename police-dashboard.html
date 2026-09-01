@@ -179,7 +179,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 }
 
 /* ==========================================
-   7. POST MISSING PERSON MODAL (NEW)
+   7. POST MODALS (Missing Person & Sighting)
    ========================================== */
 .post-modal-content { background: var(--dark); color: white; border-radius: 16px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
 .post-modal-header { padding: 20px 25px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
@@ -201,6 +201,12 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 }
 .form-group input[type="file"] { padding: 10px; }
 .form-group textarea { min-height: 100px; resize: vertical; }
+/* FIX: Ensure select options are visible */
+.form-group select option {
+    background: var(--dark);
+    color: white;
+    padding: 10px;
+}
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 .form-actions { display: flex; gap: 12px; justify-content: flex-end; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
 .btn-cancel { padding: 12px 24px; background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
@@ -391,7 +397,10 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                     Pending Sightings
                 </h3>
-                <button class="btn btn-success" onclick="markAllRead()">✓ Mark All Read</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-success" onclick="openSightingModal()">+ Report Sighting</button>
+                    <button class="btn btn-success" onclick="markAllRead()">✓ Mark All Read</button>
+                </div>
             </div>
             <div class="sightings-list" id="sightingList"></div>
         </div>
@@ -446,7 +455,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
                 <h3>Sighting Analysis Report</h3>
                 <p>Analysis of all citizen sighting reports and response times</p>
-                <div class="report-date">📅 Current Month</div>
+                <div class="report-date"> Current Month</div>
                 <button class="btn-download" onclick="downloadReport('sighting-analysis')">📥 Download PDF</button>
             </div>
             <div class="report-card">
@@ -456,7 +465,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 <h3>Resolved Cases Summary</h3>
                 <p>Summary of all successfully resolved cases this month</p>
                 <div class="report-date">📅 Current Month</div>
-                <button class="btn-download" onclick="downloadReport('resolved-summary')">📥 Download PDF</button>
+                <button class="btn-download" onclick="downloadReport('resolved-summary')"> Download PDF</button>
             </div>
             <div class="report-card">
                 <div class="report-icon red">
@@ -464,7 +473,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
                 <h3>Critical Cases Report</h3>
                 <p>Detailed report on all critical priority missing person cases</p>
-                <div class="report-date"> Current Month</div>
+                <div class="report-date">📅 Current Month</div>
                 <button class="btn-download" onclick="downloadReport('critical-cases')">📥 Download PDF</button>
             </div>
             <div class="report-card">
@@ -494,7 +503,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
     <div class="modal-container">
         <div class="modal-header">
             <h2>Case Details</h2>
-            <button class="btn-close" onclick="closeModal()">✕</button>
+            <button class="btn-close" onclick="closeModal()"></button>
         </div>
         <div class="modal-body" id="modalBody"></div>
     </div>
@@ -522,8 +531,8 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                         </div>
                         <div class="form-group">
                             <label>Gender</label>
-                            <select id="postGender">
-                                <option value="">Select gender</option>
+                            <select id="postGender" required>
+                                <option value="" disabled selected>Select gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                                 <option value="Other">Other</option>
@@ -575,6 +584,79 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 <div class="form-actions">
                     <button type="button" class="btn-cancel" onclick="closePostModal()">Cancel</button>
                     <button type="submit" class="btn-submit" id="submitBtn">Submit Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- POST SIGHTING MODAL (UPDATED WITH PHOTO) -->
+<div class="modal-overlay" id="sightingModal">
+    <div class="post-modal-content">
+        <div class="post-modal-header">
+            <h2>👁️ Report Sighting</h2>
+            <button class="btn-close" onclick="closeSightingModal()"></button>
+        </div>
+        <div class="post-modal-body">
+            <form id="postSightingForm" onsubmit="handlePostSighting(event)">
+                <div class="form-section">
+                    <div class="form-section-title">Sighting Information</div>
+                    <div class="form-group">
+                        <label>Missing Person Name <span>*</span></label>
+                        <input type="text" id="sightingPersonName" placeholder="Name of missing person" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="sightingGender">
+                            <option value="" disabled selected>Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Sighting Location <span>*</span></label>
+                            <input type="text" id="sightingLocation" placeholder="Where was the person seen?" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Sighting Time</label>
+                            <input type="text" id="sightingTime" placeholder="e.g., 2:30 PM or Yesterday">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Photo Evidence</div>
+                    <div class="form-group">
+                        <label>Sighting Photo (Optional but Recommended)</label>
+                        <input type="file" id="sightingPhoto" accept="image/*" onchange="previewSightingImage(this)">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Description & Details</div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="sightingDescription" placeholder="Describe what you saw, clothing, behavior, etc..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Reporter Information</div>
+                    <div class="form-group">
+                        <label>Reporter Name</label>
+                        <input type="text" id="sightingReporterName" placeholder="Your name (optional)">
+                    </div>
+                    <div class="form-group">
+                        <label>Reporter Contact <span>*</span></label>
+                        <input type="tel" id="sightingReporterContact" placeholder="Phone number" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeSightingModal()">Cancel</button>
+                    <button type="submit" class="btn-submit" id="sightingSubmitBtn">Submit Sighting</button>
                 </div>
             </form>
         </div>
@@ -670,7 +752,7 @@ async function fetchDashboardData() {
 
     } catch (error) {
         console.error('❌ Error fetching data:', error);
-        const errorMsg = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">⚠️</div><div style="font-size: 16px; margin-bottom: 10px;">Unable to connect to database</div><div style="font-size: 14px; color: var(--gray); margin-bottom: 20px;">${error.message}</div><button class="btn btn-primary" onclick="fetchDashboardData()" style="margin: 0 auto;">🔄 Try Again</button></div>`;
+        const errorMsg = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">⚠️</div><div style="font-size: 16px; margin-bottom: 10px;">Unable to connect to database</div><div style="font-size: 14px; color: var(--gray); margin-bottom: 20px;">${error.message}</div><button class="btn btn-primary" onclick="fetchDashboardData()" style="margin: 0 auto;"> Try Again</button></div>`;
         missingList.innerHTML = errorMsg;
         dashboardList.innerHTML = errorMsg;
         sightingList.innerHTML = errorMsg;
@@ -756,11 +838,11 @@ function renderMissingPersons(container, cases) {
             <div class="missing-info">
                 <h4>${p.name} ${criticalBadge}</h4>
                 <div class="meta-info">
-                    <span>🎂 ${p.age} years</span>
-                    <span>️ ${p.gender}</span>
+                    <span> ${p.age} years</span>
+                    <span>♂️ ${p.gender}</span>
                     <span>📅 ${formatDate(p.date_missing)}</span>
                 </div>
-                <div class="meta-info"><span>📍 ${p.last_seen_location}</span></div>
+                <div class="meta-info"><span> ${p.last_seen_location}</span></div>
                 <div class="case-notes">${p.description ? p.description.substring(0, 80) + '...' : 'No additional notes'}</div>
             </div>
             <div class="action-buttons">
@@ -785,8 +867,8 @@ function renderSightings(container, sightings) {
             <div class="sighting-info">
                 <h4>Sighting: ${s.missing_person_name || 'Unknown Person'}</h4>
                 <div class="meta-info">
-                    <span>📍 ${s.sighting_location}</span>
-                    <span> ${s.sighting_time || 'Recently'}</span>
+                    <span> ${s.sighting_location}</span>
+                    <span>🕐 ${s.sighting_time || 'Recently'}</span>
                 </div>
                 <div class="meta-info">
                     <span>👤 ${s.reporter_name || 'Anonymous'}</span>
@@ -830,7 +912,7 @@ function showDetails(id, type) {
             
             imageGallery += '</div></div>';
         } else {
-            imageGallery = '<div style="margin-bottom: 20px; background: var(--light); padding: 40px; text-align: center; border-radius: 12px;"><div style="font-size: 48px; opacity: 0.3;">📷</div><div style="color: var(--gray); margin-top: 10px;">No photos available</div></div>';
+            imageGallery = '<div style="margin-bottom: 20px; background: var(--light); padding: 40px; text-align: center; border-radius: 12px;"><div style="font-size: 48px; opacity: 0.3;"></div><div style="color: var(--gray); margin-top: 10px;">No photos available</div></div>';
         }
 
         const critical = isCriticalCase(item);
@@ -956,7 +1038,7 @@ function markAllRead() { alert('✅ All sighting alerts marked as read'); }
 function formatDate(dateString) { if (!dateString) return 'Not specified'; return new Date(dateString).toLocaleDateString('en-KE', { year: 'numeric', month: 'short', day: 'numeric' }); }
 
 // ==========================================
-// POST MISSING PERSON FUNCTIONS (NEW)
+// POST MISSING PERSON FUNCTIONS
 // ==========================================
 
 function openPostModal() {
@@ -975,6 +1057,16 @@ function previewImage(input, previewId) {
         const reader = new FileReader();
         reader.onload = function(e) {
             // Could add image preview here if needed
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+function previewSightingImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            console.log('Image selected for upload');
         };
         reader.readAsDataURL(input.files[0]);
     }
@@ -1027,6 +1119,7 @@ async function handlePostMissing(event) {
         };
         
         const policeStation = stationMap[currentUser.station_id] || currentUser.station_id;
+        const dateLastSeen = document.getElementById('postDateSeen').value;
         
         // Submit missing person report
         const reportData = {
@@ -1037,8 +1130,8 @@ async function handlePostMissing(event) {
             notes: document.getElementById('postNotes').value,
             residence: document.getElementById('postResidence').value,
             last_seen_location: document.getElementById('postLocation').value,
-            date_last_seen: document.getElementById('postDateSeen').value,
-            date_missing: document.getElementById('postDateSeen').value,
+            date_last_seen: dateLastSeen,
+            date_missing: dateLastSeen, // Keep this for backward compatibility
             police_station: policeStation,
             photo_urls: photoUrls
         };
@@ -1066,6 +1159,101 @@ async function handlePostMissing(event) {
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit Report';
+    }
+}
+
+// ==========================================
+// POST SIGHTING FUNCTIONS (UPDATED WITH PHOTO)
+// ==========================================
+
+function openSightingModal() {
+    document.getElementById('sightingModal').classList.add('active');
+}
+
+function closeSightingModal() {
+    document.getElementById('sightingModal').classList.remove('active');
+    document.getElementById('postSightingForm').reset();
+}
+
+async function handlePostSighting(event) {
+    event.preventDefault();
+    
+    const submitBtn = document.getElementById('sightingSubmitBtn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+    
+    try {
+        const token = localStorage.getItem('authToken');
+        const photoFile = document.getElementById('sightingPhoto').files[0];
+        
+        // Upload photo to Cloudinary if provided
+        let photoUrl = null;
+        if (photoFile) {
+            const formData = new FormData();
+            formData.append('image', photoFile);
+            
+            const uploadRes = await fetch(`${API_URL}/upload`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
+            });
+            
+            if (uploadRes.ok) {
+                const uploadData = await uploadRes.json();
+                photoUrl = uploadData.secure_url;
+            }
+        }
+        
+        // Get station name from current user
+        const stationMap = {
+            'RUI-2026-001': 'Ruiru Police Station',
+            'KAS-2026-001': 'Kasarani Police Station',
+            'NRB-2026-001': 'Central Police Station',
+            'KIL-2026-001': 'Kilimani Police Station',
+            'WES-2026-001': 'Westlands Police Station',
+            'LAN-2026-001': "Lang'ata Police Station",
+            'EMB-2026-001': 'Embakasi Police Station',
+            'PAR-2026-001': 'Parklands police station',
+            'KAR-2026-001': 'Karen Police Station.'
+        };
+        
+        const policeStation = stationMap[currentUser.station_id] || currentUser.station_id;
+        
+        const sightingData = {
+            missing_person_name: document.getElementById('sightingPersonName').value,
+            gender: document.getElementById('sightingGender').value,
+            sighting_location: document.getElementById('sightingLocation').value,
+            sighting_time: document.getElementById('sightingTime').value,
+            description: document.getElementById('sightingDescription').value,
+            reporter_name: document.getElementById('sightingReporterName').value,
+            reporter_contact: document.getElementById('sightingReporterContact').value,
+            police_station: policeStation,
+            photo_url: photoUrl
+        };
+        
+        const res = await fetch(`${API_URL}/sightings`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(sightingData)
+        });
+        
+        if (!res.ok) {
+            throw new Error('Failed to submit sighting');
+        }
+        
+        alert('✅ Sighting report submitted successfully!');
+        closeSightingModal();
+        fetchDashboardData();
+        
+    } catch (error) {
+        console.error('Error submitting sighting:', error);
+        alert('❌ Failed to submit sighting: ' + error.message);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Sighting';
     }
 }
 
