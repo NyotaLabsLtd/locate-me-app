@@ -67,12 +67,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .card-info { font-size: 14px; color: var(--gray); margin-bottom: 4px; }
 .card-days-missing { font-size: 15px; color: var(--warning); font-weight: 700; margin-bottom: 6px; }
 
-/* My Posts Styles */
+/* My Posts Styles - UPDATED */
+.my-posts-section { margin-top: 15px; }
 .my-post-card { 
     background: var(--dark-card); 
     border-radius: 10px; 
     padding: 15px; 
-    margin-bottom: 12px; 
+    margin-bottom: 10px; 
     cursor: pointer; 
     transition: all 0.2s;
     border: 2px solid transparent;
@@ -85,7 +86,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
-    margin-bottom: 8px; 
+    margin-bottom: 0; 
 }
 .my-post-title { 
     font-size: 16px; 
@@ -97,20 +98,49 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .post-badge { 
     padding: 3px 10px; 
     border-radius: 12px; 
-    font-size: 11px; 
+    font-size: 10px; 
     font-weight: 700; 
     text-transform: uppercase;
 }
 .post-badge.missing { background: var(--warning); color: var(--dark); }
 .post-badge.sighting { background: var(--success); color: white; }
-.my-post-meta { 
+.my-post-summary { 
     font-size: 13px; 
     color: var(--gray); 
-    display: flex; 
-    gap: 15px; 
-    flex-wrap: wrap;
+    margin-top: 5px;
 }
-.my-post-meta span { display: flex; align-items: center; gap: 5px; }
+.my-post-details {
+    display: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    animation: slideDown 0.3s ease;
+}
+.my-post-details.expanded {
+    display: block;
+}
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.my-post-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+.action-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.action-btn.edit { background: var(--primary); color: white; }
+.action-btn.delete { background: var(--danger); color: white; }
+.action-btn:hover { transform: translateY(-1px); }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: none; overflow-y: auto; }
 .modal-overlay.active { display: block; }
@@ -359,7 +389,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
-          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">️</button>
         </div>
       </div>
       <button type="submit" class="btn-submit" style="width:100%">Login</button>
@@ -645,13 +675,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <div class="info-value" id="userEmailDisplay">Loading...</div>
         </div>
       </div>
-      <div class="info-section" onclick="loadMyPosts()">
+      <!-- UPDATED: Clickable My Posts Section -->
+      <div class="info-section" onclick="toggleMyPosts()">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
             <div class="info-label">MY POSTS</div>
             <div class="info-value">View, edit or delete your reports</div>
           </div>
-          <span style="font-size: 20px;">➡️</span>
+          <span id="myPostsArrow" style="font-size: 20px; transition: transform 0.3s;">➡️</span>
         </div>
       </div>
       <div id="my-posts-container" style="display:none; margin-bottom: 20px;">
@@ -741,7 +772,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div class="modal-overlay" id="emailVerificationModal">
   <div class="modal-content">
     <div class="verification-message">
-      <h2>📧 Check Your Email!</h2>
+      <h2> Check Your Email!</h2>
       <p style="font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
         <strong style="color: var(--warning);">Important:</strong> We've sent a verification link to your email.
       </p>
@@ -833,6 +864,7 @@ let currentUser = null;
 let currentViewPost = null;
 let currentEditId = null;
 let currentDeleteId = null;
+let myPostsExpanded = false;
 
 function escapeHTML(str) {
     if (!str) return '';
@@ -1009,7 +1041,7 @@ function togglePassword(inputId, btn) {
     btn.textContent = '🙈';
   } else {
     input.type = 'password';
-    btn.textContent = '️';
+    btn.textContent = '👁️';
   }
 }
 
@@ -1034,7 +1066,7 @@ async function handleSignup(e) {
   const btn = document.getElementById('signupBtn');
   const agreeToTerms = document.getElementById('agreeToTerms');
   if (!agreeToTerms.checked) {
-    showToast(' You must agree to Privacy Policy and Terms of Service');
+    showToast('❌ You must agree to Privacy Policy and Terms of Service');
     return;
   }
   if (btn) {
@@ -1326,7 +1358,10 @@ function openModal(id, type) {
     ? missingPersons.find(x => x.id === id)
     : foundPersons.find(x => x.id === id);
     
-  if (!person) return;
+  if (!person) {
+    showToast('❌ Post not found');
+    return;
+  }
   
   const photos = type === 'missing' ? (person.photo_urls || []) : (person.photo_url ? [person.photo_url] : []);
   let photoHTML = '';
@@ -1336,15 +1371,20 @@ function openModal(id, type) {
       photoHTML += `<div class="photo-wrapper"><img src="${url}"><div class="photo-counter">${index + 1} / ${photos.length}</div></div>`; 
     });
     photoHTML += '</div>';
+  } else {
+    photoHTML = '<div style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); padding: 60px; text-align: center; border-radius: 12px; margin-bottom: 20px; color: #94a3b8; font-size: 18px;">No Photos Available</div>';
   }
   
   const statusBadge = type === 'missing' 
     ? '<div style="background: var(--warning); color: var(--dark); padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">⚠️ MISSING PERSON</div>'
-    : '<div style="background: var(--success); color: white; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">️ SIGHTING REPORT</div>';
+    : '<div style="background: var(--success); color: white; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">👁️ SIGHTING REPORT</div>';
   
   let detailsHTML = '';
   
   if (type === 'missing') {
+      const daysMissing = getDaysMissing(person.date_last_seen || person.date_missing);
+      const missingTime = formatMissingTime(daysMissing);
+      
       detailsHTML = `
         <div class="info-section">
             <div class="info-label">Name</div>
@@ -1357,13 +1397,20 @@ function openModal(id, type) {
         <div class="info-section">
             <div class="info-label">Date Last Seen</div>
             <div class="info-value">${formatDate(person.date_last_seen || person.date_missing)}</div>
+            <div class="info-label">Days Missing</div>
+            <div class="info-value" style="color: var(--warning);">${missingTime}</div>
             <div class="info-label">Last Seen Location</div>
             <div class="info-value">${escapeHTML(person.last_seen_location)}</div>
         </div>
         ${person.description ? `<div class="info-section"><div class="info-label">Clothing & Appearance</div><div class="info-value">${escapeHTML(person.description)}</div></div>` : ''}
+        ${person.notes ? `<div class="info-section"><div class="info-label">Additional Notes</div><div class="info-value">${escapeHTML(person.notes)}</div></div>` : ''}
+        ${person.residence ? `<div class="info-section"><div class="info-label">Residence</div><div class="info-value">${escapeHTML(person.residence)}</div></div>` : ''}
         ${person.police_station ? `<div class="info-section"><div class="info-label">Nearest Police Station</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
       `;
   } else {
+      const daysAgo = getDaysMissing(person.created_at);
+      const timeAgo = formatTimeAgo(daysAgo);
+      
       detailsHTML = `
         <div class="info-section">
             <div class="info-label">Person Name</div>
@@ -1378,24 +1425,26 @@ function openModal(id, type) {
             <div class="info-value">${escapeHTML(person.sighting_time || 'Not specified')}</div>
             <div class="info-label">Date Reported</div>
             <div class="info-value">${formatDate(person.created_at)}</div>
+            <div class="info-label">Reported</div>
+            <div class="info-value" style="color: var(--success);">${timeAgo}</div>
         </div>
         ${person.description ? `<div class="info-section"><div class="info-label">Description</div><div class="info-value">${escapeHTML(person.description)}</div></div>` : ''}
         ${person.police_station ? `<div class="info-section"><div class="info-label">Reported To Station</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
         <div style="margin-top: 20px; padding: 15px; background: #1e3a8a; border-radius: 8px; text-align: center;">
             <div style="font-size: 13px; color: var(--light); font-weight: 600;">
-                 If you have information, please contact the nearest police station.
+                📞 If you have information, please contact the nearest police station.
             </div>
         </div>
       `;
   }
   
-  document.getElementById('modalContent').innerHTML = `
+  document.getElementById('viewPostTitle').textContent = type === 'missing' ? 'Missing Person Details' : 'Sighting Details';
+  document.getElementById('viewPostContent').innerHTML = `
     ${statusBadge}
     ${photoHTML}
     ${detailsHTML}
   `;
-  
-  document.getElementById('profileModal').classList.add('active');
+  document.getElementById('viewPostModal').classList.add('active');
 }
 
 function closeProfileModal() { document.getElementById('profileModal').classList.remove('active'); }
@@ -1538,6 +1587,25 @@ function formatDate(dateString) {
   return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+// UPDATED: Toggle My Posts section open/close
+function toggleMyPosts() {
+    const container = document.getElementById('my-posts-container');
+    const arrow = document.getElementById('myPostsArrow');
+    
+    if (myPostsExpanded) {
+        // Close
+        container.style.display = 'none';
+        arrow.style.transform = 'rotate(0deg)';
+        myPostsExpanded = false;
+    } else {
+        // Open and load posts
+        loadMyPosts();
+        container.style.display = 'block';
+        arrow.style.transform = 'rotate(90deg)';
+        myPostsExpanded = true;
+    }
+}
+
 async function loadMyPosts() {
   const token = localStorage.getItem('authToken');
   if (!token) { showToast('🔒 Please log in first'); return; }
@@ -1558,10 +1626,7 @@ async function loadMyPosts() {
     }
     
     const posts = await res.json();
-    const container = document.getElementById('my-posts-container');
     const list = document.getElementById('my-posts-list');
-    
-    container.style.display = 'block';
     
     if (posts.length === 0) { 
       list.innerHTML = '<p style="color:var(--gray); padding: 20px; text-align: center;">You have no posts yet.</p>'; 
@@ -1574,19 +1639,26 @@ async function loadMyPosts() {
         const missingTime = formatMissingTime(daysMissing);
         
         return `
-        <div class="my-post-card" onclick="viewMyPost(${post.id}, 'missing')">
+        <div class="my-post-card" onclick="togglePostDetails(this)">
           <div class="my-post-header">
             <div class="my-post-title">
               👁️ ${escapeHTML(post.name)}
               <span class="post-badge missing">Missing Person</span>
             </div>
-            <button onclick="event.stopPropagation(); openEditModal(${post.id}, '${(post.name || '').replace(/'/g, "\\'")}', ${post.age}, '${(post.gender || '').replace(/'/g, "\\'")}', '${(post.date_last_seen || '').replace(/'/g, "\\'")}', '${(post.description || '').replace(/'/g, "\\'")}', '${(post.notes || '').replace(/'/g, "\\'")}', '${(post.last_seen_location || '').replace(/'/g, "\\'")}', '${(post.residence || '').replace(/'/g, "\\'")}', '${(post.police_station || '').replace(/'/g, "\\'")}')" 
-              style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer; font-size: 12px;">Edit</button>
           </div>
-          <div class="my-post-meta">
-            <span>⏳ Missing for ${missingTime}</span>
-            <span> ${escapeHTML(post.last_seen_location)}</span>
-            <span>👤 Age: ${post.age}</span>
+          <div class="my-post-summary">
+            ⏳ Missing for ${missingTime}
+          </div>
+          <div class="my-post-details">
+            <div class="my-post-meta">
+              <span>📍 ${escapeHTML(post.last_seen_location)}</span>
+              <span> Age: ${post.age}</span>
+              ${post.gender ? `<span>⚧️ ${escapeHTML(post.gender)}</span>` : ''}
+            </div>
+            <div class="my-post-actions">
+              <button class="action-btn edit" onclick="event.stopPropagation(); openEditModal(${post.id}, '${(post.name || '').replace(/'/g, "\\'")}', ${post.age}, '${(post.gender || '').replace(/'/g, "\\'")}', '${(post.date_last_seen || '').replace(/'/g, "\\'")}', '${(post.description || '').replace(/'/g, "\\'")}', '${(post.notes || '').replace(/'/g, "\\'")}', '${(post.last_seen_location || '').replace(/'/g, "\\'")}', '${(post.residence || '').replace(/'/g, "\\'")}', '${(post.police_station || '').replace(/'/g, "\\'")}')">Edit Post</button>
+              <button class="action-btn delete" onclick="event.stopPropagation(); openDeleteModal(${post.id})">Delete Post</button>
+            </div>
           </div>
         </div>
         `;
@@ -1595,19 +1667,24 @@ async function loadMyPosts() {
         const timeAgo = formatTimeAgo(daysAgo);
         
         return `
-        <div class="my-post-card" onclick="viewMyPost(${post.id}, 'sighting')">
+        <div class="my-post-card" onclick="togglePostDetails(this)">
           <div class="my-post-header">
             <div class="my-post-title">
               👁️ ${escapeHTML(post.missing_person_name || 'Unknown Person')}
               <span class="post-badge sighting">Sighting</span>
             </div>
-            <button onclick="event.stopPropagation(); deleteSighting(${post.id})" 
-              style="background:var(--danger); color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer; font-size: 12px;">Delete</button>
           </div>
-          <div class="my-post-meta">
-            <span>📅 Reported ${timeAgo}</span>
-            <span>📍 ${escapeHTML(post.sighting_location)}</span>
-            <span>👤 ${escapeHTML(post.gender || 'Not specified')}</span>
+          <div class="my-post-summary">
+            📅 Reported ${timeAgo}
+          </div>
+          <div class="my-post-details">
+            <div class="my-post-meta">
+              <span>📍 ${escapeHTML(post.sighting_location)}</span>
+              <span>👤 ${escapeHTML(post.gender || 'Not specified')}</span>
+            </div>
+            <div class="my-post-actions">
+              <button class="action-btn delete" onclick="event.stopPropagation(); deleteSighting(${post.id})">Delete Sighting</button>
+            </div>
           </div>
         </div>
         `;
@@ -1620,85 +1697,12 @@ async function loadMyPosts() {
   }
 }
 
-function viewMyPost(id, type) {
-    const post = type === 'missing' 
-        ? missingPersons.find(p => p.id === id)
-        : foundPersons.find(p => p.id === id);
-    
-    if (!post) {
-        showToast('❌ Post not found');
-        return;
+// Toggle individual post details
+function togglePostDetails(card) {
+    const details = card.querySelector('.my-post-details');
+    if (details) {
+        details.classList.toggle('expanded');
     }
-    
-    currentViewPost = { id, type, data: post };
-    
-    let content = '';
-    
-    if (type === 'missing') {
-        const daysMissing = getDaysMissing(post.date_last_seen || post.date_missing);
-        const missingTime = formatMissingTime(daysMissing);
-        
-        content = `
-            <div class="info-section">
-                <div class="info-label">Name</div>
-                <div class="info-value">${escapeHTML(post.name)}</div>
-                <div class="info-label">Age</div>
-                <div class="info-value">${post.age || 'N/A'} years old</div>
-                <div class="info-label">Gender</div>
-                <div class="info-value">${escapeHTML(post.gender || 'N/A')}</div>
-            </div>
-            <div class="info-section">
-                <div class="info-label">Date Last Seen</div>
-                <div class="info-value">${formatDate(post.date_last_seen || post.date_missing)}</div>
-                <div class="info-label">Days Missing</div>
-                <div class="info-value" style="color: var(--warning);">${missingTime}</div>
-                <div class="info-label">Last Seen Location</div>
-                <div class="info-value">${escapeHTML(post.last_seen_location)}</div>
-            </div>
-            ${post.description ? `<div class="info-section"><div class="info-label">Clothing & Appearance</div><div class="info-value">${escapeHTML(post.description)}</div></div>` : ''}
-            ${post.notes ? `<div class="info-section"><div class="info-label">Additional Notes</div><div class="info-value">${escapeHTML(post.notes)}</div></div>` : ''}
-            ${post.residence ? `<div class="info-section"><div class="info-label">Residence</div><div class="info-value">${escapeHTML(post.residence)}</div></div>` : ''}
-            ${post.police_station ? `<div class="info-section"><div class="info-label">Nearest Police Station</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(post.police_station)}</div></div>` : ''}
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button onclick="openEditModal(${post.id}, '${(post.name || '').replace(/'/g, "\\'")}', ${post.age}, '${(post.gender || '').replace(/'/g, "\\'")}', '${(post.date_last_seen || '').replace(/'/g, "\\'")}', '${(post.description || '').replace(/'/g, "\\'")}', '${(post.notes || '').replace(/'/g, "\\'")}', '${(post.last_seen_location || '').replace(/'/g, "\\'")}', '${(post.residence || '').replace(/'/g, "\\'")}', '${(post.police_station || '').replace(/'/g, "\\'")}')" 
-                    style="flex: 1; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Edit Post</button>
-                <button onclick="openDeleteModal(${post.id})" 
-                    style="flex: 1; padding: 12px; background: var(--danger); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Delete Post</button>
-            </div>
-        `;
-    } else {
-        const daysAgo = getDaysMissing(post.created_at);
-        const timeAgo = formatTimeAgo(daysAgo);
-        
-        content = `
-            <div class="info-section">
-                <div class="info-label">Person Name</div>
-                <div class="info-value">${escapeHTML(post.missing_person_name || 'Unknown')}</div>
-                <div class="info-label">Gender</div>
-                <div class="info-value">${escapeHTML(post.gender || 'Not specified')}</div>
-            </div>
-            <div class="info-section">
-                <div class="info-label">Sighting Location</div>
-                <div class="info-value">${escapeHTML(post.sighting_location)}</div>
-                <div class="info-label">Time Seen</div>
-                <div class="info-value">${escapeHTML(post.sighting_time || 'Not specified')}</div>
-                <div class="info-label">Date Reported</div>
-                <div class="info-value">${formatDate(post.created_at)}</div>
-                <div class="info-label">Reported</div>
-                <div class="info-value" style="color: var(--success);">${timeAgo}</div>
-            </div>
-            ${post.description ? `<div class="info-section"><div class="info-label">Description</div><div class="info-value">${escapeHTML(post.description)}</div></div>` : ''}
-            ${post.police_station ? `<div class="info-section"><div class="info-label">Reported To Station</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(post.police_station)}</div></div>` : ''}
-            <div style="margin-top: 20px;">
-                <button onclick="deleteSighting(${post.id})" 
-                    style="width: 100%; padding: 12px; background: var(--danger); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Delete Sighting</button>
-            </div>
-        `;
-    }
-    
-    document.getElementById('viewPostTitle').textContent = type === 'missing' ? 'Missing Person Details' : 'Sighting Details';
-    document.getElementById('viewPostContent').innerHTML = content;
-    document.getElementById('viewPostModal').classList.add('active');
 }
 
 async function deleteSighting(id) {
@@ -1719,7 +1723,6 @@ async function deleteSighting(id) {
     if (!res.ok) throw new Error('Delete failed');
     
     showToast('✅ Sighting deleted.');
-    closeModal('viewPostModal');
     loadMyPosts();
   } catch (err) { 
     showToast('❌ ' + err.message); 
