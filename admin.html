@@ -25,6 +25,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .stat-card h3 { color: var(--gray); font-size: 14px; margin-bottom: 10px; }
 .stat-card .number { font-size: 32px; font-weight: 700; color: var(--warning); }
 .content-card { background: var(--dark-card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); overflow-x: auto; }
+.create-user-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.create-user-btn { background: var(--success); color: white; padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 14px; }
+.create-user-btn:hover { background: #047857; }
 table { width: 100%; border-collapse: collapse; min-width: 900px; }
 th, td { padding: 15px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
 th { color: var(--warning); font-size: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; background: rgba(15, 23, 42, 0.5); }
@@ -33,6 +36,7 @@ tr:hover td { background: rgba(251, 191, 36, 0.05); }
 .role-badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
 .role-admin { background: var(--warning); color: var(--dark); }
 .role-user { background: var(--gray); color: var(--dark); }
+.role-police { background: var(--primary); color: white; }
 .phone-number, .email-link { font-family: monospace; background: var(--dark); padding: 6px 10px; border-radius: 6px; font-size: 13px; border: 1px solid var(--border); display: inline-block; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
 .email-link { color: var(--warning); text-decoration: none; }
 .email-link:hover { text-decoration: underline; }
@@ -44,8 +48,20 @@ tr:hover td { background: rgba(251, 191, 36, 0.05); }
 .img-modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.95); justify-content: center; align-items: center; }
 .img-modal-content { max-width: 95%; max-height: 95%; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
 .close-modal { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; font-weight: bold; }
+.modal { display: none; position: fixed; z-index: 9998; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
+.modal-content { background: var(--dark-card); padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; border: 1px solid var(--border); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-header h2 { color: var(--warning); }
+.close-modal-btn { background: none; border: none; color: var(--gray); font-size: 28px; cursor: pointer; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--light); }
+.form-group input, .form-group select { width: 100%; padding: 12px; background: var(--dark); border: 1px solid var(--border); border-radius: 8px; color: var(--light); font-size: 14px; }
+.form-group input:focus, .form-group select:focus { outline: none; border-color: var(--warning); }
+.submit-btn { width: 100%; padding: 14px; background: var(--success); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 16px; }
+.submit-btn:hover { background: #047857; }
 .loading { text-align: center; padding: 40px; color: var(--gray); }
 .error { color: var(--danger); text-align: center; padding: 20px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; }
+.success-message { color: var(--success); text-align: center; padding: 10px; background: rgba(5, 150, 105, 0.1); border-radius: 8px; margin-bottom: 15px; }
 @media (max-width: 768px) {
   .header { flex-direction: column; gap: 15px; align-items: flex-start; }
   th, td { padding: 10px 8px; font-size: 12px; }
@@ -72,10 +88,14 @@ tr:hover td { background: rgba(251, 191, 36, 0.05); }
   <div class="stats">
     <div class="stat-card"><h3>Total Users</h3><div class="number" id="totalUsers">0</div></div>
     <div class="stat-card"><h3>Admins</h3><div class="number" id="totalAdmins">0</div></div>
+    <div class="stat-card"><h3>Police Officers</h3><div class="number" id="totalPolice">0</div></div>
     <div class="stat-card"><h3>Verified</h3><div class="number" id="verifiedUsers">0</div></div>
   </div>
   <div class="content-card">
-    <h2 style="color: var(--warning); margin-bottom: 20px;">Registered Users</h2>
+    <div class="create-user-header">
+      <h2 style="color: var(--warning);">Registered Users</h2>
+      <button class="create-user-btn" onclick="openCreateUserModal()">+ Create Police User</button>
+    </div>
     <div id="usersContainer"><div class="loading">Loading users...</div></div>
   </div>
 </div>
@@ -102,6 +122,74 @@ tr:hover td { background: rgba(251, 191, 36, 0.05); }
   </div>
 </div>
 
+<!-- Create Police User Modal -->
+<div id="createUserModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Create Police User Account</h2>
+      <button class="close-modal-btn" onclick="closeCreateUserModal()">&times;</button>
+    </div>
+    <div id="createUserMessage"></div>
+    <form onsubmit="createPoliceUser(event)">
+      <div class="form-group">
+        <label>Email Address *</label>
+        <input type="email" id="policeEmail" required placeholder="officer@police.go.ke">
+      </div>
+      <div class="form-group">
+        <label>Temporary Password *</label>
+        <input type="text" id="policePassword" required placeholder="Enter temporary password">
+        <small style="color: var(--gray); display: block; margin-top: 5px;">The officer will be able to change this after logging in</small>
+      </div>
+      <div class="form-group">
+        <label>Police Station *</label>
+        <select id="policeStation" required>
+          <option value="">-- Select Police Station --</option>
+          <option value="RUI-2026-001">Ruiru Police Station</option>
+          <option value="KAS-2026-001">Kasarani Police Station</option>
+          <option value="NRB-2026-001">Central Police Station - Nairobi</option>
+          <option value="KIL-2026-001">Kilimani Police Station</option>
+          <option value="WES-2026-001">Westlands Police Station</option>
+          <option value="LAN-2026-001">Lang'ata Police Station</option>
+          <option value="EMB-2026-001">Embakasi Police Station</option>
+          <option value="RUA-2026-001">Ruaraka Police Station</option>
+          <option value="DON-2026-001">Donholm Police Station</option>
+          <option value="KAY-2026-001">Kayole Police Station</option>
+          <option value="PUM-2026-001">Pumwani Police Station</option>
+          <option value="KAM-2026-001">Kamukunji Police Station</option>
+          <option value="STA-2026-001">Starehe Police Station</option>
+          <option value="MAK-2026-001">Makadara Police Station</option>
+          <option value="KIB-2026-001">Kibera Police Station</option>
+          <option value="PAR-2026-001">Parklands Police Station</option>
+          <option value="THI-2026-001">Thika Police Station</option>
+          <option value="KIA-2026-001">Kiambu Town Police Station</option>
+          <option value="LIM-2026-001">Limuru Police Station</option>
+          <option value="JUJ-2026-001">Juja Police Station</option>
+          <option value="KAR-2026-001">Karuri Police Station</option>
+          <option value="KIK-2026-001">Kikuyu Police Station</option>
+          <option value="MOM-2026-001">Mombasa Central Police Station</option>
+          <option value="TUD-2026-001">Tudor Police Station</option>
+          <option value="CHA-2026-001">Changamwe Police Station</option>
+          <option value="KIS-2026-001">Kisauni Police Station</option>
+          <option value="LIK-2026-001">Likoni Police Station</option>
+          <option value="KIS-CEN-001">Kisumu Central Police Station</option>
+          <option value="KIS-TOW-001">Kisumu Town Police Station</option>
+          <option value="NYA-2026-001">Nyando Police Station</option>
+          <option value="MUH-2026-001">Muhoroni Police Station</option>
+          <option value="NAK-CEN-001">Nakuru Central Police Station</option>
+          <option value="NAK-TOW-001">Nakuru Town Police Station</option>
+          <option value="NAI-2026-001">Naivasha Police Station</option>
+          <option value="GIL-2026-001">Gilgil Police Station</option>
+          <option value="MOL-2026-001">Molo Police Station</option>
+          <option value="ELD-2026-001">Eldoret Police Station</option>
+          <option value="ELD-TOW-001">Eldoret Town Police Station</option>
+          <option value="TUR-2026-001">Turbo Police Station</option>
+        </select>
+      </div>
+      <button type="submit" class="submit-btn">Create Account</button>
+    </form>
+  </div>
+</div>
+
 <!-- Image Modal -->
 <div id="imageModal" class="img-modal" onclick="closeImageModal()">
   <span class="close-modal">&times;</span>
@@ -111,7 +199,7 @@ tr:hover td { background: rgba(251, 191, 36, 0.05); }
 <script>
 const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 
-// ️ ADMIN SECURITY GUARD
+//  ADMIN SECURITY GUARD
 (function checkAdminAccess() {
     const token = localStorage.getItem('authToken');
     const userStr = localStorage.getItem('user');
@@ -141,6 +229,56 @@ function closeImageModal() {
     document.getElementById('imageModal').style.display = 'none';
 }
 
+// Create User Modal Functions
+function openCreateUserModal() {
+    document.getElementById('createUserModal').style.display = 'flex';
+    document.getElementById('createUserMessage').innerHTML = '';
+    document.getElementById('policeEmail').value = '';
+    document.getElementById('policePassword').value = '';
+    document.getElementById('policeStation').value = '';
+}
+
+function closeCreateUserModal() {
+    document.getElementById('createUserModal').style.display = 'none';
+}
+
+// Create Police User
+async function createPoliceUser(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('policeEmail').value;
+    const password = document.getElementById('policePassword').value;
+    const station_id = document.getElementById('policeStation').value;
+    const token = localStorage.getItem('authToken');
+    const messageDiv = document.getElementById('createUserMessage');
+    
+    try {
+        const res = await fetch(`${API_URL}/admin/create-police-user`, {
+            method: 'POST',
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password, station_id })
+        });
+        
+        const data = await res.json();
+        
+        if (!res.ok) {
+            throw new Error(data.error || 'Failed to create user');
+        }
+        
+        messageDiv.innerHTML = `<div class="success-message">✅ User created successfully! Email: ${data.user.email}</div>`;
+        setTimeout(() => {
+            closeCreateUserModal();
+            loadUsers(); // Reload the users list
+        }, 2000);
+        
+    } catch (err) {
+        messageDiv.innerHTML = `<div class="error">❌ ${err.message}</div>`;
+    }
+}
+
 // Load Users
 async function loadUsers() {
     const token = localStorage.getItem('authToken');
@@ -152,25 +290,29 @@ async function loadUsers() {
         
         document.getElementById('totalUsers').textContent = users.length;
         document.getElementById('totalAdmins').textContent = users.filter(u => u.role === 'admin').length;
+        document.getElementById('totalPolice').textContent = users.filter(u => u.role === 'police').length;
         document.getElementById('verifiedUsers').textContent = users.filter(u => u.is_verified).length;
         
         if (users.length === 0) { container.innerHTML = '<div class="loading">No users found</div>'; return; }
         
-        // Added "Action" column header
-        let html = `<table><thead><tr><th>Email</th><th>Role</th><th>Verified</th><th>Joined</th><th>Action</th></tr></thead><tbody>`;
+        let html = `<table><thead><tr><th>Email</th><th>Role</th><th>Station</th><th>Verified</th><th>Joined</th><th>Action</th></tr></thead><tbody>`;
         users.forEach(user => {
             const verifiedBadge = user.is_verified ? '<span style="color: var(--success); font-weight: bold;">✅ Yes</span>' : '<span style="color: var(--gray);">❌ No</span>';
-            const roleClass = user.role === 'admin' ? 'role-admin' : 'role-user';
+            let roleClass = 'role-user';
+            if (user.role === 'admin') roleClass = 'role-admin';
+            else if (user.role === 'police') roleClass = 'role-police';
+            
             const joinDate = new Date(user.created_at).toLocaleDateString('en-KE');
-            // Added Delete button for each user
-            html += `<tr><td>${user.email}</td><td><span class="role-badge ${roleClass}">${user.role}</span></td><td>${verifiedBadge}</td><td>${joinDate}</td><td><button class="btn-delete" onclick="deleteUser('${user.id}', '${user.email}')">Delete User</button></td></tr>`;
+            const station = user.station_id || 'N/A';
+            
+            html += `<tr><td>${user.email}</td><td><span class="role-badge ${roleClass}">${user.role}</span></td><td>${station}</td><td>${verifiedBadge}</td><td>${joinDate}</td><td><button class="btn-delete" onclick="deleteUser('${user.id}', '${user.email}')">Delete User</button></td></tr>`;
         });
         html += `</tbody></table>`;
         container.innerHTML = html;
     } catch (err) { container.innerHTML = `<div class="error">❌ ${err.message}</div>`; }
 }
 
-// ✅ NEW: Delete User Function
+// Delete User Function
 async function deleteUser(id, email) {
     if (!confirm(`Are you sure you want to permanently delete the user "${email}"? This cannot be undone.`)) return;
     
@@ -186,9 +328,9 @@ async function deleteUser(id, email) {
         
         if (!res.ok) throw new Error('Failed to delete user');
         alert('✅ User deleted successfully');
-        loadUsers(); // Reload the list
+        loadUsers();
     } catch (err) {
-        alert('❌ Failed to delete: ' + err.message);
+        alert(' Failed to delete: ' + err.message);
     }
 }
 
@@ -246,7 +388,7 @@ async function loadSightings() {
             const date = new Date(s.created_at).toLocaleDateString('en-KE');
             const phone = s.reporter_contact || 'N/A';
             const reporterEmail = s.reporter_email || 'Unknown';
-            html += `<tr><td>${imgHtml}</td><td><strong>${s.missing_person_name || 'Unknown'}</strong></td><td>${s.sighting_location}</td><td>${s.sighting_time || 'N/A'}</td><td><span class="phone-number">📞 ${phone}</span></td><td><a href="mailto:${reporterEmail}" class="email-link">📧 ${reporterEmail}</a></td><td>${date}</td><td><button class="btn-delete" onclick="deleteSighting('${s.id}')">Delete</button></td></tr>`;
+            html += `<tr><td>${imgHtml}</td><td><strong>${s.missing_person_name || 'Unknown'}</strong></td><td>${s.sighting_location}</td><td>${s.sighting_time || 'N/A'}</td><td><span class="phone-number">📞 ${phone}</span></td><td><a href="mailto:${reporterEmail}" class="email-link"> ${reporterEmail}</a></td><td>${date}</td><td><button class="btn-delete" onclick="deleteSighting('${s.id}')">Delete</button></td></tr>`;
         });
         html += `</tbody></table>`;
         container.innerHTML = html;
