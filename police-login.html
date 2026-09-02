@@ -87,7 +87,7 @@ body {
         </div>
         <button type="submit" class="btn-login" id="loginBtn">
             <span id="btnText">🔐 Access Dashboard</span>
-            <span id="btnSpinner" style="display:none;">⏳ Logging in...</span>
+            <span id="btnSpinner" style="display:none;"> Logging in...</span>
         </button>
     </form>
 
@@ -97,15 +97,30 @@ body {
 <script>
 const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 
-// 1. AUTO-LOGIN CHECK (Caching)
+// 1. AUTO-LOGIN CHECK (Prevent redirect loop)
 window.onload = function() {
     const token = localStorage.getItem('authToken');
-    const user = JSON.parse(localStorage.getItem('policeUser'));
+    const userStr = localStorage.getItem('user');
+    const policeUserStr = localStorage.getItem('policeUser');
     
-    // If token and user exist, and user has a station, skip login
-    if (token && user && user.station_id) {
-        console.log('✅ Cached session found. Redirecting to dashboard...');
-        window.location.href = 'police-dashboard.html';
+    // Check if already logged in as police officer
+    if (token && (userStr || policeUserStr)) {
+        try {
+            const user = userStr ? JSON.parse(userStr) : JSON.parse(policeUserStr);
+            
+            // Verify user is police officer and has station
+            if (user.role === 'police' && user.station_id && user.station_id !== 'UNASSIGNED') {
+                console.log('✅ Valid police session found. Redirecting to dashboard...');
+                window.location.href = 'police-dashboard.html';
+                return;
+            }
+        } catch (e) {
+            console.error('Session parse error:', e);
+            // Clear invalid session
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            localStorage.removeItem('policeUser');
+        }
     }
 };
 
@@ -139,19 +154,26 @@ async function handleLogin(e) {
             throw new Error(data.error || 'Login failed. Check credentials.');
         }
 
-        // 3. CHECK STATION ASSIGNMENT
+        // 3. CHECK IF USER IS POLICE OFFICER
+        if (data.user.role !== 'police') {
+            throw new Error('Access denied. This portal is for police officers only.');
+        }
+
+        // 4. CHECK STATION ASSIGNMENT
         if (!data.user.station_id || data.user.station_id === 'UNASSIGNED') {
             throw new Error('Your account is not assigned to a police station. Please contact the Admin.');
         }
 
-        // 4. CACHE DATA (Just like Admin)
+        // 5. CACHE DATA (Store in both locations for compatibility)
         localStorage.setItem('authToken', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('policeUser', JSON.stringify(data.user));
 
-        console.log('✅ Login successful. Redirecting...');
+        console.log('✅ Login successful. Redirecting to dashboard...');
         window.location.href = 'police-dashboard.html';
 
     } catch (err) {
+        console.error('Login error:', err);
         errorDiv.textContent = '⚠️ ' + err.message;
         errorDiv.style.display = 'block';
         btn.disabled = false;
