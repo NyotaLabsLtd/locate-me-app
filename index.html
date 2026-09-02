@@ -67,7 +67,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .card-info { font-size: 14px; color: var(--gray); margin-bottom: 4px; }
 .card-days-missing { font-size: 15px; color: var(--warning); font-weight: 700; margin-bottom: 6px; }
 
-/* My Posts Styles - UPDATED */
+/* My Posts Styles */
 .my-posts-section { margin-top: 15px; }
 .my-post-card { 
     background: var(--dark-card); 
@@ -137,9 +137,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
+    color: white;
 }
-.action-btn.edit { background: var(--primary); color: white; }
-.action-btn.delete { background: var(--danger); color: white; }
+.action-btn.edit { background: var(--primary); }
+.action-btn.delete { background: var(--danger); }
 .action-btn:hover { transform: translateY(-1px); }
 
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: none; overflow-y: auto; }
@@ -675,7 +676,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <div class="info-value" id="userEmailDisplay">Loading...</div>
         </div>
       </div>
-      <!-- UPDATED: Clickable My Posts Section -->
       <div class="info-section" onclick="toggleMyPosts()">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
@@ -801,7 +801,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <div class="modal-content" id="viewPostContent"></div>
 </div>
 
-<!-- Edit Post Modal -->
+<!-- Edit Missing Person Modal -->
 <div class="modal-overlay" id="editPostModal">
   <div class="modal-header">
     <h2>Edit Post</h2>
@@ -810,7 +810,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <div class="modal-content">
     <input type="hidden" id="editPostId">
     <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid var(--warning); border-radius: 8px; padding: 12px; margin-bottom: 20px; font-size: 13px; color: var(--warning);">
-        <strong>⚠️ Note:</strong> Images cannot be edited. To change photos, please delete this post and create a new one.
+        <strong>️ Note:</strong> Images cannot be edited. To change photos, please delete this post and create a new one.
     </div>
     <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="editName"></div>
     <div class="form-group"><label class="form-label">Age</label><input type="number" class="form-input" id="editAge"></div>
@@ -829,6 +829,32 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     <div class="form-group"><label class="form-label">Residence</label><input type="text" class="form-input" id="editResidence"></div>
     <div class="form-group"><label class="form-label">Nearest Police Station</label><input type="text" class="form-input" id="editPoliceStation"></div>
     <button class="btn-submit" style="width:100%" onclick="savePostEdit()">Save Changes</button>
+  </div>
+</div>
+
+<!-- NEW: Edit Sighting Modal -->
+<div class="modal-overlay" id="editSightingModal">
+  <div class="modal-header">
+    <h2>Edit Sighting</h2>
+    <button class="modal-close" onclick="closeModal('editSightingModal')">✕</button>
+  </div>
+  <div class="modal-content">
+    <input type="hidden" id="editSightingId">
+    <div class="form-group"><label class="form-label">Person Name</label><input type="text" class="form-input" id="editSightingName"></div>
+    <div class="form-group"><label class="form-label">Gender</label>
+        <select class="form-select" id="editSightingGender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+    <div class="form-group"><label class="form-label">Location</label><input type="text" class="form-input" id="editSightingLocation"></div>
+    <div class="form-group"><label class="form-label">Time</label><input type="text" class="form-input" id="editSightingTime"></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="editSightingDesc" rows="3"></textarea></div>
+    <div class="form-group"><label class="form-label">Reporter Name</label><input type="text" class="form-input" id="editSightingReporter"></div>
+    <div class="form-group"><label class="form-label">Contact</label><input type="text" class="form-input" id="editSightingContact"></div>
+    <div class="form-group"><label class="form-label">Police Station</label><input type="text" class="form-input" id="editSightingStation"></div>
+    <button class="btn-submit" style="width:100%" onclick="saveSightingEdit()">Save Changes</button>
   </div>
 </div>
 
@@ -864,6 +890,7 @@ let currentUser = null;
 let currentViewPost = null;
 let currentEditId = null;
 let currentDeleteId = null;
+let currentSightingEditId = null;
 let myPostsExpanded = false;
 
 function escapeHTML(str) {
@@ -1031,6 +1058,7 @@ function closeModal(id) {
     document.getElementById(id).classList.remove('active');
     if (id === 'viewPostModal') currentViewPost = null;
     if (id === 'editPostModal') currentEditId = null;
+    if (id === 'editSightingModal') currentSightingEditId = null;
     if (id === 'deletePostModal') currentDeleteId = null;
 }
 
@@ -1204,7 +1232,7 @@ async function checkVerificationLink() {
         document.getElementById('verifySuccessModal').classList.add('active');
         window.history.replaceState({}, document.title, window.location.pathname);
       } else {
-        showToast('❌ ' + (data.error || 'Verification failed'));
+        showToast(' ' + (data.error || 'Verification failed'));
       }
     } catch (err) {
       showToast('❌ Verification failed. Link may be expired.');
@@ -1608,7 +1636,7 @@ function toggleMyPosts() {
 
 async function loadMyPosts() {
   const token = localStorage.getItem('authToken');
-  if (!token) { showToast('🔒 Please log in first'); return; }
+  if (!token) { showToast(' Please log in first'); return; }
   
   try {
     const res = await fetch(`${API_URL}/users/my-posts`, { 
@@ -1651,9 +1679,8 @@ async function loadMyPosts() {
           </div>
           <div class="my-post-details">
             <div class="my-post-meta">
-              <span>📍 ${escapeHTML(post.last_seen_location)}</span>
-              <span> Age: ${post.age}</span>
-              ${post.gender ? `<span>⚧️ ${escapeHTML(post.gender)}</span>` : ''}
+              <span> ${escapeHTML(post.last_seen_location)}</span>
+              <span>👤 Age: ${post.age}</span>
             </div>
             <div class="my-post-actions">
               <button class="action-btn edit" onclick="event.stopPropagation(); openEditModal(${post.id}, '${(post.name || '').replace(/'/g, "\\'")}', ${post.age}, '${(post.gender || '').replace(/'/g, "\\'")}', '${(post.date_last_seen || '').replace(/'/g, "\\'")}', '${(post.description || '').replace(/'/g, "\\'")}', '${(post.notes || '').replace(/'/g, "\\'")}', '${(post.last_seen_location || '').replace(/'/g, "\\'")}', '${(post.residence || '').replace(/'/g, "\\'")}', '${(post.police_station || '').replace(/'/g, "\\'")}')">Edit Post</button>
@@ -1680,9 +1707,10 @@ async function loadMyPosts() {
           <div class="my-post-details">
             <div class="my-post-meta">
               <span>📍 ${escapeHTML(post.sighting_location)}</span>
-              <span>👤 ${escapeHTML(post.gender || 'Not specified')}</span>
+              <span> ${escapeHTML(post.gender || 'Not specified')}</span>
             </div>
             <div class="my-post-actions">
+              <button class="action-btn edit" onclick="event.stopPropagation(); openEditSightingModal(${post.id}, '${(post.missing_person_name || '').replace(/'/g, "\\'")}', '${(post.gender || '').replace(/'/g, "\\'")}', '${(post.sighting_location || '').replace(/'/g, "\\'")}', '${(post.sighting_time || '').replace(/'/g, "\\'")}', '${(post.description || '').replace(/'/g, "\\'")}', '${(post.reporter_name || '').replace(/'/g, "\\'")}', '${(post.reporter_contact || '').replace(/'/g, "\\'")}', '${(post.police_station || '').replace(/'/g, "\\'")}')">Edit Sighting</button>
               <button class="action-btn delete" onclick="event.stopPropagation(); deleteSighting(${post.id})">Delete Sighting</button>
             </div>
           </div>
@@ -1777,6 +1805,52 @@ async function savePostEdit() {
   }
 }
 
+// NEW: Sighting Edit Logic
+function openEditSightingModal(id, name, gender, loc, time, desc, reporter, contact, station) {
+  currentSightingEditId = id;
+  document.getElementById('editSightingName').value = name;
+  document.getElementById('editSightingGender').value = gender;
+  document.getElementById('editSightingLocation').value = loc;
+  document.getElementById('editSightingTime').value = time;
+  document.getElementById('editSightingDesc').value = desc;
+  document.getElementById('editSightingReporter').value = reporter;
+  document.getElementById('editSightingContact').value = contact;
+  document.getElementById('editSightingStation').value = station;
+  document.getElementById('editSightingModal').classList.add('active');
+}
+
+async function saveSightingEdit() {
+  const token = localStorage.getItem('authToken');
+  const data = {
+    missing_person_name: document.getElementById('editSightingName').value,
+    gender: document.getElementById('editSightingGender').value,
+    sighting_location: document.getElementById('editSightingLocation').value,
+    sighting_time: document.getElementById('editSightingTime').value,
+    description: document.getElementById('editSightingDesc').value,
+    reporter_name: document.getElementById('editSightingReporter').value,
+    reporter_contact: document.getElementById('editSightingContact').value,
+    police_station: document.getElementById('editSightingStation').value
+  };
+  try {
+    const res = await fetch(`${API_URL}/sightings/${currentSightingEditId}`, { 
+        method: 'PUT', 
+        headers: { 
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${token}` 
+        }, 
+        body: JSON.stringify(data) 
+    });
+    if (res.status === 401) { logout(); throw new Error('Session expired.'); }
+    if (!res.ok) throw new Error('Update failed');
+    showToast('✅ Sighting updated!'); 
+    closeModal('editSightingModal'); 
+    loadMyPosts(); 
+    loadData();
+  } catch (err) { 
+    showToast('❌ ' + err.message); 
+  }
+}
+
 function openDeleteModal(id) { 
     currentDeleteId = id; 
     closeModal('viewPostModal');
@@ -1802,7 +1876,7 @@ async function confirmDeletePost() {
     loadMyPosts(); 
     loadData();
   } catch (err) { 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
