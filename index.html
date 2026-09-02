@@ -390,7 +390,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
-          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
         </div>
       </div>
       <button type="submit" class="btn-submit" style="width:100%">Login</button>
@@ -1144,6 +1144,7 @@ async function handleSignup(e) {
   }
 }
 
+// ✅ UPDATED: Added role-based redirect after login
 async function handleLogin(e) {
   e.preventDefault();
   try {
@@ -1167,8 +1168,16 @@ async function handleLogin(e) {
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
     showToast('✅ Login successful!'); 
-    showApp(); 
-    loadData();
+    
+    // ✅ ROLE-BASED REDIRECT AFTER LOGIN
+    if (data.user.role === 'admin') {
+      window.location.href = 'admin-dashboard.html';
+    } else if (data.user.role === 'police') {
+      window.location.href = 'police-dashboard.html';
+    } else {
+      showApp(); 
+      loadData();
+    }
   } catch (err) { 
     showToast('❌ ' + err.message); 
   }
@@ -1207,12 +1216,23 @@ async function handleGoogleResponse(response) {
   }
 }
 
+// ✅ UPDATED: Added role-based redirect on page load
 function checkAuth() {
   const token = localStorage.getItem('authToken');
   const user = localStorage.getItem('user');
   if (token && user) {
     currentUser = JSON.parse(user);
     document.getElementById('userEmailDisplay').textContent = currentUser.email;
+    
+    // ✅ ROLE-BASED REDIRECT ON PAGE LOAD
+    if (currentUser.role === 'admin') {
+      window.location.href = 'admin-dashboard.html';
+      return;
+    } else if (currentUser.role === 'police') {
+      window.location.href = 'police-dashboard.html';
+      return;
+    }
+    
     hideLandingPage();
     showApp(); 
     loadData();
