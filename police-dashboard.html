@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Police Dashboard - Locate Me</title>
-<!-- jsPDF Library for PDF Generation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 /* ==========================================
@@ -101,21 +100,73 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 .btn-refresh:hover svg { fill: white; }
 
 /* ==========================================
-   5. LISTS
+   5. LISTS - FIXED RESPONSIVENESS
    ========================================== */
 .missing-list, .sightings-list, .resolved-list { display: flex; flex-direction: column; gap: 12px; }
 .missing-item, .sighting-item, .resolved-item {
-    background: var(--light); border-radius: 10px; padding: 15px; display: grid; grid-template-columns: 70px 1fr auto;
-    gap: 15px; align-items: center; border: 2px solid transparent; transition: all 0.2s; cursor: pointer;
+    background: var(--light); border-radius: 10px; padding: 15px; 
+    display: grid; 
+    grid-template-columns: 70px 1fr auto;
+    gap: 15px; 
+    align-items: center; 
+    border: 2px solid transparent; 
+    transition: all 0.2s; 
+    cursor: pointer;
 }
-.missing-item:hover, .sighting-item:hover, .resolved-item:hover { border-color: var(--primary); background: white; box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08); }
-.missing-photo, .sighting-photo { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-.missing-info h4, .sighting-info h4, .resolved-info h4 { font-size: 15px; color: var(--dark); margin-bottom: 6px; }
-.meta-info { display: flex; gap: 15px; font-size: 12px; color: var(--gray); margin-bottom: 6px; flex-wrap: wrap; }
-.meta-info span { display: flex; align-items: center; gap: 4px; }
-.case-notes { font-size: 12px; color: var(--gray); line-height: 1.4; }
-.action-buttons { display: flex; flex-direction: column; gap: 8px; }
-.btn { padding: 8px 14px; border-radius: 8px; border: none; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.missing-item:hover, .sighting-item:hover, .resolved-item:hover { 
+    border-color: var(--primary); 
+    background: white; 
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08); 
+}
+.missing-photo, .sighting-photo { 
+    width: 70px; 
+    height: 70px; 
+    border-radius: 10px; 
+    object-fit: cover; 
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    flex-shrink: 0;
+}
+.missing-info h4, .sighting-info h4, .resolved-info h4 { 
+    font-size: 15px; 
+    color: var(--dark); 
+    margin-bottom: 6px; 
+}
+.meta-info { 
+    display: flex; 
+    gap: 15px; 
+    font-size: 12px; 
+    color: var(--gray); 
+    margin-bottom: 6px; 
+    flex-wrap: wrap; 
+}
+.meta-info span { 
+    display: flex; 
+    align-items: center; 
+    gap: 4px; 
+}
+.case-notes { 
+    font-size: 12px; 
+    color: var(--gray); 
+    line-height: 1.4; 
+}
+.action-buttons { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+}
+.btn { 
+    padding: 8px 14px; 
+    border-radius: 8px; 
+    border: none; 
+    font-size: 11px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: all 0.2s; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 6px; 
+}
 .btn-primary { background: var(--primary); color: white; }
 .btn-success { background: var(--success); color: white; }
 .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--gray); }
@@ -126,17 +177,55 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 /* ==========================================
-   6. MODALS (Details & Image Viewer)
+   6. MODALS
    ========================================== */
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay { 
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.6); 
+    z-index: 1000; 
+    align-items: center; 
+    justify-content: center; 
+    padding: 20px;
+    overflow-y: auto;
+}
 .modal-overlay.active { display: flex; }
-.modal-container { background: white; border-radius: 16px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; }
+.modal-container { 
+    background: white; 
+    border-radius: 16px; 
+    max-width: 700px; 
+    width: 100%; 
+    max-height: 90vh; 
+    overflow-y: auto; 
+}
 .modal-header { 
-    padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; 
-    position: sticky; top: 0; background: white; z-index: 10; border-radius: 16px 16px 0 0; 
+    padding: 20px 25px; 
+    border-bottom: 1px solid var(--border); 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    position: sticky; 
+    top: 0; 
+    background: white; 
+    z-index: 10; 
+    border-radius: 16px 16px 0 0; 
 }
 .modal-header h2 { font-size: 18px; color: var(--dark); }
-.btn-close { width: 30px; height: 30px; border-radius: 8px; border: none; background: var(--light); font-size: 16px; cursor: pointer; position: relative; z-index: 20; }
+.btn-close { 
+    width: 30px; 
+    height: 30px; 
+    border-radius: 8px; 
+    border: none; 
+    background: var(--light); 
+    font-size: 16px; 
+    cursor: pointer; 
+    position: relative; 
+    z-index: 20; 
+}
 .btn-close:hover { background: var(--danger); color: white; }
 .modal-body { padding: 25px; }
 .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
@@ -146,10 +235,32 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 .full-width { grid-column: span 2; }
 
 /* Full Screen Image Viewer */
-.image-viewer-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; align-items: center; justify-content: center; }
+.image-viewer-overlay { 
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.95); 
+    z-index: 2000; 
+    align-items: center; 
+    justify-content: center; 
+}
 .image-viewer-overlay.active { display: flex; }
 .image-viewer-content { max-width: 95%; max-height: 95%; object-fit: contain; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-.image-viewer-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; background: none; border: none; transition: transform 0.2s; z-index: 2010; }
+.image-viewer-close { 
+    position: absolute; 
+    top: 20px; 
+    right: 30px; 
+    color: white; 
+    font-size: 40px; 
+    cursor: pointer; 
+    background: none; 
+    border: none; 
+    transition: transform 0.2s; 
+    z-index: 2010; 
+}
 .image-viewer-close:hover { transform: scale(1.1); color: var(--danger); }
 
 /* Reports Grid */
@@ -182,7 +293,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 }
 
 /* ==========================================
-   7. POST MODALS (Missing Person & Sighting)
+   7. POST MODALS
    ========================================== */
 .post-modal-content { background: var(--dark); color: white; border-radius: 16px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
 .post-modal-header { 
@@ -220,14 +331,35 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 .btn-submit:hover { background: #fbbf24; }
 .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
+/* ==========================================
+   8. RESPONSIVE DESIGN
+   ========================================== */
 @media (max-width: 768px) {
     .sidebar { transform: translateX(-100%); }
     .main-wrapper { margin-left: 0; }
-    .missing-item, .sighting-item, .resolved-item { grid-template-columns: 1fr; }
-    .action-buttons { flex-direction: row; }
+    .missing-item, .sighting-item, .resolved-item { 
+        grid-template-columns: 1fr; 
+        gap: 12px;
+    }
+    .missing-photo, .sighting-photo { 
+        width: 100%; 
+        height: 200px; 
+    }
+    .action-buttons { 
+        flex-direction: row; 
+    }
     .info-grid { grid-template-columns: 1fr; }
     .full-width { grid-column: span 1; }
     .form-row { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .section-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .section-header > div:last-child { width: 100%; justify-content: space-between; }
+}
+
+@media (max-width: 480px) {
+    .main-wrapper { padding: 15px; }
+    .page-title { font-size: 20px; }
+    .stat-content h4 { font-size: 24px; }
 }
 </style>
 </head>
@@ -469,7 +601,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
                 <h3>Resolved Cases Summary</h3>
                 <p>Summary of all successfully resolved cases this month</p>
-                <div class="report-date">📅 Current Month</div>
+                <div class="report-date"> Current Month</div>
                 <button class="btn-download" onclick="downloadReport('resolved-summary')"> Download PDF</button>
             </div>
             <div class="report-card">
@@ -497,14 +629,14 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 <h3>Weekly Activity Report</h3>
                 <p>Weekly summary of all station activities and cases</p>
                 <div class="report-date"> Last 7 Days</div>
-                <button class="btn-download" onclick="downloadReport('weekly')">📥 Download PDF</button>
+                <button class="btn-download" onclick="downloadReport('weekly')"> Download PDF</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- DETAILS MODAL -->
-<div class="modal-overlay" id="detailsModal">
+<div class="modal-overlay" id="detailsModal" onclick="closeModalOnOverlay(event)">
     <div class="modal-container">
         <div class="modal-header">
             <h2>Case Details</h2>
@@ -515,8 +647,8 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 </div>
 
 <!-- POST MISSING PERSON MODAL -->
-<div class="modal-overlay" id="postModal">
-    <div class="post-modal-content">
+<div class="modal-overlay" id="postModal" onclick="closeModalOnOverlay(event)">
+    <div class="post-modal-content" onclick="event.stopPropagation()">
         <div class="post-modal-header">
             <h2>📍 Post Missing Person</h2>
             <button class="btn-close" onclick="closePostModal()">✕</button>
@@ -596,8 +728,8 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 </div>
 
 <!-- POST SIGHTING MODAL -->
-<div class="modal-overlay" id="sightingModal">
-    <div class="post-modal-content">
+<div class="modal-overlay" id="sightingModal" onclick="closeModalOnOverlay(event)">
+    <div class="post-modal-content" onclick="event.stopPropagation()">
         <div class="post-modal-header">
             <h2>👁️ Report Sighting</h2>
             <button class="btn-close" onclick="closeSightingModal()">✕</button>
@@ -684,15 +816,14 @@ let currentUser = { stationName: null, officerId: null, stationId: null };
 let uploadedPhotos = [];
 
 // ==========================================
-// 1. SECURITY CHECK (FIXED - No redirect loop)
+// 1. SECURITY CHECK
 // ==========================================
 window.onload = function() {
     const token = localStorage.getItem('authToken');
     const userStr = localStorage.getItem('user');
     
     if (!token || !userStr) {
-        // Not logged in - redirect to police login
-        console.log('⚠️ No valid session. Redirecting to login...');
+        console.log('️ No valid session. Redirecting to login...');
         window.location.href = 'police-login.html';
         return;
     }
@@ -700,9 +831,8 @@ window.onload = function() {
     try {
         const user = JSON.parse(userStr);
         
-        // Verify user is police officer
         if (user.role !== 'police') {
-            console.log('️ User is not a police officer. Redirecting...');
+            console.log(' User is not a police officer. Redirecting...');
             localStorage.removeItem('authToken');
             localStorage.removeItem('user');
             localStorage.removeItem('policeUser');
@@ -710,7 +840,6 @@ window.onload = function() {
             return;
         }
         
-        // User is authenticated police officer
         currentUser = user;
         document.getElementById('currentStationName').textContent = user.station_id || 'Police Station';
         fetchDashboardData();
@@ -735,6 +864,7 @@ function logout() {
 
 function switchPage(pageName, event) {
     if(event) {
+        event.stopPropagation();
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
         event.currentTarget.classList.add('active');
     }
@@ -746,7 +876,7 @@ function switchPage(pageName, event) {
     }
 }
 
-// 2. FETCH DATA FROM BACKEND (With proper auth headers)
+// 2. FETCH DATA FROM BACKEND
 async function fetchDashboardData() {
     const missingList = document.getElementById('missingList');
     const dashboardList = document.getElementById('dashboardMissingList');
@@ -832,7 +962,7 @@ async function fetchResolvedCases() {
                 : `<img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2364748b%22 font-size=%2224%22%3E✅%3C/text%3E%3C/svg%3E" alt="${c.name}" class="missing-photo">`;
             
             return `
-            <div class="resolved-item" onclick="showDetails(${c.id}, 'resolved')">
+            <div class="resolved-item" onclick="showDetails('${c.id}', 'resolved')">
                 ${imgHtml}
                 <div class="resolved-info">
                     <h4>${c.name}</h4>
@@ -845,7 +975,7 @@ async function fetchResolvedCases() {
                     <div class="case-notes">${c.resolution_notes || 'Case resolved successfully'}</div>
                 </div>
                 <div class="action-buttons">
-                    <button class="btn btn-primary" onclick="event.stopPropagation(); showDetails(${c.id}, 'resolved')">View Details</button>
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); showDetails('${c.id}', 'resolved')">View Details</button>
                 </div>
             </div>
         `}).join('');
@@ -880,14 +1010,13 @@ function renderMissingPersons(container, cases) {
         const critical = isCriticalCase(p);
         const criticalBadge = critical ? '<span class="critical-badge">CRITICAL</span>' : '';
         
-        // Use a proper placeholder or first photo
         const photoUrl = p.photo_urls && p.photo_urls.length > 0 ? p.photo_urls[0] : null;
         const imgHtml = photoUrl 
             ? `<img src="${photoUrl}" alt="${p.name}" class="missing-photo" onerror="this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2364748b%22 font-size=%2224%22%3E👤%3C/text%3E%3C/svg%3E'">`
             : `<img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2364748b%22 font-size=%2224%22%3E👤%3C/text%3E%3C/svg%3E" alt="${p.name}" class="missing-photo">`;
         
         return `
-        <div class="missing-item" onclick="showDetails(${p.id}, 'missing')">
+        <div class="missing-item" onclick="showDetails('${p.id}', 'missing')">
             ${imgHtml}
             <div class="missing-info">
                 <h4>${p.name} ${criticalBadge}</h4>
@@ -900,8 +1029,8 @@ function renderMissingPersons(container, cases) {
                 <div class="case-notes">${p.description ? p.description.substring(0, 80) + '...' : 'No additional notes'}</div>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" onclick="event.stopPropagation(); showDetails(${p.id}, 'missing')">View Details</button>
-                <button class="btn btn-success" onclick="event.stopPropagation(); markAsFound(${p.id})">Mark Found</button>
+                <button class="btn btn-primary" onclick="event.stopPropagation(); showDetails('${p.id}', 'missing')">View Details</button>
+                <button class="btn btn-success" onclick="event.stopPropagation(); markAsFound('${p.id}')">Mark Found</button>
             </div>
         </div>
     `}).join('');
@@ -913,20 +1042,19 @@ function renderSightings(container, sightings) {
         return;
     }
     container.innerHTML = sightings.map(s => {
-        // Use a proper placeholder or photo
         const photoUrl = s.photo_url || null;
         const imgHtml = photoUrl 
             ? `<img src="${photoUrl}" alt="Sighting" class="sighting-photo" onerror="this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2364748b%22 font-size=%2224%22%3E️%3C/text%3E%3C/svg%3E'">`
             : `<img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2364748b%22 font-size=%2224%22%3E️%3C/text%3E%3C/svg%3E" alt="Sighting" class="sighting-photo">`;
         
         return `
-        <div class="sighting-item" onclick="showDetails(${s.id}, 'sighting')">
+        <div class="sighting-item" onclick="showDetails('${s.id}', 'sighting')">
             ${imgHtml}
             <div class="sighting-info">
                 <h4>Sighting: ${s.missing_person_name || 'Unknown Person'}</h4>
                 <div class="meta-info">
                     <span> ${s.sighting_location}</span>
-                    <span>🕐 ${s.sighting_time || 'Recently'}</span>
+                    <span> ${s.sighting_time || 'Recently'}</span>
                 </div>
                 <div class="meta-info">
                     <span> ${s.reporter_name || 'Anonymous'}</span>
@@ -935,18 +1063,22 @@ function renderSightings(container, sightings) {
                 <div class="case-notes">${s.description ? s.description.substring(0, 80) + '...' : 'No description provided'}</div>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" onclick="event.stopPropagation(); showDetails(${s.id}, 'sighting')">View Details</button>
-                <button class="btn btn-success" onclick="event.stopPropagation(); markSightingResolved(${s.id})">✓ Mark Resolved</button>
+                <button class="btn btn-primary" onclick="event.stopPropagation(); showDetails('${s.id}', 'sighting')">View Details</button>
+                <button class="btn btn-success" onclick="event.stopPropagation(); markSightingResolved('${s.id}')">✓ Mark Resolved</button>
             </div>
         </div>
     `}).join('');
 }
 
 function showDetails(id, type) {
+    console.log('Showing details for:', id, type);
     const item = type === 'missing' ? missingPersons.find(c => c.id == id) : 
                  type === 'sighting' ? sightingAlerts.find(s => s.id == id) : 
                  resolvedCases.find(c => c.id == id);
-    if (!item) return;
+    if (!item) {
+        console.error('Item not found:', id);
+        return;
+    }
     
     const modalBody = document.getElementById('modalBody');
     
@@ -994,7 +1126,7 @@ function showDetails(id, type) {
                 <div class="info-box"><label>Last Updated</label><value>${formatDate(item.updated_at)}</value></div>
             </div>
             <div style="display: flex; gap: 10px;">
-                <button class="btn btn-success" style="flex: 1;" onclick="markAsFound(${item.id}); closeModal();">✓ Mark as Found</button>
+                <button class="btn btn-success" style="flex: 1;" onclick="markAsFound('${item.id}'); closeModal();">✓ Mark as Found</button>
                 <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Close</button>
             </div>
         `;
@@ -1028,7 +1160,7 @@ function showDetails(id, type) {
             </div>
             <div style="display: flex; gap: 10px;">
                 ${item.reporter_contact ? `<button class="btn btn-primary" style="flex: 1;" onclick="contactReporter('${item.reporter_contact}')"> Call Reporter</button>` : ''}
-                <button class="btn btn-success" style="flex: 1;" onclick="markSightingResolved(${item.id}); closeModal();">✓ Mark Resolved</button>
+                <button class="btn btn-success" style="flex: 1;" onclick="markSightingResolved('${item.id}'); closeModal();">✓ Mark Resolved</button>
             </div>
         `;
     } else {
@@ -1052,6 +1184,12 @@ function showDetails(id, type) {
     document.getElementById('detailsModal').classList.add('active');
 }
 
+function closeModalOnOverlay(event) {
+    if (event.target === event.currentTarget) {
+        closeModal();
+    }
+}
+
 function openImageViewer(url) {
     if(!url) return;
     document.getElementById('viewerImage').src = url;
@@ -1063,7 +1201,11 @@ function closeImageViewer() {
     document.getElementById('viewerImage').src = '';
 }
 
-function closeModal() { document.getElementById('detailsModal').classList.remove('active'); }
+function closeModal() { 
+    document.getElementById('detailsModal').classList.remove('active');
+    document.getElementById('postModal').classList.remove('active');
+    document.getElementById('sightingModal').classList.remove('active');
+}
 
 async function markAsFound(id) {
     const resolutionNotes = prompt('Enter resolution notes (optional):', 'Found safe and returned to family');
@@ -1090,10 +1232,27 @@ async function markAsFound(id) {
     }
 }
 
-function markSightingResolved(id) { if(confirm('Mark this sighting as resolved?')) { alert('✅ Sighting marked as resolved.'); fetchDashboardData(); } }
-function contactReporter(phone) { if(confirm(`Call ${phone}?`)) { window.location.href = `tel:${phone}`; } }
-function markAllRead() { alert('✅ All sighting alerts marked as read'); }
-function formatDate(dateString) { if (!dateString) return 'Not specified'; return new Date(dateString).toLocaleDateString('en-KE', { year: 'numeric', month: 'short', day: 'numeric' }); }
+function markSightingResolved(id) { 
+    if(confirm('Mark this sighting as resolved?')) { 
+        alert('✅ Sighting marked as resolved.'); 
+        fetchDashboardData(); 
+    } 
+}
+
+function contactReporter(phone) { 
+    if(confirm(`Call ${phone}?`)) { 
+        window.location.href = `tel:${phone}`; 
+    } 
+}
+
+function markAllRead() { 
+    alert('✅ All sighting alerts marked as read'); 
+}
+
+function formatDate(dateString) { 
+    if (!dateString) return 'Not specified'; 
+    return new Date(dateString).toLocaleDateString('en-KE', { year: 'numeric', month: 'short', day: 'numeric' }); 
+}
 
 // ==========================================
 // POST MISSING PERSON FUNCTIONS
@@ -1189,7 +1348,7 @@ async function handlePostMissing(event) {
             residence: document.getElementById('postResidence').value,
             last_seen_location: document.getElementById('postLocation').value,
             date_last_seen: dateLastSeen,
-            date_missing: dateLastSeen, // Keep this for backward compatibility
+            date_missing: dateLastSeen,
             police_station: policeStation,
             photo_urls: photoUrls
         };
@@ -1244,7 +1403,6 @@ async function handlePostSighting(event) {
         const token = localStorage.getItem('authToken');
         const photoFile = document.getElementById('sightingPhoto').files[0];
         
-        // Upload photo to Cloudinary if provided
         let photoUrl = null;
         if (photoFile) {
             const formData = new FormData();
@@ -1262,7 +1420,6 @@ async function handlePostSighting(event) {
             }
         }
         
-        // Get station name from current user
         const stationMap = {
             'RUI-2026-001': 'Ruiru Police Station',
             'KAS-2026-001': 'Kasarani Police Station',
@@ -1516,8 +1673,6 @@ function getMonthName(monthNumber) {
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     return months[monthNumber - 1];
 }
-
-document.getElementById('detailsModal').addEventListener('click', function(e) { if(e.target === this) closeModal(); });
 </script>
 </body>
 </html>
