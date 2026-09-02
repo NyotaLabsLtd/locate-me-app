@@ -131,13 +131,11 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
 .modal-overlay.active { display: flex; }
 .modal-container { background: white; border-radius: 16px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; }
-/* FIX: Sticky header for light modal so X button stays visible */
 .modal-header { 
     padding: 20px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; 
     position: sticky; top: 0; background: white; z-index: 10; border-radius: 16px 16px 0 0; 
 }
 .modal-header h2 { font-size: 18px; color: var(--dark); }
-/* FIX: High z-index for close button */
 .btn-close { width: 30px; height: 30px; border-radius: 8px; border: none; background: var(--light); font-size: 16px; cursor: pointer; position: relative; z-index: 20; }
 .btn-close:hover { background: var(--danger); color: white; }
 .modal-body { padding: 25px; }
@@ -187,13 +185,11 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
    7. POST MODALS (Missing Person & Sighting)
    ========================================== */
 .post-modal-content { background: var(--dark); color: white; border-radius: 16px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
-/* FIX: Sticky header for dark modal so X button stays visible */
 .post-modal-header { 
     padding: 20px 25px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; 
     position: sticky; top: 0; background: var(--dark); z-index: 10; border-radius: 16px 16px 0 0; 
 }
 .post-modal-header h2 { font-size: 20px; font-weight: 700; }
-/* FIX: High z-index for close button in dark modal */
 .post-modal-header .btn-close { background: rgba(255,255,255,0.1); color: white; position: relative; z-index: 20; }
 .post-modal-header .btn-close:hover { background: var(--danger); }
 .post-modal-body { padding: 25px; }
@@ -211,7 +207,6 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 }
 .form-group input[type="file"] { padding: 10px; }
 .form-group textarea { min-height: 100px; resize: vertical; }
-/* FIX: Ensure select options are visible */
 .form-group select option {
     background: var(--dark);
     color: white;
@@ -466,7 +461,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 <h3>Sighting Analysis Report</h3>
                 <p>Analysis of all citizen sighting reports and response times</p>
                 <div class="report-date"> Current Month</div>
-                <button class="btn-download" onclick="downloadReport('sighting-analysis')">📥 Download PDF</button>
+                <button class="btn-download" onclick="downloadReport('sighting-analysis')"> Download PDF</button>
             </div>
             <div class="report-card">
                 <div class="report-icon green">
@@ -604,7 +599,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 <div class="modal-overlay" id="sightingModal">
     <div class="post-modal-content">
         <div class="post-modal-header">
-            <h2>️ Report Sighting</h2>
+            <h2>👁️ Report Sighting</h2>
             <button class="btn-close" onclick="closeSightingModal()">✕</button>
         </div>
         <div class="post-modal-body">
@@ -688,24 +683,51 @@ let resolvedCases = [];
 let currentUser = { stationName: null, officerId: null, stationId: null };
 let uploadedPhotos = [];
 
-// 1. SECURITY CHECK (Redirect if not logged in)
+// ==========================================
+// 1. SECURITY CHECK (FIXED - No redirect loop)
+// ==========================================
 window.onload = function() {
     const token = localStorage.getItem('authToken');
-    const user = JSON.parse(localStorage.getItem('policeUser'));
+    const userStr = localStorage.getItem('user');
     
-    if (!token || !user) {
+    if (!token || !userStr) {
+        // Not logged in - redirect to police login
+        console.log('⚠️ No valid session. Redirecting to login...');
         window.location.href = 'police-login.html';
         return;
     }
     
-    currentUser = user;
-    document.getElementById('currentStationName').textContent = user.station_id;
-    fetchDashboardData();
+    try {
+        const user = JSON.parse(userStr);
+        
+        // Verify user is police officer
+        if (user.role !== 'police') {
+            console.log('️ User is not a police officer. Redirecting...');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+            localStorage.removeItem('policeUser');
+            window.location.href = 'police-login.html';
+            return;
+        }
+        
+        // User is authenticated police officer
+        currentUser = user;
+        document.getElementById('currentStationName').textContent = user.station_id || 'Police Station';
+        fetchDashboardData();
+        
+    } catch (e) {
+        console.error('Auth error:', e);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('policeUser');
+        window.location.href = 'police-login.html';
+    }
 };
 
 function logout() {
     if(confirm('Are you sure you want to logout?')) {
         localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
         localStorage.removeItem('policeUser');
         window.location.href = 'police-login.html';
     }
@@ -724,7 +746,7 @@ function switchPage(pageName, event) {
     }
 }
 
-// 2. FETCH DATA FROM BACKEND
+// 2. FETCH DATA FROM BACKEND (With proper auth headers)
 async function fetchDashboardData() {
     const missingList = document.getElementById('missingList');
     const dashboardList = document.getElementById('dashboardMissingList');
@@ -738,12 +760,19 @@ async function fetchDashboardData() {
         const token = localStorage.getItem('authToken');
         
         const res = await fetch(`${API_URL}/police/cases`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
         });
 
         if (!res.ok) {
             if (res.status === 401 || res.status === 403) {
-                logout();
+                console.log('⚠️ Token expired or invalid. Redirecting to login...');
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('user');
+                localStorage.removeItem('policeUser');
+                window.location.href = 'police-login.html';
                 return;
             }
             throw new Error('Failed to fetch data');
@@ -778,7 +807,10 @@ async function fetchResolvedCases() {
         const token = localStorage.getItem('authToken');
         
         const res = await fetch(`${API_URL}/missing-persons/resolved`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
         });
 
         if (!res.ok) {
@@ -800,7 +832,7 @@ async function fetchResolvedCases() {
                     <h4>${c.name}</h4>
                     <div class="meta-info">
                         <span> ${c.age} years</span>
-                        <span>♂️ ${c.gender}</span>
+                        <span>️ ${c.gender}</span>
                         <span>📅 Resolved: ${formatDate(c.resolved_at)}</span>
                     </div>
                     <div class="meta-info"><span> ${c.last_seen_location}</span></div>
@@ -979,7 +1011,7 @@ function showDetails(id, type) {
                 ${item.poster_email ? `<div class="info-box full-width"><label>Posted By</label><value style="color: var(--success);">${item.poster_email}</value></div>` : ''}
             </div>
             <div style="display: flex; gap: 10px;">
-                ${item.reporter_contact ? `<button class="btn btn-primary" style="flex: 1;" onclick="contactReporter('${item.reporter_contact}')">📞 Call Reporter</button>` : ''}
+                ${item.reporter_contact ? `<button class="btn btn-primary" style="flex: 1;" onclick="contactReporter('${item.reporter_contact}')"> Call Reporter</button>` : ''}
                 <button class="btn btn-success" style="flex: 1;" onclick="markSightingResolved(${item.id}); closeModal();">✓ Mark Resolved</button>
             </div>
         `;
