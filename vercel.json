@@ -1,0 +1,35 @@
+{
+  "rewrites": [
+    {
+      "source": "/police-dashboard",
+      "destination": "/police-dashboard.html"
+    },
+    {
+      "source": "/admin-dashboard",
+      "destination": "/admin-dashboard.html"
+    },
+    {
+      "source": "/police-login",
+      "destination": "/police-login.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}
