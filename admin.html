@@ -62,6 +62,14 @@ tr:hover td { background: rgba(251, 191, 36, 0.05); }
 .loading { text-align: center; padding: 40px; color: var(--gray); }
 .error { color: var(--danger); text-align: center; padding: 20px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; }
 .success-message { color: var(--success); text-align: center; padding: 10px; background: rgba(5, 150, 105, 0.1); border-radius: 8px; margin-bottom: 15px; }
+
+/* --- ADDED: Audit Log Badges --- */
+.action-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+.badge-login { background: #1e3a8a; color: white; }
+.badge-create { background: var(--success); color: white; }
+.badge-delete { background: var(--danger); color: white; }
+.badge-update { background: var(--warning); color: var(--dark); }
+
 @media (max-width: 768px) {
   .header { flex-direction: column; gap: 15px; align-items: flex-start; }
   th, td { padding: 10px 8px; font-size: 12px; }
@@ -81,6 +89,7 @@ tr:hover td { background: rgba(251, 191, 36, 0.05); }
   <button class="tab active" onclick="switchTab('users', event)">👥 Users</button>
   <button class="tab" onclick="switchTab('missing', event)">📋 Missing Persons</button>
   <button class="tab" onclick="switchTab('found', event)">🔍 Found/Sightings</button>
+  <button class="tab" onclick="switchTab('logs', event)">📜 Audit Logs</button>
 </div>
 
 <!-- USERS SECTION -->
@@ -119,6 +128,17 @@ tr:hover td { background: rgba(251, 191, 36, 0.05); }
   <div class="content-card">
     <h2 style="color: var(--warning); margin-bottom: 20px;">Found/Sighting Reports</h2>
     <div id="foundContainer"><div class="loading">Loading sightings...</div></div>
+  </div>
+</div>
+
+<!-- ADDED: AUDIT LOGS SECTION -->
+<div id="logsSection" class="section">
+  <div class="content-card">
+    <div class="create-user-header">
+      <h2 style="color: var(--warning);">System Activity Log</h2>
+      <button class="create-user-btn" style="background: var(--dark); border: 1px solid var(--border);" onclick="loadAuditLogs()">🔄 Refresh</button>
+    </div>
+    <div id="logsContainer"><div class="loading">Loading logs...</div></div>
   </div>
 </div>
 
@@ -199,7 +219,7 @@ tr:hover td { background: rgba(251, 191, 36, 0.05); }
 <script>
 const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
 
-//  ADMIN SECURITY GUARD
+// ADMIN SECURITY GUARD
 (function checkAdminAccess() {
     const token = localStorage.getItem('authToken');
     const userStr = localStorage.getItem('user');
@@ -218,6 +238,11 @@ function switchTab(tabName, event) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     event.target.classList.add('active');
     document.getElementById(tabName + 'Section').classList.add('active');
+    
+    // ADDED: Load logs when switching to the logs tab
+    if (tabName === 'logs') {
+        loadAuditLogs();
+    }
 }
 
 function openImageModal(src) {
@@ -330,7 +355,7 @@ async function deleteUser(id, email) {
         alert('✅ User deleted successfully');
         loadUsers();
     } catch (err) {
-        alert(' Failed to delete: ' + err.message);
+        alert('❌ Failed to delete: ' + err.message);
     }
 }
 
@@ -388,7 +413,7 @@ async function loadSightings() {
             const date = new Date(s.created_at).toLocaleDateString('en-KE');
             const phone = s.reporter_contact || 'N/A';
             const reporterEmail = s.reporter_email || 'Unknown';
-            html += `<tr><td>${imgHtml}</td><td><strong>${s.missing_person_name || 'Unknown'}</strong></td><td>${s.sighting_location}</td><td>${s.sighting_time || 'N/A'}</td><td><span class="phone-number">📞 ${phone}</span></td><td><a href="mailto:${reporterEmail}" class="email-link"> ${reporterEmail}</a></td><td>${date}</td><td><button class="btn-delete" onclick="deleteSighting('${s.id}')">Delete</button></td></tr>`;
+            html += `<tr><td>${imgHtml}</td><td><strong>${s.missing_person_name || 'Unknown'}</strong></td><td>${s.sighting_location}</td><td>${s.sighting_time || 'N/A'}</td><td><span class="phone-number">📞 ${phone}</span></td><td><a href="mailto:${reporterEmail}" class="email-link">📧 ${reporterEmail}</a></td><td>${date}</td><td><button class="btn-delete" onclick="deleteSighting('${s.id}')">Delete</button></td></tr>`;
         });
         html += `</tbody></table>`;
         container.innerHTML = html;
@@ -438,6 +463,48 @@ async function deleteSighting(id) {
         loadSightings(); 
     } catch (err) {
         alert('❌ Failed to delete: ' + err.message);
+    }
+}
+
+// ADDED: Audit Logs Logic
+async function loadAuditLogs() {
+    const token = localStorage.getItem('authToken');
+    const container = document.getElementById('logsContainer');
+    container.innerHTML = '<div class="loading">Loading logs...</div>';
+    
+    try {
+        const res = await fetch(`${API_URL}/admin/audit-logs`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!res.ok) throw new Error('Failed to load logs');
+        const logs = await res.json();
+        
+        if (logs.length === 0) {
+            container.innerHTML = '<div class="loading">No activity logs found.</div>';
+            return;
+        }
+
+        let html = `<table><thead><tr><th>Time</th><th>User</th><th>Action</th><th>Target</th><th>Details</th><th>IP Address</th></tr></thead><tbody>`;
+        logs.forEach(log => {
+            const time = new Date(log.created_at).toLocaleString('en-KE');
+            const email = log.user_email || 'System/Unknown';
+            
+            let badgeClass = 'badge-update';
+            if (log.action.includes('LOGIN')) badgeClass = 'badge-login';
+            else if (log.action.includes('CREATE')) badgeClass = 'badge-create';
+            else if (log.action.includes('DELETE')) badgeClass = 'badge-delete';
+            
+            html += `<tr>
+                <td style="font-size:12px; color:var(--gray);">${time}</td>
+                <td>${email}</td>
+                <td><span class="action-badge ${badgeClass}">${log.action}</span></td>
+                <td>${log.target_type || '-'}</td>
+                <td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${log.details || '-'}">${log.details || '-'}</td>
+                <td style="font-size:12px; color:var(--gray);">${log.ip_address || '-'}</td>
+            </tr>`;
+        });
+        html += `</tbody></table>`;
+        container.innerHTML = html;
+    } catch (err) { 
+        container.innerHTML = `<div class="error">❌ ${err.message}</div>`; 
     }
 }
 
