@@ -1144,7 +1144,6 @@ async function handleSignup(e) {
   }
 }
 
-// ✅ UPDATED: Added role-based redirect after login
 async function handleLogin(e) {
   e.preventDefault();
   try {
@@ -1169,7 +1168,6 @@ async function handleLogin(e) {
     document.getElementById('userEmailDisplay').textContent = data.user.email;
     showToast('✅ Login successful!'); 
     
-    // ✅ FIXED: Role-based redirect after login
     if (data.user.role === 'admin') {
       window.location.href = 'admin.html';
     } else if (data.user.role === 'police') {
@@ -1216,7 +1214,6 @@ async function handleGoogleResponse(response) {
   }
 }
 
-// ✅ UPDATED: Added role-based redirect on page load
 function checkAuth() {
   const token = localStorage.getItem('authToken');
   const user = localStorage.getItem('user');
@@ -1224,7 +1221,6 @@ function checkAuth() {
     currentUser = JSON.parse(user);
     document.getElementById('userEmailDisplay').textContent = currentUser.email;
     
-    // ✅ FIXED: Role-based redirect on page load
     if (currentUser.role === 'admin') {
       window.location.href = 'admin.html';
       return;
@@ -1363,7 +1359,7 @@ function renderMissingCards() {
         ? `<img src="${photoSrc}" class="card-image" onerror="this.style.display='none'">`
         : `<div class="card-image" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 18px;">No Photo</div>`;
       return `
-    <div class="missing-card" onclick="openModal(${p.id}, 'missing')">
+    <div class="missing-card" onclick="openModal('${p.id}', 'missing')">
       ${imgTag}
       <div class="card-content">
         <div class="card-name">${escapeHTML(p.name)}</div>
@@ -1389,7 +1385,7 @@ function renderFoundCards() {
       ? `<img src="${photoSrc}" class="card-image" onerror="this.style.display='none'">`
       : `<div class="card-image" style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 18px;">No Photo</div>`;
     return `
-      <div class="missing-card" onclick="openModal(${p.id}, 'found')">
+      <div class="missing-card" onclick="openModal('${p.id}', 'found')">
         ${imgTag}
         <div class="card-content">
           <div class="card-name">👁️ ${escapeHTML(p.missing_person_name || 'Unknown Person')}</div>
@@ -1635,18 +1631,15 @@ function formatDate(dateString) {
   return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-// UPDATED: Toggle My Posts section open/close
 function toggleMyPosts() {
     const container = document.getElementById('my-posts-container');
     const arrow = document.getElementById('myPostsArrow');
     
     if (myPostsExpanded) {
-        // Close
         container.style.display = 'none';
         arrow.style.transform = 'rotate(0deg)';
         myPostsExpanded = false;
     } else {
-        // Open and load posts
         loadMyPosts();
         container.style.display = 'block';
         arrow.style.transform = 'rotate(90deg)';
@@ -1703,8 +1696,8 @@ async function loadMyPosts() {
               <span>👤 Age: ${post.age}</span>
             </div>
             <div class="my-post-actions">
-              <button class="action-btn edit" onclick="event.stopPropagation(); openEditModal(${post.id}, '${(post.name || '').replace(/'/g, "\\'")}', ${post.age}, '${(post.gender || '').replace(/'/g, "\\'")}', '${(post.date_last_seen || '').replace(/'/g, "\\'")}', '${(post.description || '').replace(/'/g, "\\'")}', '${(post.notes || '').replace(/'/g, "\\'")}', '${(post.last_seen_location || '').replace(/'/g, "\\'")}', '${(post.residence || '').replace(/'/g, "\\'")}', '${(post.police_station || '').replace(/'/g, "\\'")}')">Edit Post</button>
-              <button class="action-btn delete" onclick="event.stopPropagation(); openDeleteModal(${post.id})">Delete Post</button>
+              <button class="action-btn edit" onclick="event.stopPropagation(); openEditModal('${post.id}', '${(post.name || '').replace(/'/g, "\\'")}', ${post.age}, '${(post.gender || '').replace(/'/g, "\\'")}', '${(post.date_last_seen || '').replace(/'/g, "\\'")}', '${(post.description || '').replace(/'/g, "\\'")}', '${(post.notes || '').replace(/'/g, "\\'")}', '${(post.last_seen_location || '').replace(/'/g, "\\'")}', '${(post.residence || '').replace(/'/g, "\\'")}', '${(post.police_station || '').replace(/'/g, "\\'")}')">Edit Post</button>
+              <button class="action-btn delete" onclick="event.stopPropagation(); openDeleteModal('${post.id}')">Delete Post</button>
             </div>
           </div>
         </div>
@@ -1730,8 +1723,8 @@ async function loadMyPosts() {
               <span> ${escapeHTML(post.gender || 'Not specified')}</span>
             </div>
             <div class="my-post-actions">
-              <button class="action-btn edit" onclick="event.stopPropagation(); openEditSightingModal(${post.id}, '${(post.missing_person_name || '').replace(/'/g, "\\'")}', '${(post.gender || '').replace(/'/g, "\\'")}', '${(post.sighting_location || '').replace(/'/g, "\\'")}', '${(post.sighting_time || '').replace(/'/g, "\\'")}', '${(post.description || '').replace(/'/g, "\\'")}', '${(post.reporter_name || '').replace(/'/g, "\\'")}', '${(post.reporter_contact || '').replace(/'/g, "\\'")}', '${(post.police_station || '').replace(/'/g, "\\'")}')">Edit Sighting</button>
-              <button class="action-btn delete" onclick="event.stopPropagation(); deleteSighting(${post.id})">Delete Sighting</button>
+              <button class="action-btn edit" onclick="event.stopPropagation(); openEditSightingModal('${post.id}', '${(post.missing_person_name || '').replace(/'/g, "\\'")}', '${(post.gender || '').replace(/'/g, "\\'")}', '${(post.sighting_location || '').replace(/'/g, "\\'")}', '${(post.sighting_time || '').replace(/'/g, "\\'")}', '${(post.description || '').replace(/'/g, "\\'")}', '${(post.reporter_name || '').replace(/'/g, "\\'")}', '${(post.reporter_contact || '').replace(/'/g, "\\'")}', '${(post.police_station || '').replace(/'/g, "\\'")}')">Edit Sighting</button>
+              <button class="action-btn delete" onclick="event.stopPropagation(); deleteSighting('${post.id}')">Delete Sighting</button>
             </div>
           </div>
         </div>
@@ -1745,7 +1738,6 @@ async function loadMyPosts() {
   }
 }
 
-// Toggle individual post details
 function togglePostDetails(card) {
     const details = card.querySelector('.my-post-details');
     if (details) {
@@ -1825,7 +1817,6 @@ async function savePostEdit() {
   }
 }
 
-// NEW: Sighting Edit Logic
 function openEditSightingModal(id, name, gender, loc, time, desc, reporter, contact, station) {
   currentSightingEditId = id;
   document.getElementById('editSightingName').value = name;
