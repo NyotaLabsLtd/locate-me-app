@@ -1168,6 +1168,7 @@ async function handleLogin(e) {
     document.getElementById('userEmailDisplay').textContent = data.user.email;
     showToast('✅ Login successful!'); 
     
+    // ✅ Redirect based on role ONLY immediately after login
     if (data.user.role === 'admin') {
       window.location.href = 'admin.html';
     } else if (data.user.role === 'police') {
@@ -1207,27 +1208,29 @@ async function handleGoogleResponse(response) {
     currentUser = data.user;
     document.getElementById('userEmailDisplay').textContent = data.user.email;
     showToast('✅ Signed in with Google!'); 
-    showApp(); 
-    loadData();
+    
+    // ✅ Redirect based on role ONLY immediately after login
+    if (data.user.role === 'admin') {
+      window.location.href = 'admin.html';
+    } else if (data.user.role === 'police') {
+      window.location.href = 'police-dashboard.html';
+    } else {
+      showApp(); 
+      loadData();
+    }
   } catch (err) { 
     showToast('❌ ' + err.message); 
   }
 }
 
+// ✅ FIXED: Removed forced redirect so admins/police can freely browse the main app.
+// Dashboard redirects only happen immediately after a successful login.
 function checkAuth() {
   const token = localStorage.getItem('authToken');
   const user = localStorage.getItem('user');
   if (token && user) {
     currentUser = JSON.parse(user);
     document.getElementById('userEmailDisplay').textContent = currentUser.email;
-    
-    if (currentUser.role === 'admin') {
-      window.location.href = 'admin.html';
-      return;
-    } else if (currentUser.role === 'police') {
-      window.location.href = 'police-dashboard.html';
-      return;
-    }
     
     hideLandingPage();
     showApp(); 
