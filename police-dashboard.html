@@ -605,7 +605,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 <h3>Resolved Cases Summary</h3>
                 <p>Summary of all successfully resolved cases this month</p>
                 <div class="report-date">📅 Current Month</div>
-                <button class="btn-download" onclick="downloadReport('resolved-summary')"> Download PDF</button>
+                <button class="btn-download" onclick="downloadReport('resolved-summary')">📥 Download PDF</button>
             </div>
             <div class="report-card">
                 <div class="report-icon red">
@@ -734,7 +734,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 <div class="modal-overlay" id="sightingModal" onclick="closeModalOnOverlay(event)">
     <div class="post-modal-content" onclick="event.stopPropagation()">
         <div class="post-modal-header">
-            <h2>️ Report Sighting</h2>
+            <h2>👁️ Report Sighting</h2>
             <button class="btn-close" onclick="closeSightingModal()">✕</button>
         </div>
         <div class="post-modal-body">
@@ -805,7 +805,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 
 <!-- FULL SCREEN IMAGE VIEWER -->
 <div class="image-viewer-overlay" id="imageViewer" onclick="closeImageViewer()">
-    <button class="image-viewer-close" onclick="closeImageViewer()"></button>
+    <button class="image-viewer-close" onclick="closeImageViewer()">✕</button>
     <img class="image-viewer-content" id="viewerImage" src="" alt="Full size image">
 </div>
 
@@ -924,7 +924,7 @@ async function fetchDashboardData() {
 
     } catch (error) {
         console.error('❌ Error fetching data:', error);
-        const errorMsg = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">️</div><div style="font-size: 16px; margin-bottom: 10px;">Unable to connect to database</div><div style="font-size: 14px; color: var(--gray); margin-bottom: 20px;">${error.message}</div><button class="btn btn-primary" onclick="fetchDashboardData()" style="margin: 0 auto;">🔄 Try Again</button></div>`;
+        const errorMsg = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">⚠️</div><div style="font-size: 16px; margin-bottom: 10px;">Unable to connect to database</div><div style="font-size: 14px; color: var(--gray); margin-bottom: 20px;">${error.message}</div><button class="btn btn-primary" onclick="fetchDashboardData()" style="margin: 0 auto;">🔄 Try Again</button></div>`;
         missingList.innerHTML = errorMsg;
         dashboardList.innerHTML = errorMsg;
         sightingList.innerHTML = errorMsg;
@@ -1015,8 +1015,8 @@ function renderMissingPersons(container, cases) {
         
         const photoUrl = p.photo_urls && p.photo_urls.length > 0 ? p.photo_urls[0] : null;
         const imgHtml = photoUrl 
-            ? `<img src="${photoUrl}" alt="${p.name}" class="missing-photo" onerror="this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2364748b%22 font-size=%2224%22%3E%3C/text%3E%3C/svg%3E'">`
-            : `<img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2364748b%22 font-size=%2224%22%3E%3C/text%3E%3C/svg%3E" alt="${p.name}" class="missing-photo">`;
+            ? `<img src="${photoUrl}" alt="${p.name}" class="missing-photo" onerror="this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2364748b%22 font-size=%2224%22%3E👤%3C/text%3E%3C/svg%3E'">`
+            : `<img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2270%22 height=%2270%22%3E%3Crect width=%2270%22 height=%2270%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 fill=%22%2364748b%22 font-size=%2224%22%3E👤%3C/text%3E%3C/svg%3E" alt="${p.name}" class="missing-photo">`;
         
         return `
         <div class="missing-item" onclick="showDetails('${p.id}', 'missing')">
@@ -1026,7 +1026,7 @@ function renderMissingPersons(container, cases) {
                 <div class="meta-info">
                     <span>👤 ${p.age} years</span>
                     <span>⚧ ${p.gender}</span>
-                    <span> ${formatDate(p.date_missing)}</span>
+                    <span>📅 ${formatDate(p.date_missing)}</span>
                 </div>
                 <div class="meta-info"><span>📍 ${p.last_seen_location}</span></div>
                 <div class="case-notes">${p.description ? p.description.substring(0, 80) + '...' : 'No additional notes'}</div>
@@ -1057,7 +1057,7 @@ function renderSightings(container, sightings) {
                 <h4>Sighting: ${s.missing_person_name || 'Unknown Person'}</h4>
                 <div class="meta-info">
                     <span>📍 ${s.sighting_location}</span>
-                    <span> ${s.sighting_time || 'Recently'}</span>
+                    <span>🕒 ${s.sighting_time || 'Recently'}</span>
                 </div>
                 <div class="meta-info">
                     <span>👤 ${s.reporter_name || 'Anonymous'}</span>
@@ -1073,14 +1073,17 @@ function renderSightings(container, sightings) {
     `}).join('');
 }
 
+// ==========================================
+// FIXED SHOW DETAILS FUNCTION
+// ==========================================
 function showDetails(id, type) {
     console.log('Showing details for:', id, type);
     
-    // Try to find in active lists first
-    let item = type === 'missing' ? missingPersons.find(c => c.id == id) : 
-               type === 'sighting' ? sightingAlerts.find(s => s.id == id) : 
+    // FIX 1: Search ALL lists so resolved cases are actually found
+    let item = missingPersons.find(c => c.id == id) || 
+               sightingAlerts.find(s => s.id == id) || 
                resolvedCases.find(c => c.id == id);
-    
+               
     if (!item) {
         console.error('Item not found:', id);
         return;
@@ -1170,36 +1173,29 @@ function showDetails(id, type) {
             </div>
         `;
     } else {
-        // ✅ RESOLVED CASES - IMPROVED VERSION
+        // FIX 2: Full details for Resolved Cases
         const isMissingType = item.type === 'missing';
         const name = isMissingType ? item.name : `Sighting: ${item.missing_person_name || 'Unknown'}`;
         const resolvedDate = formatDate(item.resolved_at || item.updated_at);
         const missingDate = isMissingType ? formatDate(item.date_missing) : formatDate(item.created_at);
         
-        // Build image gallery for missing persons
         let imageGallery = '';
         if (isMissingType && item.photo_urls && item.photo_urls.length > 0) {
             imageGallery = '<div style="margin-bottom: 20px;">';
-            imageGallery += '<h3 style="margin-bottom: 10px; font-size: 14px; color: var(--gray); text-transform: uppercase;">Photos</h3>';
+            imageGallery += '<h3 style="margin-bottom: 10px; font-size: 14px; color: var(--gray); text-transform: uppercase;">Photos (Click to enlarge)</h3>';
             imageGallery += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">';
-            
             item.photo_urls.forEach((photoUrl, index) => {
                 imageGallery += `
                     <div style="position: relative; border-radius: 8px; overflow: hidden; border: 2px solid var(--border); cursor: pointer;" onclick="openImageViewer('${photoUrl}')">
                         <img src="${photoUrl}" alt="Photo ${index + 1}" style="width: 100%; height: 150px; object-fit: cover;">
-                        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: white; padding: 4px; font-size: 11px; text-align: center;">
-                            Photo ${index + 1}
-                        </div>
                     </div>
                 `;
             });
-            
             imageGallery += '</div></div>';
         } else if (item.photo_url) {
-            // For sightings
             imageGallery = `
                 <div style="margin-bottom: 20px;">
-                    <h3 style="margin-bottom: 10px; font-size: 14px; color: var(--gray); text-transform: uppercase;">Photo Evidence</h3>
+                    <h3 style="margin-bottom: 10px; font-size: 14px; color: var(--gray); text-transform: uppercase;">Photo Evidence (Click to enlarge)</h3>
                     <div style="border-radius: 8px; overflow: hidden; border: 2px solid var(--border); cursor: pointer;" onclick="openImageViewer('${item.photo_url}')">
                         <img src="${item.photo_url}" alt="Photo" style="width: 100%; max-height: 300px; object-fit: cover;">
                     </div>
@@ -1211,9 +1207,7 @@ function showDetails(id, type) {
             <div style="background: #d1fae5; color: #059669; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-weight: 700;">
                 ✅ CASE RESOLVED
             </div>
-            
             ${imageGallery}
-            
             <div class="info-grid">
                 <div class="info-box"><label>Full Name</label><value>${name}</value></div>
                 ${isMissingType ? `<div class="info-box"><label>Age</label><value>${item.age || 'N/A'} years</value></div>` : ''}
@@ -1239,10 +1233,8 @@ function showDetails(id, type) {
                 </div>
                 
                 <div class="info-box full-width"><label>Police Station</label><value style="color: var(--primary); font-weight: 700;">${item.police_station}</value></div>
-                
                 ${item.poster_email ? `<div class="info-box full-width"><label>Posted By</label><value style="color: var(--success);">${item.poster_email}</value></div>` : ''}
             </div>
-            
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Close</button>
             </div>
