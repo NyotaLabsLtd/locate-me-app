@@ -1168,7 +1168,6 @@ async function handleLogin(e) {
     document.getElementById('userEmailDisplay').textContent = data.user.email;
     showToast('✅ Login successful!'); 
     
-    // ✅ Redirect based on role ONLY immediately after login
     if (data.user.role === 'admin') {
       window.location.href = 'admin.html';
     } else if (data.user.role === 'police') {
@@ -1209,7 +1208,6 @@ async function handleGoogleResponse(response) {
     document.getElementById('userEmailDisplay').textContent = data.user.email;
     showToast('✅ Signed in with Google!'); 
     
-    // ✅ Redirect based on role ONLY immediately after login
     if (data.user.role === 'admin') {
       window.location.href = 'admin.html';
     } else if (data.user.role === 'police') {
@@ -1223,8 +1221,6 @@ async function handleGoogleResponse(response) {
   }
 }
 
-// ✅ FIXED: Removed forced redirect so admins/police can freely browse the main app.
-// Dashboard redirects only happen immediately after a successful login.
 function checkAuth() {
   const token = localStorage.getItem('authToken');
   const user = localStorage.getItem('user');
@@ -1334,11 +1330,11 @@ function formatTimeAgo(days) {
 
 function renderMissingCards() {
   const container = document.getElementById('missingCardsContainer');
-  const term = document.getElementById('searchInput').value.toLowerCase();
+  // Note: Local term filtering removed, as search is now handled by the server
   const gender = document.getElementById('filterGender').value;
   const ageFilter = document.getElementById('filterAge').value;
+  
   let filtered = missingPersons.filter(p => {
-    const matchesSearch = p.name.toLowerCase().includes(term) || p.last_seen_location.toLowerCase().includes(term);
     const matchesGender = !gender || p.gender === gender;
     let matchesAge = true;
     if (ageFilter) {
@@ -1348,8 +1344,9 @@ function renderMissingCards() {
       else if (ageFilter === 'adult') matchesAge = age >= 20 && age <= 64; 
       else if (ageFilter === 'senior') matchesAge = age >= 65;
     }
-    return matchesSearch && matchesGender && matchesAge;
+    return matchesGender && matchesAge;
   });
+  
   if (filtered.length === 0) { 
     container.innerHTML = '<div class="loading">No missing persons found.</div>'; 
     return; 
@@ -1901,14 +1898,46 @@ window.addEventListener('load', () => {
   updateCarousel();
 });
 
-document.getElementById('searchInput').addEventListener('input', () => {
-  if (currentHomeTab === 'missing') renderMissingCards();
-  else renderFoundCards();
+// ==========================================
+// NEW: SERVER-SIDE SEARCH WITH DEBOUNCE
+// ==========================================
+let searchTimeout;
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    clearTimeout(searchTimeout);
+    const term = e.target.value.trim();
+    
+    // If search is empty, reload normal list
+    if (term.length === 0) {
+        loadData(); 
+        return;
+    }
+
+    // Wait 500ms after user stops typing before searching the server
+    searchTimeout = setTimeout(async () => {
+        try {
+            const res = await fetch(`${API_URL}/missing-persons/search?q=${encodeURIComponent(term)}`);
+            if (!res.ok) throw new Error('Search failed');
+            
+            const results = await res.json();
+            
+            // Replace the missingPersons array with search results
+            missingPersons = results;
+            
+            // Render the new results (gender/age filters will still apply to these results)
+            renderMissingCards();
+            
+        } catch (err) {
+            console.error('Search error:', err);
+            showToast('❌ Search failed');
+        }
+    }, 500); 
 });
+
 document.getElementById('filterGender').addEventListener('change', () => {
   if (currentHomeTab === 'missing') renderMissingCards();
   else renderFoundCards();
 });
+
 document.getElementById('filterAge').addEventListener('change', () => {
   if (currentHomeTab === 'missing') renderMissingCards();
   else renderFoundCards();
