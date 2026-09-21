@@ -533,6 +533,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Residence</label>
         <input type="text" class="form-input" id="postResidence" placeholder="Where do they live?">
       </div>
+      
+      <!-- NEW: Poster Contact Phone Number Field -->
+      <div class="form-group">
+        <label class="form-label">Your Contact Phone Number *</label>
+        <input type="tel" class="form-input" id="postContactPhone" placeholder="e.g. 0712345678" pattern="[0-9+\-\s]{10,15}" required>
+        <small style="color: var(--gray); font-size: 12px; margin-top: 4px; display: block;">This will only be visible to the police to help locate the person.</small>
+      </div>
+
       <div class="form-section-title">Police Info <span class="optional-badge">(Required)</span></div>
       <div class="form-group">
         <label class="form-label">Nearest Police Station *</label>
@@ -1330,7 +1338,6 @@ function formatTimeAgo(days) {
 
 function renderMissingCards() {
   const container = document.getElementById('missingCardsContainer');
-  // Note: Local term filtering removed, as search is now handled by the server
   const gender = document.getElementById('filterGender').value;
   const ageFilter = document.getElementById('filterAge').value;
   
@@ -1545,16 +1552,43 @@ async function submitMissingPerson() {
   const desc = document.getElementById('postDescription')?.value.trim();
   const dateLastSeen = document.getElementById('postDateLastSeen')?.value;
   const policeStation = document.getElementById('postPoliceStation')?.value;
+  
+  // NEW: Capture and validate contact phone number
+  const contactPhone = document.getElementById('postContactPhone')?.value.trim();
+  const phoneRegex = /^(\+254|0)?[7]\d{8}$/;
+  if (!contactPhone || !phoneRegex.test(contactPhone.replace(/\s/g, ''))) { 
+      showToast('Please enter a valid Kenyan phone number'); 
+      return; 
+  }
+
   const photo1 = document.getElementById('postPhoto1')?.files[0]; 
   const photo2 = document.getElementById('postPhoto2')?.files[0]; 
   const photo3 = document.getElementById('postPhoto3')?.files[0];
   const files = [photo1, photo2, photo3];
   if (!name || !age || !location || !desc || !dateLastSeen || !policeStation || files.some(f => !f)) { showToast('Please fill all required fields & select 3 photos'); return; }
+  
   const btn = document.getElementById('postBtn'); 
   if (btn) { btn.disabled = true; btn.textContent = 'Uploading...'; }
+  
   try {
     const urls = await Promise.all(files.map((f, i) => uploadToBackend(f, `progress${i+1}`)));
-    const newPerson = { name, age: parseInt(age), gender: document.getElementById('postGender')?.value, description: desc, notes: document.getElementById('postNotes')?.value.trim(), residence: document.getElementById('postResidence')?.value, last_seen_location: location, date_last_seen: dateLastSeen, police_station: policeStation, date_missing: new Date().toISOString().split('T')[0], photo_urls: urls };
+    
+    // NEW: Include poster_contact in the payload
+    const newPerson = { 
+        name, 
+        age: parseInt(age), 
+        gender: document.getElementById('postGender')?.value, 
+        description: desc, 
+        notes: document.getElementById('postNotes')?.value.trim(), 
+        residence: document.getElementById('postResidence')?.value, 
+        last_seen_location: location, 
+        date_last_seen: dateLastSeen, 
+        police_station: policeStation, 
+        date_missing: new Date().toISOString().split('T')[0], 
+        photo_urls: urls,
+        poster_contact: contactPhone 
+    };
+    
     const token = localStorage.getItem('authToken');
     const response = await fetch(`${API_URL}/missing-persons`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify(newPerson) });
     if (response.status === 401) { logout(); throw new Error('Session expired.'); }
