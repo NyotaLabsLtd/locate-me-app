@@ -330,7 +330,6 @@ async function loadUsers() {
             const joinDate = new Date(user.created_at).toLocaleDateString('en-KE');
             const station = user.station_id || 'N/A';
             
-            // ✅ FIXED: Escaped single quotes in email to prevent JS errors
             const safeEmail = (user.email || '').replace(/'/g, "\\'");
             
             html += `<tr><td>${user.email}</td><td><span class="role-badge ${roleClass}">${user.role}</span></td><td>${station}</td><td>${verifiedBadge}</td><td>${joinDate}</td><td><button class="btn-delete" onclick="deleteUser('${user.id}', '${safeEmail}')">Delete User</button></td></tr>`;
@@ -375,7 +374,8 @@ async function loadMissingPersons() {
         
         if (posts.length === 0) { container.innerHTML = '<div class="loading">No missing person reports</div>'; return; }
         
-        let html = `<table><thead><tr><th>Photo</th><th>Name</th><th>Age</th><th>Gender</th><th>Last Seen</th><th>Posted By</th><th>Date</th><th>Action</th></tr></thead><tbody>`;
+        // ✅ ADDED: "Contact" column to the table header
+        let html = `<table><thead><tr><th>Photo</th><th>Name</th><th>Age</th><th>Gender</th><th>Last Seen</th><th>Posted By</th><th>Contact</th><th>Date</th><th>Action</th></tr></thead><tbody>`;
         posts.forEach(post => {
             const photoUrl = post.photo_urls && post.photo_urls.length > 0 ? post.photo_urls[0] : null;
             const imgHtml = photoUrl 
@@ -383,11 +383,22 @@ async function loadMissingPersons() {
                 : `<div class="no-photo">📷</div>`;
             const date = new Date(post.date_missing).toLocaleDateString('en-KE');
             const posterEmail = post.poster_email || 'Unknown';
+            const posterContact = post.poster_contact || 'N/A'; // ✅ ADDED: Capture contact number
             
-            // ✅ FIXED: Escaped single quotes in name to prevent JS errors
             const safeName = (post.name || '').replace(/'/g, "\\'");
             
-            html += `<tr><td>${imgHtml}</td><td><strong>${post.name}</strong></td><td>${post.age || 'N/A'}</td><td>${post.gender || 'N/A'}</td><td>${post.last_seen_location}</td><td><a href="mailto:${posterEmail}" class="email-link">📧 ${posterEmail}</a></td><td>${date}</td><td><button class="btn-delete" onclick="deleteMissingPost('${post.id}', '${safeName}')">Delete</button></td></tr>`;
+            // ✅ ADDED: Display contact number in the new column
+            html += `<tr>
+                <td>${imgHtml}</td>
+                <td><strong>${post.name}</strong></td>
+                <td>${post.age || 'N/A'}</td>
+                <td>${post.gender || 'N/A'}</td>
+                <td>${post.last_seen_location}</td>
+                <td><a href="mailto:${posterEmail}" class="email-link">📧 ${posterEmail}</a></td>
+                <td><span class="phone-number">📞 ${posterContact}</span></td>
+                <td>${date}</td>
+                <td><button class="btn-delete" onclick="deleteMissingPost('${post.id}', '${safeName}')">Delete</button></td>
+            </tr>`;
         });
         html += `</tbody></table>`;
         container.innerHTML = html;
