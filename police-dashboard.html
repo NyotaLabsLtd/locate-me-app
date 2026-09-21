@@ -1130,13 +1130,15 @@ function showDetails(id, type) {
                 <div class="info-box full-width"><label>Description</label><value>${item.description || 'No description provided'}</value></div>
                 <div class="info-box full-width"><label>Additional Notes</label><value>${item.notes || 'No additional notes'}</value></div>
                 <div class="info-box full-width"><label>Police Station</label><value style="color: var(--primary); font-weight: 700;">${item.police_station}</value></div>
+                ${item.poster_contact ? `<div class="info-box full-width"><label>Poster Contact</label><value style="color: var(--primary); font-weight: 700;">${item.poster_contact}</value></div>` : ''}
                 ${item.poster_email ? `<div class="info-box full-width"><label>Posted By</label><value style="color: var(--success);">${item.poster_email}</value></div>` : ''}
                 <div class="info-box"><label>Date Created</label><value>${formatDate(item.created_at)}</value></div>
                 <div class="info-box"><label>Last Updated</label><value>${formatDate(item.updated_at)}</value></div>
             </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-success" style="flex: 1;" onclick="markAsFound('${item.id}'); closeModal();">✓ Mark as Found</button>
-                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal()">Close</button>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                ${item.poster_contact ? `<button class="btn btn-primary" style="flex: 1; min-width: 120px;" onclick="window.location.href='tel:${item.poster_contact}'">📞 Call Poster</button>` : ''}
+                <button class="btn btn-success" style="flex: 1; min-width: 120px;" onclick="markAsFound('${item.id}'); closeModal();">✓ Mark as Found</button>
+                <button class="btn btn-outline" style="flex: 1; min-width: 120px;" onclick="closeModal()">Close</button>
             </div>
         `;
     } else if (type === 'sighting') {
