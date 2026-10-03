@@ -5,8 +5,8 @@
       "destination": "/police-dashboard.html"
     },
     {
-      "source": "/admin-dashboard",
-      "destination": "/admin-dashboard.html"
+      "source": "/admin",
+      "destination": "/admin.html"
     },
     {
       "source": "/police-login",
