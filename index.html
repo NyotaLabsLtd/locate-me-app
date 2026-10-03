@@ -67,7 +67,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 .card-info { font-size: 14px; color: var(--gray); margin-bottom: 4px; }
 .card-days-missing { font-size: 15px; color: var(--warning); font-weight: 700; margin-bottom: 6px; }
 
-/* My Posts Styles */
 .my-posts-section { margin-top: 15px; }
 .my-post-card { 
     background: var(--dark-card); 
@@ -534,7 +533,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <input type="text" class="form-input" id="postResidence" placeholder="Where do they live?">
       </div>
       
-      <!-- NEW: Poster Contact Phone Number Field -->
       <div class="form-group">
         <label class="form-label">Your Contact Phone Number *</label>
         <input type="tel" class="form-input" id="postContactPhone" placeholder="e.g. 0712345678" pattern="[0-9+\-\s]{10,15}" required>
@@ -800,7 +798,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
-<!-- View Post Details Modal -->
 <div class="modal-overlay" id="viewPostModal">
   <div class="modal-header">
     <h2 id="viewPostTitle">Post Details</h2>
@@ -809,7 +806,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   <div class="modal-content" id="viewPostContent"></div>
 </div>
 
-<!-- Edit Missing Person Modal -->
 <div class="modal-overlay" id="editPostModal">
   <div class="modal-header">
     <h2>Edit Post</h2>
@@ -840,7 +836,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
   </div>
 </div>
 
-<!-- NEW: Edit Sighting Modal -->
 <div class="modal-overlay" id="editSightingModal">
   <div class="modal-header">
     <h2>Edit Sighting</h2>
@@ -1177,9 +1172,9 @@ async function handleLogin(e) {
     showToast('✅ Login successful!'); 
     
     if (data.user.role === 'admin') {
-      window.location.href = 'admin.html';
+      window.location.href = '/admin';
     } else if (data.user.role === 'police') {
-      window.location.href = 'police-dashboard.';
+      window.location.href = '/police-dashboard';
     } else {
       showApp(); 
       loadData();
@@ -1217,9 +1212,9 @@ async function handleGoogleResponse(response) {
     showToast('✅ Signed in with Google!'); 
     
     if (data.user.role === 'admin') {
-      window.location.href = 'admin.html';
+      window.location.href = '/admin';
     } else if (data.user.role === 'police') {
-      window.location.href = 'police-dashboard.html';
+      window.location.href = '/police-dashboard';
     } else {
       showApp(); 
       loadData();
@@ -1553,7 +1548,6 @@ async function submitMissingPerson() {
   const dateLastSeen = document.getElementById('postDateLastSeen')?.value;
   const policeStation = document.getElementById('postPoliceStation')?.value;
   
-  // NEW: Capture and validate contact phone number
   const contactPhone = document.getElementById('postContactPhone')?.value.trim();
   const phoneRegex = /^(\+254|0)?[7]\d{8}$/;
   if (!contactPhone || !phoneRegex.test(contactPhone.replace(/\s/g, ''))) { 
@@ -1573,7 +1567,6 @@ async function submitMissingPerson() {
   try {
     const urls = await Promise.all(files.map((f, i) => uploadToBackend(f, `progress${i+1}`)));
     
-    // NEW: Include poster_contact in the payload
     const newPerson = { 
         name, 
         age: parseInt(age), 
@@ -1932,32 +1925,23 @@ window.addEventListener('load', () => {
   updateCarousel();
 });
 
-// ==========================================
-// NEW: SERVER-SIDE SEARCH WITH DEBOUNCE
-// ==========================================
 let searchTimeout;
 document.getElementById('searchInput').addEventListener('input', (e) => {
     clearTimeout(searchTimeout);
     const term = e.target.value.trim();
     
-    // If search is empty, reload normal list
     if (term.length === 0) {
         loadData(); 
         return;
     }
 
-    // Wait 500ms after user stops typing before searching the server
     searchTimeout = setTimeout(async () => {
         try {
             const res = await fetch(`${API_URL}/missing-persons/search?q=${encodeURIComponent(term)}`);
             if (!res.ok) throw new Error('Search failed');
             
             const results = await res.json();
-            
-            // Replace the missingPersons array with search results
             missingPersons = results;
-            
-            // Render the new results (gender/age filters will still apply to these results)
             renderMissingCards();
             
         } catch (err) {
