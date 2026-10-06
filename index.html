@@ -11,10 +11,10 @@
 <meta name="author" content="Nyota Labs">
 
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://locate-me-app.vercel.app/">
+<meta property="og:url" content="https://locate-me.co.ke/">
 <meta property="og:title" content="Locate Me - Find Missing Persons">
 <meta property="og:description" content="Help us find missing loved ones. Post reports and sightings instantly.">
-<meta property="og:image" content="https://locate-me-app.vercel.app/icon.png">
+<meta property="og:image" content="https://locate-me.co.ke/icon.png">
 
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="/icon.png?v=3" type="image/png">
@@ -874,7 +874,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <option value="duplicate">🔄 This is a duplicate post</option>
       <option value="wrong_info"> Contains wrong information</option>
       <option value="resolved">🔒 Issue resolved</option>
-      <option value="other">📝 Other reason</option>
+      <option value="other"> Other reason</option>
     </select>
     <button class="btn-submit" style="width:100%; background:var(--danger); color:white;" onclick="confirmDeletePost()">Yes, Delete Post</button>
     <button class="btn-cancel" style="width:100%; margin-top:10px;" onclick="closeModal('deletePostModal')">Cancel</button>
@@ -885,7 +885,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 
 <script>
 const API_URL = 'https://locate-me-backend-yvs8.onrender.com/api';
-const GOOGLE_CLIENT_ID = '384124217618-38rde3tgblslp1s9u3e1fn5tn7h971uk.apps.googleusercontent.com';
+// ⚠️ IMPORTANT: Replace the placeholder below with your FULL Client ID from Google Cloud Console.
+// It should look like: '816021523687-bjk1hqa...apps.googleusercontent.com'
+const GOOGLE_CLIENT_ID = '816021523687-bjk1hqa...apps.googleusercontent.com'; 
 let missingPersons = []; 
 let foundPersons = [];
 let currentHomeTab = 'missing';
@@ -1126,7 +1128,7 @@ async function handleSignup(e) {
         to_email: email,
         email: email,
         name: 'Locate Me User',
-        verification_link: `https://locate-me-app.vercel.app/?verify=${data.token}`
+        verification_link: `https://locate-me.co.ke/?verify=${data.token}`
       };
       try {
         await emailjs.send('service_arv347q', 'template_ryoa12h', templateParams);
@@ -1180,7 +1182,7 @@ async function handleLogin(e) {
       loadData();
     }
   } catch (err) { 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
@@ -1253,7 +1255,7 @@ async function checkVerificationLink() {
         showToast(' ' + (data.error || 'Verification failed'));
       }
     } catch (err) {
-      showToast('❌ Verification failed. Link may be expired.');
+      showToast(' Verification failed. Link may be expired.');
     }
   }
 }
@@ -1946,7 +1948,7 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
             
         } catch (err) {
             console.error('Search error:', err);
-            showToast('❌ Search failed');
+            showToast(' Search failed');
         }
     }, 500); 
 });
