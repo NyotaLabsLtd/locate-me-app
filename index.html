@@ -411,6 +411,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
           <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
         </div>
+        <div style="text-align: right; margin-top: 8px;">
+          <a href="#" onclick="openForgotPasswordModal()" style="color: var(--warning); font-size: 13px; text-decoration: none;">Forgot Password?</a>
+        </div>
       </div>
       <button type="submit" class="btn-submit" style="width:100%">Login</button>
     </form>
@@ -436,8 +439,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <div class="checkbox-wrapper" style="margin: 20px 0;">
         <input type="checkbox" id="agreeToTerms" required>
         <label class="form-label" for="agreeToTerms" style="margin: 0; font-size: 13px; line-height: 1.4;">
-          I agree to the <a href="privacy-policy.html" target="_blank" style="color: var(--warning);">Privacy Policy</a> and 
-          <a href="terms.html" target="_blank" style="color: var(--warning);">Terms of Service</a> *
+          I agree to the <a href="policies.html" target="_blank" style="color: var(--warning);">Privacy Policy</a> and 
+          <a href="policies.html" target="_blank" style="color: var(--warning);">Terms of Service</a> *
         </label>
       </div>
       <button type="submit" id="signupBtn" class="btn-submit" style="width:100%">Create Account</button>
@@ -450,7 +453,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     </div>
     
     <div class="google-terms-notice">
-      <strong>Note:</strong> By signing in with Google, you agree to our <a href="privacy-policy.html" target="_blank" style="color: var(--warning);">Privacy Policy</a> and <a href="terms.html" target="_blank" style="color: var(--warning);">Terms of Service</a>.
+      <strong>Note:</strong> By signing in with Google, you agree to our <a href="policies.html" target="_blank" style="color: var(--warning);">Privacy Policy</a> and <a href="policies.html" target="_blank" style="color: var(--warning);">Terms of Service</a>.
     </div>
   </div>
 </div>
@@ -733,7 +736,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           <label class="toggle-switch"><input type="checkbox" checked id="notifToggle" onchange="toggleNotifications()"><span class="toggle-slider"></span></label>
         </div>
       </div>
-      <a href="mailto:nyotalabs@gmail.com" style="text-decoration: none; color: inherit; display: block;">
+      <a href="mailto:info@locate-me.co.ke" style="text-decoration: none; color: inherit; display: block;">
         <div class="info-section">
           <div class="info-label">CONTACT SUPPORT</div>
           <div class="info-value">Get help or report issues</div>
@@ -818,6 +821,41 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       </div>
       <button class="btn-submit" onclick="closeModal('emailVerificationModal')" style="width:100%; margin-top: 20px;">Got it!</button>
     </div>
+  </div>
+</div>
+
+<!-- Forgot Password Request Modal -->
+<div class="modal-overlay" id="forgotPasswordModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Reset Password</h2>
+      <button class="modal-close" onclick="closeModal('forgotPasswordModal')">✕</button>
+    </div>
+    <p style="color: var(--gray); margin-bottom: 20px; font-size: 14px;">Enter your email address and we'll send you a link to reset your password.</p>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input type="email" class="form-input" id="resetEmailInput" placeholder="your@email.com">
+    </div>
+    <button class="btn-submit" style="width:100%" onclick="handleForgotPasswordRequest()">Send Reset Link</button>
+  </div>
+</div>
+
+<!-- Reset Password Form Modal -->
+<div class="modal-overlay" id="resetPasswordModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Create New Password</h2>
+      <button class="modal-close" onclick="closeModal('resetPasswordModal'); window.history.replaceState({}, document.title, window.location.pathname);">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">New Password</label>
+      <input type="password" class="form-input" id="newPasswordInput" placeholder="Min 6 characters" minlength="6">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirm New Password</label>
+      <input type="password" class="form-input" id="confirmNewPasswordInput" placeholder="Re-enter password" minlength="6">
+    </div>
+    <button class="btn-submit" style="width:100%" onclick="handleResetPassword()">Update Password</button>
   </div>
 </div>
 
@@ -1266,23 +1304,18 @@ function checkAuth() {
 async function checkVerificationLink() {
   const urlParams = new URLSearchParams(window.location.search);
   const verifyToken = urlParams.get('verify');
+  const resetToken = urlParams.get('reset');
+
   if (verifyToken) {
     try {
       const res = await fetch(`${API_URL}/auth/verify/${verifyToken}`);
       const data = await res.json();
       if (data.verified || data.alreadyVerified) {
-        // Clear the verification token from URL
         window.history.replaceState({}, document.title, window.location.pathname);
-        
-        // Hide landing page and show auth screen
         hideLandingPage();
         document.getElementById('authScreen').classList.add('active');
         document.getElementById('mainApp').classList.remove('active');
-        
-        // Switch to login tab
         switchAuthTab('login');
-        
-        // Show success message
         showToast('✅ Email verified! Please log in.');
       } else {
         showToast('❌ ' + (data.error || 'Verification failed'));
@@ -1290,6 +1323,67 @@ async function checkVerificationLink() {
     } catch (err) {
       showToast('❌ Verification failed. Link may be expired.');
     }
+  }
+
+  if (resetToken) {
+    hideLandingPage();
+    document.getElementById('authScreen').classList.add('active');
+    document.getElementById('mainApp').classList.remove('active');
+    switchAuthTab('login');
+    document.getElementById('resetPasswordModal').classList.add('active');
+  }
+}
+
+function openForgotPasswordModal() {
+  document.getElementById('resetEmailInput').value = '';
+  document.getElementById('forgotPasswordModal').classList.add('active');
+}
+
+async function handleForgotPasswordRequest() {
+  const email = document.getElementById('resetEmailInput').value.trim();
+  if (!email) return showToast('❌ Please enter your email');
+  
+  try {
+    const res = await fetch(`${API_URL}/auth/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to send reset link');
+    
+    showToast('✅ Reset link sent! Check your email.');
+    closeModal('forgotPasswordModal');
+  } catch (err) {
+    showToast('❌ ' + err.message);
+  }
+}
+
+async function handleResetPassword() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const resetToken = urlParams.get('reset');
+  const newPass = document.getElementById('newPasswordInput').value;
+  const confirmPass = document.getElementById('confirmNewPasswordInput').value;
+
+  if (!resetToken) return showToast('❌ Invalid reset link');
+  if (newPass !== confirmPass) return showToast('❌ Passwords do not match');
+  if (newPass.length < 6) return showToast('❌ Password must be at least 6 characters');
+
+  try {
+    const res = await fetch(`${API_URL}/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: resetToken, newPassword: newPass })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to reset password');
+
+    showToast('✅ Password updated! Please log in.');
+    closeModal('resetPasswordModal');
+    window.history.replaceState({}, document.title, window.location.pathname);
+    switchAuthTab('login');
+  } catch (err) {
+    showToast('❌ ' + err.message);
   }
 }
 
