@@ -21,14 +21,6 @@
 <link rel="apple-touch-icon" href="/icon.png">
 <link rel="shortcut icon" href="/icon.png?v=3" type="image/png">
 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script type="text/javascript">
-   (function(){
-      emailjs.init({
-        publicKey: "Dk02lgQDtIdZYetEC",
-      });
-   })();
-</script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -299,7 +291,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                 </div>
                 <div class="step-slide" data-step="2">
                     <div class="step-header"><div class="step-badge">2</div><h3 class="step-title">Post Missing Person</h3></div>
-                    <div class="step-icon">📝</div>
+                    <div class="step-icon"></div>
                     <p class="step-description">Create a Missing Person Report with detailed information to help identify and locate them.</p>
                     <ul class="step-features">
                         <li><span class="check-icon">✓</span> Upload multiple photos</li>
@@ -389,7 +381,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
-          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">️</button>
         </div>
       </div>
       <button type="submit" class="btn-submit" style="width:100%">Login</button>
@@ -688,7 +680,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
             <div class="info-label">MY POSTS</div>
             <div class="info-value">View, edit or delete your reports</div>
           </div>
-          <span id="myPostsArrow" style="font-size: 20px; transition: transform 0.3s;">➡️</span>
+          <span id="myPostsArrow" style="font-size: 20px; transition: transform 0.3s;">️</span>
         </div>
       </div>
       <div id="my-posts-container" style="display:none; margin-bottom: 20px;">
@@ -809,7 +801,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div class="modal-overlay" id="editPostModal">
   <div class="modal-header">
     <h2>Edit Post</h2>
-    <button class="modal-close" onclick="closeModal('editPostModal')">✕</button>
+    <button class="modal-close" onclick="closeModal('editPostModal')"></button>
   </div>
   <div class="modal-content">
     <input type="hidden" id="editPostId">
@@ -871,7 +863,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
     <p style="margin-bottom: 15px;">Please select a reason for deletion:</p>
     <select class="form-select" id="deleteReason" style="margin-bottom: 20px;">
       <option value="found">✅ The missing person has been found</option>
-      <option value="duplicate">🔄 This is a duplicate post</option>
+      <option value="duplicate"> This is a duplicate post</option>
       <option value="wrong_info"> Contains wrong information</option>
       <option value="resolved">🔒 Issue resolved</option>
       <option value="other"> Other reason</option>
@@ -1099,7 +1091,7 @@ async function handleSignup(e) {
   const btn = document.getElementById('signupBtn');
   const agreeToTerms = document.getElementById('agreeToTerms');
   if (!agreeToTerms.checked) {
-    showToast('❌ You must agree to Privacy Policy and Terms of Service');
+    showToast(' You must agree to Privacy Policy and Terms of Service');
     return;
   }
   if (btn) {
@@ -1124,16 +1116,17 @@ async function handleSignup(e) {
       throw new Error(data.error || 'Signup failed');
     }
     if (data.token) {
-      const templateParams = {
-        to_email: email,
-        email: email,
-        name: 'Locate Me User',
-        verification_link: `https://locate-me.co.ke/?verify=${data.token}`
-      };
       try {
-        await emailjs.send('service_arv347q', 'template_ryoa12h', templateParams);
+        await fetch(`${API_URL}/auth/send-verification-email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            verificationLink: `https://locate-me.co.ke/?verify=${data.token}`
+          })
+        });
       } catch (emailErr) {
-        console.error('EmailJS Error:', emailErr);
+        console.error('Email error:', emailErr);
       }
     }
     showToast('✅ Account created!');
@@ -1222,7 +1215,7 @@ async function handleGoogleResponse(response) {
       loadData();
     }
   } catch (err) { 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
@@ -1368,7 +1361,7 @@ function renderMissingCards() {
       <div class="card-content">
         <div class="card-name">${escapeHTML(p.name)}</div>
         <div class="card-days-missing">⏳ Missing for ${missingTime}</div>
-        <div class="card-info">📍 Last Seen: ${escapeHTML(p.last_seen_location)}</div>
+        <div class="card-info"> Last Seen: ${escapeHTML(p.last_seen_location)}</div>
       </div>
     </div>
   `}).join('');
@@ -1394,7 +1387,7 @@ function renderFoundCards() {
         <div class="card-content">
           <div class="card-name">👁️ ${escapeHTML(p.missing_person_name || 'Unknown Person')}</div>
           <div class="card-days-missing" style="color: var(--success);">📅 Reported ${timeAgo}</div>
-          <div class="card-info">📍 Location: ${escapeHTML(p.sighting_location)}</div>
+          <div class="card-info"> Location: ${escapeHTML(p.sighting_location)}</div>
         </div>
       </div>
     `;
@@ -1480,7 +1473,7 @@ function openModal(id, type) {
         ${person.police_station ? `<div class="info-section"><div class="info-label">Reported To Station</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
         <div style="margin-top: 20px; padding: 15px; background: #1e3a8a; border-radius: 8px; text-align: center;">
             <div style="font-size: 13px; color: var(--light); font-weight: 600;">
-                📞 If you have information, please contact the nearest police station.
+                 If you have information, please contact the nearest police station.
             </div>
         </div>
       `;
@@ -1722,7 +1715,7 @@ async function loadMyPosts() {
           <div class="my-post-details">
             <div class="my-post-meta">
               <span> ${escapeHTML(post.last_seen_location)}</span>
-              <span>👤 Age: ${post.age}</span>
+              <span> Age: ${post.age}</span>
             </div>
             <div class="my-post-actions">
               <button class="action-btn edit" onclick="event.stopPropagation(); openEditModal('${post.id}', '${(post.name || '').replace(/'/g, "\\'")}', ${post.age}, '${(post.gender || '').replace(/'/g, "\\'")}', '${(post.date_last_seen || '').replace(/'/g, "\\'")}', '${(post.description || '').replace(/'/g, "\\'")}', '${(post.notes || '').replace(/'/g, "\\'")}', '${(post.last_seen_location || '').replace(/'/g, "\\'")}', '${(post.residence || '').replace(/'/g, "\\'")}', '${(post.police_station || '').replace(/'/g, "\\'")}')">Edit Post</button>
@@ -1763,7 +1756,7 @@ async function loadMyPosts() {
     
   } catch (err) { 
     console.error(err); 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
@@ -1887,7 +1880,7 @@ async function saveSightingEdit() {
     loadMyPosts(); 
     loadData();
   } catch (err) { 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
