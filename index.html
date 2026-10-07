@@ -813,7 +813,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           📧 Open Outlook
         </a>
         <a href="https://mail.yahoo.com" target="_blank" class="email-provider-btn">
-          📧 Open Yahoo
+           Open Yahoo
         </a>
       </div>
       <button class="btn-submit" onclick="closeModal('emailVerificationModal')" style="width:100%; margin-top: 20px;">Got it!</button>
@@ -897,7 +897,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
       <option value="duplicate">🔄 This is a duplicate post</option>
       <option value="wrong_info">️ Contains wrong information</option>
       <option value="resolved">🔒 Issue resolved</option>
-      <option value="other">📝 Other reason</option>
+      <option value="other"> Other reason</option>
     </select>
     <button class="btn-submit" style="width:100%; background:var(--danger); color:white;" onclick="confirmDeletePost()">Yes, Delete Post</button>
     <button class="btn-cancel" style="width:100%; margin-top:10px;" onclick="closeModal('deletePostModal')">Cancel</button>
@@ -1271,8 +1271,19 @@ async function checkVerificationLink() {
       const res = await fetch(`${API_URL}/auth/verify/${verifyToken}`);
       const data = await res.json();
       if (data.verified || data.alreadyVerified) {
-        document.getElementById('verifySuccessModal').classList.add('active');
+        // Clear the verification token from URL
         window.history.replaceState({}, document.title, window.location.pathname);
+        
+        // Hide landing page and show auth screen
+        hideLandingPage();
+        document.getElementById('authScreen').classList.add('active');
+        document.getElementById('mainApp').classList.remove('active');
+        
+        // Switch to login tab
+        switchAuthTab('login');
+        
+        // Show success message
+        showToast('✅ Email verified! Please log in.');
       } else {
         showToast('❌ ' + (data.error || 'Verification failed'));
       }
