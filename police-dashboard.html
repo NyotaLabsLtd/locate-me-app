@@ -371,7 +371,7 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
 <div class="sidebar">
     <div class="sidebar-header">
         <div class="sidebar-logo">
-            <img src="icon.png" alt="Locate Me Logo">
+            <img src="/icon.png" alt="Locate Me Logo">
         </div>
         <div>
             <div class="sidebar-title">Locate Me</div>
@@ -819,7 +819,7 @@ let currentUser = { stationName: null, officerId: null, stationId: null };
 let uploadedPhotos = [];
 
 // ==========================================
-// 1. SECURITY CHECK
+// 1. SECURITY CHECK (FIXED)
 // ==========================================
 window.onload = function() {
     const token = localStorage.getItem('authToken');
@@ -827,19 +827,17 @@ window.onload = function() {
     
     if (!token || !userStr) {
         console.log('⚠️ No valid session. Redirecting to login...');
-        window.location.href = 'police-login.html';
+        window.location.href = '/index.html'; // FIXED: Redirect to main login
         return;
     }
     
     try {
         const user = JSON.parse(userStr);
         
-        if (user.role !== 'police') {
-            console.log('⚠️ User is not a police officer. Redirecting...');
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('user');
-            localStorage.removeItem('policeUser');
-            window.location.href = 'police-login.html';
+        // FIXED: Allow both police and admin, and DO NOT clear localStorage for normal users
+        if (user.role !== 'police' && user.role !== 'admin') {
+            console.log('⚠️ User is not a police officer. Redirecting to home...');
+            window.location.href = '/index.html'; // FIXED: Just redirect, don't log them out
             return;
         }
         
@@ -849,10 +847,7 @@ window.onload = function() {
         
     } catch (e) {
         console.error('Auth error:', e);
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        localStorage.removeItem('policeUser');
-        window.location.href = 'police-login.html';
+        window.location.href = '/index.html';
     }
 };
 
@@ -861,7 +856,7 @@ function logout() {
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
         localStorage.removeItem('policeUser');
-        window.location.href = 'police-login.html';
+        window.location.href = '/index.html'; // FIXED: Redirect to main login
     }
 }
 
@@ -905,7 +900,7 @@ async function fetchDashboardData() {
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('user');
                 localStorage.removeItem('policeUser');
-                window.location.href = 'police-login.html';
+                window.location.href = '/index.html'; // FIXED
                 return;
             }
             throw new Error('Failed to fetch data');
@@ -1079,7 +1074,6 @@ function renderSightings(container, sightings) {
 function showDetails(id, type) {
     console.log('Showing details for:', id, type);
     
-    // FIX 1: Search ALL lists so resolved cases are actually found
     let item = missingPersons.find(c => c.id == id) || 
                sightingAlerts.find(s => s.id == id) || 
                resolvedCases.find(c => c.id == id);
@@ -1175,7 +1169,6 @@ function showDetails(id, type) {
             </div>
         `;
     } else {
-        // FIX 2: Full details for Resolved Cases
         const isMissingType = item.type === 'missing';
         const name = isMissingType ? item.name : `Sighting: ${item.missing_person_name || 'Unknown'}`;
         const resolvedDate = formatDate(item.resolved_at || item.updated_at);
