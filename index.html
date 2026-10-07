@@ -300,7 +300,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div id="landing-page">
     <nav class="landing-nav">
         <div class="landing-logo">
-            <span class="landing-logo-icon">📍</span>
+            <span class="landing-logo-icon"></span>
             <span>Locate Me</span>
         </div>
     </nav>
@@ -409,7 +409,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
-          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">️</button>
         </div>
         <div style="text-align: right; margin-top: 8px;">
           <a href="#" onclick="openForgotPasswordModal()" style="color: var(--warning); font-size: 13px; text-decoration: none;">Forgot Password?</a>
@@ -809,15 +809,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         Please check your inbox and click the verification link to activate your account.
       </p>
       <div class="email-provider-buttons">
-        <a href="https://mail.google.com" target="_blank" class="email-provider-btn">
-          📧 Open Gmail
-        </a>
-        <a href="https://outlook.live.com" target="_blank" class="email-provider-btn">
-          📧 Open Outlook
-        </a>
-        <a href="https://mail.yahoo.com" target="_blank" class="email-provider-btn">
-           Open Yahoo
-        </a>
+        <a href="https://mail.google.com" target="_blank" class="email-provider-btn">📧 Open Gmail</a>
+        <a href="https://outlook.live.com" target="_blank" class="email-provider-btn"> Open Outlook</a>
+        <a href="https://mail.yahoo.com" target="_blank" class="email-provider-btn">📧 Open Yahoo</a>
       </div>
       <button class="btn-submit" onclick="closeModal('emailVerificationModal')" style="width:100%; margin-top: 20px;">Got it!</button>
     </div>
@@ -870,7 +864,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div class="modal-overlay" id="editPostModal">
   <div class="modal-header">
     <h2>Edit Post</h2>
-    <button class="modal-close" onclick="closeModal('editPostModal')">✕</button>
+    <button class="modal-close" onclick="closeModal('editPostModal')"></button>
   </div>
   <div class="modal-content">
     <input type="hidden" id="editPostId">
@@ -1153,6 +1147,7 @@ function updateGoogleButtonState() {
     }
 }
 
+// ✅ FIXED handleSignup - Now properly handles email sending errors
 async function handleSignup(e) {
   e.preventDefault();
   const btn = document.getElementById('signupBtn');
@@ -1183,24 +1178,29 @@ async function handleSignup(e) {
       throw new Error(data.error || 'Signup failed');
     }
     if (data.token) {
-      try {
-        await fetch(`${API_URL}/auth/send-verification-email`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: email,
-            verificationLink: `https://locate-me.co.ke/?verify=${data.token}`
-          })
-        });
-      } catch (emailErr) {
-        console.error('Email error:', emailErr);
+      // Send verification email with proper error handling
+      const emailRes = await fetch(`${API_URL}/auth/send-verification-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          verificationLink: `https://locate-me.co.ke/?verify=${data.token}`
+        })
+      });
+      
+      if (!emailRes.ok) {
+        const emailData = await emailRes.json();
+        console.error('Verification email failed:', emailData);
+        showToast('⚠️ Account created but verification email failed. Contact support.');
+      } else {
+        console.log('✅ Verification email sent successfully to:', email);
       }
     }
     showToast('✅ Account created!');
     document.getElementById('signupForm').reset();
     document.getElementById('emailVerificationModal').classList.add('active');
   } catch (err) { 
-    showToast(' ' + (err.message || 'Signup failed')); 
+    showToast('❌ ' + (err.message || 'Signup failed')); 
   } finally {
     if (btn) {
       btn.disabled = false;
@@ -1242,7 +1242,7 @@ async function handleLogin(e) {
       loadData();
     }
   } catch (err) { 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
@@ -1282,7 +1282,7 @@ async function handleGoogleResponse(response) {
       loadData();
     }
   } catch (err) { 
-    showToast(' ' + err.message); 
+    showToast('❌ ' + err.message); 
   }
 }
 
@@ -1921,7 +1921,7 @@ async function deleteSighting(id) {
     showToast('✅ Sighting deleted.');
     loadMyPosts();
   } catch (err) { 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
