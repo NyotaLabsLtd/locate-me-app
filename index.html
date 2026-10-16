@@ -426,7 +426,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="signupPassword" placeholder="Min 6 characters" required minlength="6">
-          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)">👁️</button>
         </div>
       </div>
       <div class="form-group">
@@ -586,6 +586,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           </optgroup>
           <optgroup label="KIAMBU COUNTY">
             <option value="Ruiru Police Station">Ruiru Police Station</option>
+            <option value="Gatundu Police Station">Gatundu Police Station</option>
             <option value="Thika Police Station">Thika Police Station</option>
             <option value="Kiambu Town Police Station">Kiambu Town Police Station</option>
             <option value="Limuru Police Station">Limuru Police Station</option>
@@ -670,6 +671,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
           </optgroup>
           <optgroup label="KIAMBU COUNTY">
             <option value="Ruiru Police Station">Ruiru Police Station</option>
+            <option value="Gatundu Police Station">Gatundu Police Station</option>
             <option value="Thika Police Station">Thika Police Station</option>
             <option value="Kiambu Town Police Station">Kiambu Town Police Station</option>
             <option value="Limuru Police Station">Limuru Police Station</option>
@@ -1147,7 +1149,6 @@ function updateGoogleButtonState() {
     }
 }
 
-// ✅ FIXED handleSignup - Now properly handles email sending errors
 async function handleSignup(e) {
   e.preventDefault();
   const btn = document.getElementById('signupBtn');
@@ -1178,7 +1179,6 @@ async function handleSignup(e) {
       throw new Error(data.error || 'Signup failed');
     }
     if (data.token) {
-      // Send verification email with proper error handling
       const emailRes = await fetch(`${API_URL}/auth/send-verification-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
