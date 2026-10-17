@@ -409,7 +409,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <label class="form-label">Password</label>
         <div class="password-wrapper">
           <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
-          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
+          <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">️</button>
         </div>
         <div style="text-align: right; margin-top: 8px;">
           <a href="#" onclick="openForgotPasswordModal()" style="color: var(--warning); font-size: 13px; text-decoration: none;">Forgot Password?</a>
@@ -568,7 +568,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <select class="form-select" id="postPoliceStation" required>
           <option value="">-- Select Nearest Police Station --</option>
           <optgroup label="NAIROBI COUNTY">
-            <option value="Central Police Station - Nairobi">Central Police Station - Nairobi</option>
+            <option value="Central Police Station">Central Police Station</option>
             <option value="Kilimani Police Station">Kilimani Police Station</option>
             <option value="Westlands Police Station">Westlands Police Station</option>
             <option value="Kasarani Police Station">Kasarani Police Station</option>
@@ -583,8 +583,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
             <option value="Makadara Police Station">Makadara Police Station</option>
             <option value="Kibera Police Station">Kibera Police Station</option>
             <option value="Parklands Police Station">Parklands Police Station</option>
+            <option value="Karen Police Station">Karen Police Station</option>
+            <option value="Dagoretti Police Station">Dagoretti Police Station</option>
+            <option value="Mathare Police Station">Mathare Police Station</option>
+            <option value="Kariobangi Police Station">Kariobangi Police Station</option>
           </optgroup>
-          <optgroup label="KIAMBU COUNTY">
+
+          <optgroup label="CENTRAL REGION (Kiambu, Murang'a, Nyeri, Kirinyaga, Nyandarua)">
             <option value="Ruiru Police Station">Ruiru Police Station</option>
             <option value="Gatundu Police Station">Gatundu Police Station</option>
             <option value="Thika Police Station">Thika Police Station</option>
@@ -593,18 +598,160 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
             <option value="Juja Police Station">Juja Police Station</option>
             <option value="Karuri Police Station">Karuri Police Station</option>
             <option value="Kikuyu Police Station">Kikuyu Police Station</option>
+            <option value="Kijabe Police Station">Kijabe Police Station</option>
+            <option value="Lari Police Station">Lari Police Station</option>
+            <option value="Murang'a Town Police Station">Murang'a Town Police Station</option>
+            <option value="Kangema Police Station">Kangema Police Station</option>
+            <option value="Kiharu Police Station">Kiharu Police Station</option>
+            <option value="Nyeri Central Police Station">Nyeri Central Police Station</option>
+            <option value="Othaya Police Station">Othaya Police Station</option>
+            <option value="Karatina Police Station">Karatina Police Station</option>
+            <option value="Mukurweini Police Station">Mukurweini Police Station</option>
+            <option value="Kerugoya Police Station">Kerugoya Police Station</option>
+            <option value="Kutus Police Station">Kutus Police Station</option>
+            <option value="Sagana Police Station">Sagana Police Station</option>
+            <option value="Ol Kalou Police Station">Ol Kalou Police Station</option>
+            <option value="Njabini Police Station">Njabini Police Station</option>
+            <option value="Kinangop Police Station">Kinangop Police Station</option>
           </optgroup>
-          <optgroup label="OTHER COUNTIES">
+
+          <optgroup label="EASTERN & NORTH EASTERN (Machakos, Kitui, Makueni, Embu, Meru, Marsabit, Garissa, Wajir, Mandera, Isiolo)">
+            <option value="Machakos Town Police Station">Machakos Town Police Station</option>
+            <option value="Mavoko Police Station (Athi River)">Mavoko Police Station (Athi River)</option>
+            <option value="Kangundo Police Station">Kangundo Police Station</option>
+            <option value="Matuu Police Station">Matuu Police Station</option>
+            <option value="Kitui Town Police Station">Kitui Town Police Station</option>
+            <option value="Mwingi Police Station">Mwingi Police Station</option>
+            <option value="Wote Police Station (Makueni)">Wote Police Station (Makueni)</option>
+            <option value="Makindu Police Station">Makindu Police Station</option>
+            <option value="Mtito Andei Police Station">Mtito Andei Police Station</option>
+            <option value="Embu Town Police Station">Embu Town Police Station</option>
+            <option value="Runyenjes Police Station">Runyenjes Police Station</option>
+            <option value="Siakago Police Station">Siakago Police Station</option>
+            <option value="Meru Central Police Station">Meru Central Police Station</option>
+            <option value="Maua Police Station">Maua Police Station</option>
+            <option value="Nkubu Police Station">Nkubu Police Station</option>
+            <option value="Chuka Police Station">Chuka Police Station</option>
+            <option value="Timau Police Station">Timau Police Station</option>
+            <option value="Marsabit Town Police Station">Marsabit Town Police Station</option>
+            <option value="Moyale Police Station">Moyale Police Station</option>
+            <option value="North Horr Police Station">North Horr Police Station</option>
+            <option value="Garissa Town Police Station">Garissa Town Police Station</option>
+            <option value="Dadaab Police Station">Dadaab Police Station</option>
+            <option value="Balambala Police Station">Balambala Police Station</option>
+            <option value="Wajir Town Police Station">Wajir Town Police Station</option>
+            <option value="Eldas Police Station">Eldas Police Station</option>
+            <option value="Mandera Town Police Station">Mandera Town Police Station</option>
+            <option value="El Wak Police Station">El Wak Police Station</option>
+            <option value="Isiolo Town Police Station">Isiolo Town Police Station</option>
+            <option value="Garbatulla Police Station">Garbatulla Police Station</option>
+          </optgroup>
+
+          <optgroup label="COAST REGION (Mombasa, Kilifi, Kwale, Tana River, Lamu)">
             <option value="Mombasa Central Police Station">Mombasa Central Police Station</option>
-            <option value="Kisumu Central Police Station">Kisumu Central Police Station</option>
+            <option value="Tudor Police Station">Tudor Police Station</option>
+            <option value="Changamwe Police Station">Changamwe Police Station</option>
+            <option value="Kisauni Police Station">Kisauni Police Station</option>
+            <option value="Likoni Police Station">Likoni Police Station</option>
+            <option value="Nyali Police Station">Nyali Police Station</option>
+            <option value="Bamburi Police Station">Bamburi Police Station</option>
+            <option value="Kilifi Town Police Station">Kilifi Town Police Station</option>
+            <option value="Malindi Police Station">Malindi Police Station</option>
+            <option value="Mtwapa Police Station">Mtwapa Police Station</option>
+            <option value="Vipingo Police Station">Vipingo Police Station</option>
+            <option value="Kwale Town Police Station">Kwale Town Police Station</option>
+            <option value="Msambweni Police Station">Msambweni Police Station</option>
+            <option value="Kinango Police Station">Kinango Police Station</option>
+            <option value="Hola Police Station (Tana River)">Hola Police Station (Tana River)</option>
+            <option value="Garsen Police Station">Garsen Police Station</option>
+            <option value="Lamu Town Police Station">Lamu Town Police Station</option>
+            <option value="Mpeketoni Police Station">Mpeketoni Police Station</option>
+          </optgroup>
+
+          <optgroup label="RIFT VALLEY (Nakuru, Uasin Gishu, Nandi, Kericho, Bomet, Narok, Kajiado, Baringo, Laikipia, Samburu, Turkana, West Pokot, Trans Nzoia, Elgeyo Marakwet)">
             <option value="Nakuru Central Police Station">Nakuru Central Police Station</option>
-            <option value="Eldoret Police Station">Eldoret Police Station</option>
-            <option value="Meru Police Station">Meru Police Station</option>
-            <option value="Nyeri Police Station">Nyeri Police Station</option>
-            <option value="Machakos Police Station">Machakos Police Station</option>
-            <option value="Kakamega Police Station">Kakamega Police Station</option>
-            <option value="Kisii Police Station">Kisii Police Station</option>
-            <option value="Garissa Police Station">Garissa Police Station</option>
+            <option value="Naivasha Police Station">Naivasha Police Station</option>
+            <option value="Gilgil Police Station">Gilgil Police Station</option>
+            <option value="Molo Police Station">Molo Police Station</option>
+            <option value="Njoro Police Station">Njoro Police Station</option>
+            <option value="Rongai Police Station (Nakuru)">Rongai Police Station (Nakuru)</option>
+            <option value="Eldoret Central Police Station">Eldoret Central Police Station</option>
+            <option value="Eldoret Town Police Station">Eldoret Town Police Station</option>
+            <option value="Turbo Police Station">Turbo Police Station</option>
+            <option value="Moi's Bridge Police Station">Moi's Bridge Police Station</option>
+            <option value="Burnt Forest Police Station">Burnt Forest Police Station</option>
+            <option value="Kapsabet Police Station">Kapsabet Police Station</option>
+            <option value="Nandi Hills Police Station">Nandi Hills Police Station</option>
+            <option value="Mosoriot Police Station">Mosoriot Police Station</option>
+            <option value="Kericho Town Police Station">Kericho Town Police Station</option>
+            <option value="Litein Police Station">Litein Police Station</option>
+            <option value="Kipkelion Police Station">Kipkelion Police Station</option>
+            <option value="Londiani Police Station">Londiani Police Station</option>
+            <option value="Bomet Town Police Station">Bomet Town Police Station</option>
+            <option value="Sotik Police Station">Sotik Police Station</option>
+            <option value="Longisa Police Station">Longisa Police Station</option>
+            <option value="Narok Town Police Station">Narok Town Police Station</option>
+            <option value="Kilgoris Police Station">Kilgoris Police Station</option>
+            <option value="Suswa Police Station">Suswa Police Station</option>
+            <option value="Mai Mahiu Police Station">Mai Mahiu Police Station</option>
+            <option value="Ongata Rongai Police Station (Kajiado)">Ongata Rongai Police Station (Kajiado)</option>
+            <option value="Kitengela Police Station">Kitengela Police Station</option>
+            <option value="Kajiado Town Police Station">Kajiado Town Police Station</option>
+            <option value="Ngong Police Station">Ngong Police Station</option>
+            <option value="Isinya Police Station">Isinya Police Station</option>
+            <option value="Namanga Police Station">Namanga Police Station</option>
+            <option value="Kabarnet Police Station">Kabarnet Police Station</option>
+            <option value="Eldama Ravine Police Station">Eldama Ravine Police Station</option>
+            <option value="Marigat Police Station">Marigat Police Station</option>
+            <option value="Nanyuki Police Station">Nanyuki Police Station</option>
+            <option value="Rumuruti Police Station">Rumuruti Police Station</option>
+            <option value="Dol Dol Police Station">Dol Dol Police Station</option>
+            <option value="Maralal Police Station">Maralal Police Station</option>
+            <option value="Lodwar Police Station">Lodwar Police Station</option>
+            <option value="Kakuma Police Station">Kakuma Police Station</option>
+            <option value="Kapenguria Police Station">Kapenguria Police Station</option>
+            <option value="Kitale Police Station">Kitale Police Station</option>
+            <option value="Kiminini Police Station">Kiminini Police Station</option>
+            <option value="Endebess Police Station">Endebess Police Station</option>
+          </optgroup>
+
+          <optgroup label="WESTERN (Kakamega, Bungoma, Busia, Vihiga)">
+            <option value="Kakamega Central Police Station">Kakamega Central Police Station</option>
+            <option value="Mumias Police Station">Mumias Police Station</option>
+            <option value="Butere Police Station">Butere Police Station</option>
+            <option value="Malava Police Station">Malava Police Station</option>
+            <option value="Lugari Police Station">Lugari Police Station</option>
+            <option value="Bungoma Town Police Station">Bungoma Town Police Station</option>
+            <option value="Webuye Police Station">Webuye Police Station</option>
+            <option value="Kimilili Police Station">Kimilili Police Station</option>
+            <option value="Chwele Police Station">Chwele Police Station</option>
+            <option value="Busia Town Police Station">Busia Town Police Station</option>
+            <option value="Malaba Police Station">Malaba Police Station</option>
+            <option value="Nambale Police Station">Nambale Police Station</option>
+            <option value="Mbale Police Station">Mbale Police Station</option>
+            <option value="Luanda Police Station">Luanda Police Station</option>
+            <option value="Hamisi Police Station">Hamisi Police Station</option>
+          </optgroup>
+
+          <optgroup label="NYANZA (Kisumu, Siaya, Homa Bay, Migori, Kisii, Nyamira)">
+            <option value="Kisumu Central Police Station">Kisumu Central Police Station</option>
+            <option value="Kisumu Town Police Station">Kisumu Town Police Station</option>
+            <option value="Maseno Police Station">Maseno Police Station</option>
+            <option value="Muhoroni Police Station">Muhoroni Police Station</option>
+            <option value="Ahero Police Station">Ahero Police Station</option>
+            <option value="Siaya Town Police Station">Siaya Town Police Station</option>
+            <option value="Bondo Police Station">Bondo Police Station</option>
+            <option value="Ugunja Police Station">Ugunja Police Station</option>
+            <option value="Homa Bay Town Police Station">Homa Bay Town Police Station</option>
+            <option value="Mbita Police Station">Mbita Police Station</option>
+            <option value="Kendu Bay Police Station">Kendu Bay Police Station</option>
+            <option value="Migori Town Police Station">Migori Town Police Station</option>
+            <option value="Rongo Police Station">Rongo Police Station</option>
+            <option value="Awendo Police Station">Awendo Police Station</option>
+            <option value="Kisii Town Police Station">Kisii Town Police Station</option>
+            <option value="Keroka Police Station">Keroka Police Station</option>
+            <option value="Suneka Police Station">Suneka Police Station</option>
+            <option value="Nyamira Town Police Station">Nyamira Town Police Station</option>
           </optgroup>
         </select>
       </div>
@@ -653,7 +800,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
         <select class="form-select" id="sightingPoliceStation" required>
           <option value="">-- Select Nearest Police Station --</option>
           <optgroup label="NAIROBI COUNTY">
-            <option value="Central Police Station - Nairobi">Central Police Station - Nairobi</option>
+            <option value="Central Police Station">Central Police Station</option>
             <option value="Kilimani Police Station">Kilimani Police Station</option>
             <option value="Westlands Police Station">Westlands Police Station</option>
             <option value="Kasarani Police Station">Kasarani Police Station</option>
@@ -668,8 +815,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
             <option value="Makadara Police Station">Makadara Police Station</option>
             <option value="Kibera Police Station">Kibera Police Station</option>
             <option value="Parklands Police Station">Parklands Police Station</option>
+            <option value="Karen Police Station">Karen Police Station</option>
+            <option value="Dagoretti Police Station">Dagoretti Police Station</option>
+            <option value="Mathare Police Station">Mathare Police Station</option>
+            <option value="Kariobangi Police Station">Kariobangi Police Station</option>
           </optgroup>
-          <optgroup label="KIAMBU COUNTY">
+
+          <optgroup label="CENTRAL REGION (Kiambu, Murang'a, Nyeri, Kirinyaga, Nyandarua)">
             <option value="Ruiru Police Station">Ruiru Police Station</option>
             <option value="Gatundu Police Station">Gatundu Police Station</option>
             <option value="Thika Police Station">Thika Police Station</option>
@@ -678,18 +830,160 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
             <option value="Juja Police Station">Juja Police Station</option>
             <option value="Karuri Police Station">Karuri Police Station</option>
             <option value="Kikuyu Police Station">Kikuyu Police Station</option>
+            <option value="Kijabe Police Station">Kijabe Police Station</option>
+            <option value="Lari Police Station">Lari Police Station</option>
+            <option value="Murang'a Town Police Station">Murang'a Town Police Station</option>
+            <option value="Kangema Police Station">Kangema Police Station</option>
+            <option value="Kiharu Police Station">Kiharu Police Station</option>
+            <option value="Nyeri Central Police Station">Nyeri Central Police Station</option>
+            <option value="Othaya Police Station">Othaya Police Station</option>
+            <option value="Karatina Police Station">Karatina Police Station</option>
+            <option value="Mukurweini Police Station">Mukurweini Police Station</option>
+            <option value="Kerugoya Police Station">Kerugoya Police Station</option>
+            <option value="Kutus Police Station">Kutus Police Station</option>
+            <option value="Sagana Police Station">Sagana Police Station</option>
+            <option value="Ol Kalou Police Station">Ol Kalou Police Station</option>
+            <option value="Njabini Police Station">Njabini Police Station</option>
+            <option value="Kinangop Police Station">Kinangop Police Station</option>
           </optgroup>
-          <optgroup label="OTHER COUNTIES">
+
+          <optgroup label="EASTERN & NORTH EASTERN (Machakos, Kitui, Makueni, Embu, Meru, Marsabit, Garissa, Wajir, Mandera, Isiolo)">
+            <option value="Machakos Town Police Station">Machakos Town Police Station</option>
+            <option value="Mavoko Police Station (Athi River)">Mavoko Police Station (Athi River)</option>
+            <option value="Kangundo Police Station">Kangundo Police Station</option>
+            <option value="Matuu Police Station">Matuu Police Station</option>
+            <option value="Kitui Town Police Station">Kitui Town Police Station</option>
+            <option value="Mwingi Police Station">Mwingi Police Station</option>
+            <option value="Wote Police Station (Makueni)">Wote Police Station (Makueni)</option>
+            <option value="Makindu Police Station">Makindu Police Station</option>
+            <option value="Mtito Andei Police Station">Mtito Andei Police Station</option>
+            <option value="Embu Town Police Station">Embu Town Police Station</option>
+            <option value="Runyenjes Police Station">Runyenjes Police Station</option>
+            <option value="Siakago Police Station">Siakago Police Station</option>
+            <option value="Meru Central Police Station">Meru Central Police Station</option>
+            <option value="Maua Police Station">Maua Police Station</option>
+            <option value="Nkubu Police Station">Nkubu Police Station</option>
+            <option value="Chuka Police Station">Chuka Police Station</option>
+            <option value="Timau Police Station">Timau Police Station</option>
+            <option value="Marsabit Town Police Station">Marsabit Town Police Station</option>
+            <option value="Moyale Police Station">Moyale Police Station</option>
+            <option value="North Horr Police Station">North Horr Police Station</option>
+            <option value="Garissa Town Police Station">Garissa Town Police Station</option>
+            <option value="Dadaab Police Station">Dadaab Police Station</option>
+            <option value="Balambala Police Station">Balambala Police Station</option>
+            <option value="Wajir Town Police Station">Wajir Town Police Station</option>
+            <option value="Eldas Police Station">Eldas Police Station</option>
+            <option value="Mandera Town Police Station">Mandera Town Police Station</option>
+            <option value="El Wak Police Station">El Wak Police Station</option>
+            <option value="Isiolo Town Police Station">Isiolo Town Police Station</option>
+            <option value="Garbatulla Police Station">Garbatulla Police Station</option>
+          </optgroup>
+
+          <optgroup label="COAST REGION (Mombasa, Kilifi, Kwale, Tana River, Lamu)">
             <option value="Mombasa Central Police Station">Mombasa Central Police Station</option>
-            <option value="Kisumu Central Police Station">Kisumu Central Police Station</option>
+            <option value="Tudor Police Station">Tudor Police Station</option>
+            <option value="Changamwe Police Station">Changamwe Police Station</option>
+            <option value="Kisauni Police Station">Kisauni Police Station</option>
+            <option value="Likoni Police Station">Likoni Police Station</option>
+            <option value="Nyali Police Station">Nyali Police Station</option>
+            <option value="Bamburi Police Station">Bamburi Police Station</option>
+            <option value="Kilifi Town Police Station">Kilifi Town Police Station</option>
+            <option value="Malindi Police Station">Malindi Police Station</option>
+            <option value="Mtwapa Police Station">Mtwapa Police Station</option>
+            <option value="Vipingo Police Station">Vipingo Police Station</option>
+            <option value="Kwale Town Police Station">Kwale Town Police Station</option>
+            <option value="Msambweni Police Station">Msambweni Police Station</option>
+            <option value="Kinango Police Station">Kinango Police Station</option>
+            <option value="Hola Police Station (Tana River)">Hola Police Station (Tana River)</option>
+            <option value="Garsen Police Station">Garsen Police Station</option>
+            <option value="Lamu Town Police Station">Lamu Town Police Station</option>
+            <option value="Mpeketoni Police Station">Mpeketoni Police Station</option>
+          </optgroup>
+
+          <optgroup label="RIFT VALLEY (Nakuru, Uasin Gishu, Nandi, Kericho, Bomet, Narok, Kajiado, Baringo, Laikipia, Samburu, Turkana, West Pokot, Trans Nzoia, Elgeyo Marakwet)">
             <option value="Nakuru Central Police Station">Nakuru Central Police Station</option>
-            <option value="Eldoret Police Station">Eldoret Police Station</option>
-            <option value="Meru Police Station">Meru Police Station</option>
-            <option value="Nyeri Police Station">Nyeri Police Station</option>
-            <option value="Machakos Police Station">Machakos Police Station</option>
-            <option value="Kakamega Police Station">Kakamega Police Station</option>
-            <option value="Kisii Police Station">Kisii Police Station</option>
-            <option value="Garissa Police Station">Garissa Police Station</option>
+            <option value="Naivasha Police Station">Naivasha Police Station</option>
+            <option value="Gilgil Police Station">Gilgil Police Station</option>
+            <option value="Molo Police Station">Molo Police Station</option>
+            <option value="Njoro Police Station">Njoro Police Station</option>
+            <option value="Rongai Police Station (Nakuru)">Rongai Police Station (Nakuru)</option>
+            <option value="Eldoret Central Police Station">Eldoret Central Police Station</option>
+            <option value="Eldoret Town Police Station">Eldoret Town Police Station</option>
+            <option value="Turbo Police Station">Turbo Police Station</option>
+            <option value="Moi's Bridge Police Station">Moi's Bridge Police Station</option>
+            <option value="Burnt Forest Police Station">Burnt Forest Police Station</option>
+            <option value="Kapsabet Police Station">Kapsabet Police Station</option>
+            <option value="Nandi Hills Police Station">Nandi Hills Police Station</option>
+            <option value="Mosoriot Police Station">Mosoriot Police Station</option>
+            <option value="Kericho Town Police Station">Kericho Town Police Station</option>
+            <option value="Litein Police Station">Litein Police Station</option>
+            <option value="Kipkelion Police Station">Kipkelion Police Station</option>
+            <option value="Londiani Police Station">Londiani Police Station</option>
+            <option value="Bomet Town Police Station">Bomet Town Police Station</option>
+            <option value="Sotik Police Station">Sotik Police Station</option>
+            <option value="Longisa Police Station">Longisa Police Station</option>
+            <option value="Narok Town Police Station">Narok Town Police Station</option>
+            <option value="Kilgoris Police Station">Kilgoris Police Station</option>
+            <option value="Suswa Police Station">Suswa Police Station</option>
+            <option value="Mai Mahiu Police Station">Mai Mahiu Police Station</option>
+            <option value="Ongata Rongai Police Station (Kajiado)">Ongata Rongai Police Station (Kajiado)</option>
+            <option value="Kitengela Police Station">Kitengela Police Station</option>
+            <option value="Kajiado Town Police Station">Kajiado Town Police Station</option>
+            <option value="Ngong Police Station">Ngong Police Station</option>
+            <option value="Isinya Police Station">Isinya Police Station</option>
+            <option value="Namanga Police Station">Namanga Police Station</option>
+            <option value="Kabarnet Police Station">Kabarnet Police Station</option>
+            <option value="Eldama Ravine Police Station">Eldama Ravine Police Station</option>
+            <option value="Marigat Police Station">Marigat Police Station</option>
+            <option value="Nanyuki Police Station">Nanyuki Police Station</option>
+            <option value="Rumuruti Police Station">Rumuruti Police Station</option>
+            <option value="Dol Dol Police Station">Dol Dol Police Station</option>
+            <option value="Maralal Police Station">Maralal Police Station</option>
+            <option value="Lodwar Police Station">Lodwar Police Station</option>
+            <option value="Kakuma Police Station">Kakuma Police Station</option>
+            <option value="Kapenguria Police Station">Kapenguria Police Station</option>
+            <option value="Kitale Police Station">Kitale Police Station</option>
+            <option value="Kiminini Police Station">Kiminini Police Station</option>
+            <option value="Endebess Police Station">Endebess Police Station</option>
+          </optgroup>
+
+          <optgroup label="WESTERN (Kakamega, Bungoma, Busia, Vihiga)">
+            <option value="Kakamega Central Police Station">Kakamega Central Police Station</option>
+            <option value="Mumias Police Station">Mumias Police Station</option>
+            <option value="Butere Police Station">Butere Police Station</option>
+            <option value="Malava Police Station">Malava Police Station</option>
+            <option value="Lugari Police Station">Lugari Police Station</option>
+            <option value="Bungoma Town Police Station">Bungoma Town Police Station</option>
+            <option value="Webuye Police Station">Webuye Police Station</option>
+            <option value="Kimilili Police Station">Kimilili Police Station</option>
+            <option value="Chwele Police Station">Chwele Police Station</option>
+            <option value="Busia Town Police Station">Busia Town Police Station</option>
+            <option value="Malaba Police Station">Malaba Police Station</option>
+            <option value="Nambale Police Station">Nambale Police Station</option>
+            <option value="Mbale Police Station">Mbale Police Station</option>
+            <option value="Luanda Police Station">Luanda Police Station</option>
+            <option value="Hamisi Police Station">Hamisi Police Station</option>
+          </optgroup>
+
+          <optgroup label="NYANZA (Kisumu, Siaya, Homa Bay, Migori, Kisii, Nyamira)">
+            <option value="Kisumu Central Police Station">Kisumu Central Police Station</option>
+            <option value="Kisumu Town Police Station">Kisumu Town Police Station</option>
+            <option value="Maseno Police Station">Maseno Police Station</option>
+            <option value="Muhoroni Police Station">Muhoroni Police Station</option>
+            <option value="Ahero Police Station">Ahero Police Station</option>
+            <option value="Siaya Town Police Station">Siaya Town Police Station</option>
+            <option value="Bondo Police Station">Bondo Police Station</option>
+            <option value="Ugunja Police Station">Ugunja Police Station</option>
+            <option value="Homa Bay Town Police Station">Homa Bay Town Police Station</option>
+            <option value="Mbita Police Station">Mbita Police Station</option>
+            <option value="Kendu Bay Police Station">Kendu Bay Police Station</option>
+            <option value="Migori Town Police Station">Migori Town Police Station</option>
+            <option value="Rongo Police Station">Rongo Police Station</option>
+            <option value="Awendo Police Station">Awendo Police Station</option>
+            <option value="Kisii Town Police Station">Kisii Town Police Station</option>
+            <option value="Keroka Police Station">Keroka Police Station</option>
+            <option value="Suneka Police Station">Suneka Police Station</option>
+            <option value="Nyamira Town Police Station">Nyamira Town Police Station</option>
           </optgroup>
         </select>
       </div>
@@ -858,7 +1152,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 <div class="modal-overlay" id="viewPostModal">
   <div class="modal-header">
     <h2 id="viewPostTitle">Post Details</h2>
-    <button class="modal-close" onclick="closeModal('viewPostModal')">✕</button>
+    <button class="modal-close" onclick="closeModal('viewPostModal')"></button>
   </div>
   <div class="modal-content" id="viewPostContent"></div>
 </div>
@@ -1318,7 +1612,7 @@ async function checkVerificationLink() {
         switchAuthTab('login');
         showToast('✅ Email verified! Please log in.');
       } else {
-        showToast('❌ ' + (data.error || 'Verification failed'));
+        showToast(' ' + (data.error || 'Verification failed'));
       }
     } catch (err) {
       showToast('❌ Verification failed. Link may be expired.');
@@ -1383,7 +1677,7 @@ async function handleResetPassword() {
     window.history.replaceState({}, document.title, window.location.pathname);
     switchAuthTab('login');
   } catch (err) {
-    showToast('❌ ' + err.message);
+    showToast(' ' + err.message);
   }
 }
 
@@ -1520,7 +1814,7 @@ function renderFoundCards() {
         ${imgTag}
         <div class="card-content">
           <div class="card-name">️ ${escapeHTML(p.missing_person_name || 'Unknown Person')}</div>
-          <div class="card-days-missing" style="color: var(--success);">📅 Reported ${timeAgo}</div>
+          <div class="card-days-missing" style="color: var(--success);"> Reported ${timeAgo}</div>
           <div class="card-info"> Location: ${escapeHTML(p.sighting_location)}</div>
         </div>
       </div>
@@ -1607,7 +1901,7 @@ function openModal(id, type) {
         ${person.police_station ? `<div class="info-section"><div class="info-label">Reported To Station</div><div class="info-value" style="color:var(--warning); font-weight:600">${escapeHTML(person.police_station)}</div></div>` : ''}
         <div style="margin-top: 20px; padding: 15px; background: #1e3a8a; border-radius: 8px; text-align: center;">
             <div style="font-size: 13px; color: var(--light); font-weight: 600;">
-                📞 If you have information, please contact the nearest police station.
+                 If you have information, please contact the nearest police station.
             </div>
         </div>
       `;
@@ -1890,7 +2184,7 @@ async function loadMyPosts() {
     
   } catch (err) { 
     console.error(err); 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
@@ -2014,7 +2308,7 @@ async function saveSightingEdit() {
     loadMyPosts(); 
     loadData();
   } catch (err) { 
-    showToast('❌ ' + err.message); 
+    showToast(' ' + err.message); 
   }
 }
 
