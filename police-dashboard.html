@@ -399,6 +399,13 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
             <span class="nav-text">Sightings</span>
             <span class="nav-badge" id="sightingCount">0</span>
         </a>
+        <a class="nav-item" onclick="switchPage('deleted-review', event)">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </span>
+            <span class="nav-text">Review Queue</span>
+            <span class="nav-badge" id="deletedCount" style="background: var(--warning); color: var(--dark);">0</span>
+        </a>
         <a class="nav-item" onclick="switchPage('resolved', event)">
             <span class="nav-icon">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
@@ -543,6 +550,30 @@ body { background: #f1f5f9; min-height: 100vh; color: var(--dark); }
                 </div>
             </div>
             <div class="sightings-list" id="sightingList"></div>
+        </div>
+    </div>
+
+    <!-- REVIEW QUEUE PAGE (Deleted Posts Pending Police Action) -->
+    <div id="deleted-reviewPage" class="page-section">
+        <div class="page-header">
+            <h1 class="page-title">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px;fill:var(--dark);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                Deletion Review Queue
+            </h1>
+            <p class="page-subtitle">Users have requested to delete these posts. Please review the reason and take official action.</p>
+        </div>
+        
+        <div class="section-card">
+            <div class="section-header">
+                <h3 class="section-title">⚠️ Pending Review</h3>
+                <button class="btn-refresh" onclick="fetchDeletedPosts()">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:14px;height:14px;fill:var(--primary);"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                    Refresh
+                </button>
+            </div>
+            <div class="missing-list" id="deletedPostsList">
+                <div class="loading-state"><div class="spinner"></div><p>Loading review queue...</p></div>
+            </div>
         </div>
     </div>
 
@@ -827,17 +858,16 @@ window.onload = function() {
     
     if (!token || !userStr) {
         console.log('⚠️ No valid session. Redirecting to login...');
-        window.location.href = '/index.html'; // FIXED: Redirect to main login
+        window.location.href = '/index.html';
         return;
     }
     
     try {
         const user = JSON.parse(userStr);
         
-        // FIXED: Allow both police and admin, and DO NOT clear localStorage for normal users
         if (user.role !== 'police' && user.role !== 'admin') {
             console.log('⚠️ User is not a police officer. Redirecting to home...');
-            window.location.href = '/index.html'; // FIXED: Just redirect, don't log them out
+            window.location.href = '/index.html';
             return;
         }
         
@@ -856,7 +886,7 @@ function logout() {
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
         localStorage.removeItem('policeUser');
-        window.location.href = '/index.html'; // FIXED: Redirect to main login
+        window.location.href = '/index.html';
     }
 }
 
@@ -871,6 +901,8 @@ function switchPage(pageName, event) {
     
     if (pageName === 'resolved') {
         fetchResolvedCases();
+    } else if (pageName === 'deleted-review') {
+        fetchDeletedPosts();
     }
 }
 
@@ -900,7 +932,7 @@ async function fetchDashboardData() {
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('user');
                 localStorage.removeItem('policeUser');
-                window.location.href = '/index.html'; // FIXED
+                window.location.href = '/index.html';
                 return;
             }
             throw new Error('Failed to fetch data');
@@ -981,6 +1013,92 @@ async function fetchResolvedCases() {
     } catch (error) {
         console.error('❌ Error fetching resolved cases:', error);
         resolvedList.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">⚠️</div><div style="font-size: 16px; margin-bottom: 10px;">Unable to load resolved cases</div></div>`;
+    }
+}
+
+// Fetch posts pending deletion review
+async function fetchDeletedPosts() {
+    const list = document.getElementById('deletedPostsList');
+    list.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Loading review queue...</p></div>`;
+    
+    try {
+        const token = localStorage.getItem('authToken');
+        const res = await fetch(`${API_URL}/police/deleted-posts`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (res.status === 401 || res.status === 403) {
+            window.location.href = '/index.html';
+            return;
+        }
+        
+        const posts = await res.json();
+        document.getElementById('deletedCount').textContent = posts.length;
+        
+        if (posts.length === 0) {
+            list.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">✅</div><div style="font-size: 16px;">No pending deletion requests. Great job!</div></div>`;
+            return;
+        }
+        
+        list.innerHTML = posts.map(p => `
+            <div class="missing-item" style="border-left: 4px solid var(--warning);">
+                <div class="missing-photo" style="display:flex; align-items:center; justify-content:center; font-size:24px; background: var(--warning); color: var(--dark);">📝</div>
+                <div class="missing-info">
+                    <h4>${p.name} <span style="font-size: 12px; color: var(--danger); font-weight: normal;">(Deletion Requested)</span></h4>
+                    <div class="meta-info">
+                        <span>👤 ${p.age} yrs, ${p.gender}</span>
+                        <span>📍 ${p.last_seen_location}</span>
+                    </div>
+                    <div class="case-notes" style="background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 6px; margin-top: 8px;">
+                        <strong>User's Reason:</strong> ${p.resolution_notes || 'No reason provided'}
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="reviewDeletion('${p.id}', 'resolve')">✅ Mark Resolved</button>
+                    <button class="btn btn-danger" onclick="reviewDeletion('${p.id}', 'permanent_delete')">🗑️ Permanently Delete</button>
+                </div>
+            </div>
+        `).join('');
+        
+    } catch (err) {
+        console.error('Error fetching deleted posts:', err);
+        list.innerHTML = `<div class="empty-state"><div style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;">⚠️</div><div style="font-size: 16px;">Failed to load queue.</div></div>`;
+    }
+}
+
+// Handle the officer's decision
+async function reviewDeletion(id, action) {
+    let officer_notes = '';
+    
+    if (action === 'resolve') {
+        officer_notes = prompt('Add official police notes (e.g., "Verified with family, person found safe"):');
+        if (officer_notes === null) return; // User cancelled
+    } else {
+        if (!confirm('⚠️ WARNING: This will PERMANENTLY delete this post from the database. Are you sure this is a duplicate or false report?')) {
+            return;
+        }
+    }
+    
+    try {
+        const token = localStorage.getItem('authToken');
+        const res = await fetch(`${API_URL}/police/review-deletion/${id}`, {
+            method: 'PUT',
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action, officer_notes })
+        });
+        
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        
+        alert(`✅ Success: ${data.message}`);
+        fetchDeletedPosts(); // Refresh the list
+        fetchDashboardData(); // Refresh main stats
+        
+    } catch (err) {
+        alert('❌ Error: ' + err.message);
     }
 }
 
